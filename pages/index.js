@@ -108,324 +108,225 @@ export default function BoutiqueOlda() {
   const totalPrix = panier.reduce((acc, item) => acc + (item.prix * item.quantite), 0);
 
   return (
-    <div style={{ background: '#fafbfc', minHeight: '100vh', color: '#1a1a1a', fontFamily: "'Clash Display', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div style={{ background: '#fff', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Clash+Display:wght@600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* HEADER STICKY */
+        /* HEADER */
         .nav-header {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: linear-gradient(180deg, rgba(250,251,252,0.95) 0%, rgba(250,251,252,0.85) 100%);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(0,0,0,0.06);
-          padding: 16px 0;
-          animation: slideDown 0.5s ease-out;
+          background: rgba(255,255,255,0.8);
+          backdrop-filter: saturate(180%) blur(20px);
+          border-bottom: 0.5px solid #d2d2d7;
         }
 
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .header-content {
+        .header-top {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0 20px;
+          padding: 12px 20px;
+          max-width: 1000px;
+          margin: 0 auto;
         }
 
         .logo {
-          font-size: 20px;
-          font-weight: 700;
+          font-size: 21px;
+          font-weight: 600;
           letter-spacing: -0.5px;
-          background: linear-gradient(135deg, #000 0%, #444 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: #1d1d1f;
         }
 
-        .cart-badge {
-          position: relative;
-          cursor: pointer;
-          width: 44px;
-          height: 44px;
+        .cart-btn {
+          width: 36px;
+          height: 36px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(0,0,0,0.05);
-          border-radius: 12px;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: none;
+          border: none;
+          cursor: pointer;
+          position: relative;
           font-size: 20px;
         }
 
-        .cart-badge:hover {
-          background: rgba(0,0,0,0.1);
-          transform: scale(1.05);
-        }
-
-        .badge-count {
+        .cart-count {
           position: absolute;
-          top: -8px;
-          right: -8px;
-          background: #e63946;
+          top: -4px;
+          right: -4px;
+          background: #06c;
           color: white;
-          border-radius: 50%;
-          width: 24px;
-          height: 24px;
-          font-size: 12px;
-          font-weight: 700;
+          border-radius: 10px;
+          min-width: 20px;
+          height: 20px;
+          font-size: 11px;
+          font-weight: 600;
           display: flex;
           align-items: center;
           justify-content: center;
-          animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          padding: 0 5px;
         }
 
-        @keyframes pop {
-          0% { transform: scale(0); }
-          50% { transform: scale(1.2); }
-          100% { transform: scale(1); }
-        }
-
-        /* COLLECTION BUTTONS */
-        .roulette {
+        /* TABS */
+        .tabs {
           display: flex;
-          gap: 10px;
+          gap: 8px;
+          padding: 10px 20px;
+          max-width: 1000px;
+          margin: 0 auto;
           overflow-x: auto;
-          padding: 0 20px;
-          margin-top: 16px;
           scrollbar-width: none;
           -webkit-overflow-scrolling: touch;
-          scroll-behavior: smooth;
         }
 
-        .roulette::-webkit-scrollbar { display: none; }
+        .tabs::-webkit-scrollbar { display: none; }
 
-        .collection-btn {
-          flex: 0 0 auto;
-          padding: 10px 20px;
-          border-radius: 20px;
-          border: 1px solid rgba(0,0,0,0.1);
-          font-weight: 500;
+        .tab-btn {
+          padding: 6px 14px;
+          border-radius: 12px;
+          border: none;
+          background: #f5f5f7;
+          color: #1d1d1f;
           font-size: 14px;
-          background: white;
-          color: #666;
-          cursor: pointer;
+          font-weight: 400;
           white-space: nowrap;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
+          cursor: pointer;
+          transition: all 0.2s;
         }
 
-        .collection-btn:hover {
-          border-color: rgba(0,0,0,0.2);
-          transform: translateY(-2px);
-        }
-
-        .collection-btn.active {
-          background: #000;
+        .tab-btn.active {
+          background: #1d1d1f;
           color: #fff;
-          border-color: #000;
-          box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-          transform: scale(1.02);
         }
 
-        /* MAIN CONTAINER */
+        /* MAIN */
         .container {
-          max-width: 640px;
+          max-width: 1000px;
           margin: 0 auto;
-          padding: 40px 20px 120px;
+          padding: 0 20px 100px;
         }
 
-        .section-title {
-          font-size: 36px;
-          font-weight: 700;
-          font-family: 'Clash Display', sans-serif;
-          margin-bottom: 32px;
-          letter-spacing: -1px;
-          animation: fadeInUp 0.6s ease-out;
+        /* PRODUCT CARD - HORIZONTAL LAYOUT */
+        .product-card {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 20px 0;
+          border-bottom: 0.5px solid #d2d2d7;
         }
 
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* PRODUCT CARD */
-        .card {
-          background: white;
-          border-radius: 24px;
-          padding: 24px;
-          margin-bottom: 28px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          animation: fadeInUp 0.5s ease-out;
-          animation-fill-mode: both;
-        }
-
-        .card:nth-child(2) { animation-delay: 0.1s; }
-        .card:nth-child(3) { animation-delay: 0.2s; }
-        .card:nth-child(4) { animation-delay: 0.3s; }
-        .card:nth-child(5) { animation-delay: 0.4s; }
-
-        .card:hover {
-          box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-          transform: translateY(-4px);
-        }
-
-        .img-box {
-          background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f3 100%);
-          border-radius: 18px;
-          padding: 40px 24px;
-          text-align: center;
-          margin-bottom: 24px;
-          aspect-ratio: 1;
+        .product-image {
+          width: 80px;
+          height: 80px;
+          flex-shrink: 0;
+          background: #f5f5f7;
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
         }
 
-        .img-box img {
-          max-height: 100%;
-          max-width: 100%;
+        .product-image img {
+          width: 70px;
+          height: 70px;
           object-fit: contain;
-          animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
         }
 
         .product-info {
-          margin-bottom: 24px;
-        }
-
-        .product-name {
-          font-size: 22px;
-          font-weight: 700;
-          margin-bottom: 8px;
-          color: #000;
+          flex: 1;
+          min-width: 0;
         }
 
         .product-ref {
-          color: #999;
-          font-size: 13px;
-          margin-bottom: 8px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          font-size: 12px;
+          color: #86868b;
+          margin-bottom: 2px;
+        }
+
+        .product-name {
+          font-size: 17px;
+          font-weight: 600;
+          color: #1d1d1f;
+          margin-bottom: 4px;
         }
 
         .product-price {
-          font-size: 18px;
-          font-weight: 600;
-          color: #e63946;
+          font-size: 14px;
+          color: #86868b;
         }
 
         /* CONTROLS */
-        .controls {
+        .product-controls {
           display: flex;
-          gap: 12px;
-          align-items: center;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 8px;
         }
 
-        .stepper-lux {
+        .stepper {
           display: flex;
           align-items: center;
-          gap: 0;
           background: #f5f5f7;
-          border-radius: 12px;
+          border-radius: 8px;
           overflow: hidden;
-          padding: 0;
         }
 
-        .btn-step {
+        .stepper-btn {
+          width: 32px;
+          height: 32px;
           border: none;
           background: transparent;
-          width: 40px;
-          height: 44px;
+          color: #06c;
           font-size: 18px;
-          color: #000;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s;
-          font-weight: 600;
         }
 
-        .btn-step:hover:not(:disabled) {
-          background: rgba(0,0,0,0.06);
-        }
-
-        .btn-step:disabled {
+        .stepper-btn:disabled {
           color: #d2d2d7;
-          cursor: not-allowed;
         }
 
-        .val-step {
-          font-weight: 600;
-          font-size: 15px;
-          min-width: 40px;
+        .stepper-value {
+          min-width: 28px;
           text-align: center;
-          background: white;
-          height: 44px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-left: 1px solid rgba(0,0,0,0.06);
-          border-right: 1px solid rgba(0,0,0,0.06);
+          font-size: 15px;
+          font-weight: 500;
         }
 
-        .btn-ajouter {
-          flex: 1;
-          height: 44px;
-          border: none;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #000 0%, #333 100%);
+        .add-btn {
+          padding: 6px 16px;
+          background: #06c;
           color: white;
-          font-weight: 600;
+          border: none;
+          border-radius: 8px;
           font-size: 14px;
+          font-weight: 500;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
         }
 
-        .btn-ajouter:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .btn-ajouter:active {
-          transform: scale(0.98);
-        }
-
-        /* MODALS */
-        .cart-overlay {
+        /* MODAL */
+        .modal-overlay {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0,0,0,0.5);
-          backdrop-filter: blur(4px);
-          z-index: 1000;
-          animation: fadeIn 0.2s ease-out;
+          inset: 0;
+          background: rgba(0,0,0,0.4);
+          z-index: 200;
         }
 
-        .cart-modal, .checkout-modal {
+        .modal {
           position: fixed;
           bottom: 0;
           left: 0;
           right: 0;
           background: white;
-          border-radius: 28px 28px 0 0;
-          z-index: 1001;
+          border-radius: 16px 16px 0 0;
+          z-index: 201;
           max-height: 90vh;
           overflow-y: auto;
-          animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          animation: slideUp 0.3s ease-out;
         }
 
         @keyframes slideUp {
@@ -433,110 +334,93 @@ export default function BoutiqueOlda() {
           to { transform: translateY(0); }
         }
 
-        .cart-header, .checkout-header {
-          padding: 24px 20px;
-          border-bottom: 1px solid rgba(0,0,0,0.06);
+        .modal-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          padding: 20px;
+          border-bottom: 0.5px solid #d2d2d7;
           position: sticky;
           top: 0;
           background: white;
-          border-radius: 28px 28px 0 0;
+          z-index: 10;
         }
 
-        .cart-header h2, .checkout-header h2 {
-          font-size: 24px;
-          font-weight: 700;
-          margin: 0;
+        .modal-title {
+          font-size: 20px;
+          font-weight: 600;
         }
 
-        .btn-close {
-          background: none;
+        .close-btn {
+          width: 30px;
+          height: 30px;
           border: none;
-          font-size: 28px;
+          background: #f5f5f7;
+          border-radius: 50%;
+          font-size: 20px;
+          color: #86868b;
           cursor: pointer;
-          color: #666;
-          width: 44px;
-          height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s;
         }
 
-        .btn-close:hover {
-          color: #000;
-          background: rgba(0,0,0,0.05);
-          border-radius: 12px;
-        }
-
-        .cart-items, .checkout-content {
+        .modal-content {
           padding: 20px;
         }
 
+        /* CART ITEM */
         .cart-item {
           display: flex;
-          gap: 16px;
-          padding: 16px;
-          background: #f5f5f7;
-          border-radius: 16px;
-          margin-bottom: 12px;
-          align-items: flex-start;
-          animation: fadeIn 0.3s ease-out;
+          gap: 12px;
+          padding: 16px 0;
+          border-bottom: 0.5px solid #d2d2d7;
         }
 
-        .cart-item-img {
-          width: 80px;
-          height: 80px;
-          background: white;
-          border-radius: 12px;
+        .cart-item-image {
+          width: 60px;
+          height: 60px;
+          background: #f5f5f7;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
 
-        .cart-item-img img {
-          max-width: 100%;
-          max-height: 100%;
+        .cart-item-image img {
+          width: 50px;
+          height: 50px;
           object-fit: contain;
         }
 
-        .cart-item-details {
+        .cart-item-info {
           flex: 1;
         }
 
         .cart-item-name {
-          font-weight: 600;
           font-size: 15px;
+          font-weight: 500;
           margin-bottom: 4px;
         }
 
         .cart-item-ref {
           font-size: 12px;
-          color: #999;
+          color: #86868b;
           margin-bottom: 8px;
         }
 
-        .cart-item-price {
-          font-weight: 600;
-          color: #e63946;
-        }
-
-        .cart-item-controls {
+        .cart-item-actions {
           display: flex;
           gap: 8px;
-          margin-top: 8px;
+          align-items: center;
         }
 
         .mini-stepper {
           display: flex;
           align-items: center;
-          gap: 6px;
-          background: white;
-          border-radius: 8px;
-          padding: 4px;
+          background: #f5f5f7;
+          border-radius: 6px;
         }
 
         .mini-btn {
@@ -544,193 +428,126 @@ export default function BoutiqueOlda() {
           height: 28px;
           border: none;
           background: transparent;
+          color: #06c;
+          font-size: 16px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: 600;
-          color: #000;
-          transition: all 0.2s;
         }
 
-        .mini-btn:hover {
-          background: rgba(0,0,0,0.06);
-          border-radius: 6px;
+        .mini-btn:disabled {
+          color: #d2d2d7;
         }
 
-        .mini-val {
-          min-width: 20px;
+        .mini-value {
+          min-width: 24px;
           text-align: center;
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 500;
         }
 
-        .btn-delete {
-          background: rgba(230,57,70,0.1);
-          color: #e63946;
+        .delete-btn {
+          padding: 4px 10px;
+          background: transparent;
           border: none;
-          padding: 6px 12px;
-          border-radius: 8px;
+          color: #06c;
+          font-size: 13px;
           cursor: pointer;
-          font-size: 12px;
-          font-weight: 600;
-          transition: all 0.2s;
-          margin-left: auto;
-          align-self: flex-end;
-        }
-
-        .btn-delete:hover {
-          background: rgba(230,57,70,0.2);
         }
 
         .cart-empty {
           text-align: center;
           padding: 60px 20px;
-          color: #999;
-        }
-
-        .cart-empty-icon {
-          font-size: 48px;
-          margin-bottom: 16px;
+          color: #86868b;
         }
 
         .cart-footer {
           padding: 20px;
-          border-top: 1px solid rgba(0,0,0,0.06);
+          border-top: 0.5px solid #d2d2d7;
           position: sticky;
           bottom: 0;
           background: white;
         }
 
-        .cart-summary {
+        .cart-total {
           display: flex;
           justify-content: space-between;
-          align-items: center;
           margin-bottom: 16px;
-          padding: 0 0 16px;
-          border-bottom: 1px solid rgba(0,0,0,0.06);
+          font-size: 17px;
         }
 
-        .summary-label {
-          font-size: 14px;
-          color: #666;
+        .cart-total-label {
+          color: #86868b;
         }
 
-        .summary-value {
-          font-size: 24px;
-          font-weight: 700;
-          color: #000;
+        .cart-total-value {
+          font-weight: 600;
         }
 
-        .price-total {
-          color: #e63946;
-        }
-
-        .btn-checkout {
+        .checkout-btn {
           width: 100%;
-          height: 50px;
-          background: linear-gradient(135deg, #000 0%, #333 100%);
+          padding: 14px;
+          background: #06c;
           color: white;
           border: none;
-          border-radius: 14px;
-          font-weight: 700;
-          font-size: 16px;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-checkout:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-        }
-
-        .btn-checkout:active {
-          transform: scale(0.98);
-        }
-
-        .btn-checkout:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        /* CHECKOUT MODAL */
-        .input-client {
-          width: 100%;
-          padding: 16px;
-          border: 2px solid #f0f1f3;
           border-radius: 12px;
-          font-size: 16px;
-          margin-bottom: 16px;
-          transition: all 0.2s;
+          font-size: 17px;
+          font-weight: 500;
+          cursor: pointer;
         }
 
-        .input-client:focus {
-          outline: none;
-          border-color: #000;
+        .checkout-btn:disabled {
+          opacity: 0.5;
         }
 
-        .btn-envoyer {
+        /* INPUT */
+        .input {
           width: 100%;
-          height: 54px;
-          background: linear-gradient(135deg, #000 0%, #333 100%);
+          padding: 12px 16px;
+          border: 1px solid #d2d2d7;
+          border-radius: 12px;
+          font-size: 17px;
+          margin-bottom: 12px;
+        }
+
+        .input:focus {
+          outline: none;
+          border-color: #06c;
+        }
+
+        .submit-btn {
+          width: 100%;
+          padding: 14px;
+          background: #06c;
           color: white;
           border: none;
-          border-radius: 14px;
-          font-weight: 700;
-          font-size: 16px;
+          border-radius: 12px;
+          font-size: 17px;
+          font-weight: 500;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          margin-top: 8px;
         }
 
-        .btn-envoyer:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-        }
-
-        .btn-envoyer:disabled {
+        .submit-btn:disabled {
           opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 480px) {
-          .section-title {
-            font-size: 28px;
-          }
-
-          .card {
-            padding: 18px;
-            margin-bottom: 20px;
-          }
-
-          .img-box {
-            padding: 30px 16px;
-          }
-
-          .collection-btn {
-            padding: 8px 16px;
-            font-size: 13px;
-          }
         }
       `}</style>
 
       {/* HEADER */}
       <nav className="nav-header">
-        <div className="header-content">
+        <div className="header-top">
           <div className="logo">OLDA</div>
-          <div
-            className="cart-badge"
-            onClick={() => setCartOpen(true)}
-          >
+          <button className="cart-btn" onClick={() => setCartOpen(true)}>
             🛍️
-            {totalArticles > 0 && <span className="badge-count">{totalArticles}</span>}
-          </div>
+            {totalArticles > 0 && <span className="cart-count">{totalArticles}</span>}
+          </button>
         </div>
-        <div className="roulette">
+        <div className="tabs">
           {Object.keys(MUGS_DATA).map(key => (
             <button
               key={key}
-              className={`collection-btn ${activeTab === key ? 'active' : ''}`}
+              className={`tab-btn ${activeTab === key ? 'active' : ''}`}
               onClick={() => setActiveTab(key)}
             >
               {formatTabName(key)}
@@ -741,34 +558,31 @@ export default function BoutiqueOlda() {
 
       {/* MAIN CONTENT */}
       <main className="container">
-        <h1 className="section-title">{formatTabName(activeTab)}</h1>
-
         {MUGS_DATA[activeTab].map((p) => (
-          <div key={p.id} className="card">
-            <div className="img-box">
+          <div key={p.id} className="product-card">
+            <div className="product-image">
               <img src={p.image} alt={p.couleur} />
             </div>
             <div className="product-info">
-              <p className="product-ref">{p.reference}</p>
-              <h2 className="product-name">{p.couleur}</h2>
-              <p className="product-price">{p.prix.toFixed(2)}€</p>
+              <div className="product-ref">{p.reference}</div>
+              <div className="product-name">{p.couleur}</div>
+              <div className="product-price">{p.prix.toFixed(2)}€</div>
             </div>
-
-            <div className="controls">
-              <div className="stepper-lux">
+            <div className="product-controls">
+              <div className="stepper">
                 <button
-                  className="btn-step"
+                  className="stepper-btn"
                   onClick={() => ajuster(p.id, -1)}
                   disabled={getQte(p.id) <= 3}
                 >
                   −
                 </button>
-                <div className="val-step">{getQte(p.id)}</div>
-                <button className="btn-step" onClick={() => ajuster(p.id, 1)}>
+                <div className="stepper-value">{getQte(p.id)}</div>
+                <button className="stepper-btn" onClick={() => ajuster(p.id, 1)}>
                   +
                 </button>
               </div>
-              <button className="btn-ajouter" onClick={() => ajouterAuPanier(p)}>
+              <button className="add-btn" onClick={() => ajouterAuPanier(p)}>
                 Ajouter
               </button>
             </div>
@@ -779,32 +593,29 @@ export default function BoutiqueOlda() {
       {/* CART MODAL */}
       {cartOpen && (
         <>
-          <div className="cart-overlay" onClick={() => setCartOpen(false)} />
-          <div className="cart-modal">
-            <div className="cart-header">
-              <h2>Votre panier</h2>
-              <button className="btn-close" onClick={() => setCartOpen(false)}>×</button>
+          <div className="modal-overlay" onClick={() => setCartOpen(false)} />
+          <div className="modal">
+            <div className="modal-header">
+              <div className="modal-title">Panier</div>
+              <button className="close-btn" onClick={() => setCartOpen(false)}>×</button>
             </div>
 
-            <div className="cart-items">
+            <div className="modal-content">
               {panier.length === 0 ? (
                 <div className="cart-empty">
-                  <div className="cart-empty-icon">🛍️</div>
-                  <p>Votre panier est vide</p>
+                  <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛍️</div>
+                  <div>Votre panier est vide</div>
                 </div>
               ) : (
                 panier.map(item => (
                   <div key={item.id} className="cart-item">
-                    <div className="cart-item-img">
+                    <div className="cart-item-image">
                       <img src={item.image} alt={item.couleur} />
                     </div>
-                    <div className="cart-item-details">
+                    <div className="cart-item-info">
                       <div className="cart-item-name">{item.couleur}</div>
                       <div className="cart-item-ref">{item.reference}</div>
-                      <div className="cart-item-price">
-                        {(item.prix * item.quantite).toFixed(2)}€
-                      </div>
-                      <div className="cart-item-controls">
+                      <div className="cart-item-actions">
                         <div className="mini-stepper">
                           <button
                             className="mini-btn"
@@ -813,7 +624,7 @@ export default function BoutiqueOlda() {
                           >
                             −
                           </button>
-                          <div className="mini-val">{item.quantite}</div>
+                          <div className="mini-value">{item.quantite}</div>
                           <button
                             className="mini-btn"
                             onClick={() => modifierPanier(item.id, item.quantite + 1)}
@@ -821,13 +632,13 @@ export default function BoutiqueOlda() {
                             +
                           </button>
                         </div>
-                        <button
-                          className="btn-delete"
-                          onClick={() => supprimerDuPanier(item.id)}
-                        >
+                        <button className="delete-btn" onClick={() => supprimerDuPanier(item.id)}>
                           Supprimer
                         </button>
                       </div>
+                    </div>
+                    <div style={{ fontWeight: '500' }}>
+                      {(item.prix * item.quantite).toFixed(2)}€
                     </div>
                   </div>
                 ))
@@ -836,18 +647,18 @@ export default function BoutiqueOlda() {
 
             {panier.length > 0 && (
               <div className="cart-footer">
-                <div className="cart-summary">
-                  <span className="summary-label">Total ({totalArticles} articles)</span>
-                  <span className="summary-value price-total">{totalPrix.toFixed(2)}€</span>
+                <div className="cart-total">
+                  <span className="cart-total-label">Total</span>
+                  <span className="cart-total-value">{totalPrix.toFixed(2)}€</span>
                 </div>
                 <button
-                  className="btn-checkout"
+                  className="checkout-btn"
                   onClick={() => {
                     setCartOpen(false);
                     setShowCheckoutModal(true);
                   }}
                 >
-                  Finaliser la commande
+                  Commander
                 </button>
               </div>
             )}
@@ -858,27 +669,24 @@ export default function BoutiqueOlda() {
       {/* CHECKOUT MODAL */}
       {showCheckoutModal && (
         <>
-          <div className="cart-overlay" onClick={() => !isSending && setShowCheckoutModal(false)} />
-          <div className="checkout-modal">
-            <div className="checkout-header">
-              <h2>Confirmer la commande</h2>
-              <button className="btn-close" onClick={() => !isSending && setShowCheckoutModal(false)} disabled={isSending}>×</button>
+          <div className="modal-overlay" onClick={() => !isSending && setShowCheckoutModal(false)} />
+          <div className="modal">
+            <div className="modal-header">
+              <div className="modal-title">Finaliser</div>
+              <button className="close-btn" onClick={() => !isSending && setShowCheckoutModal(false)} disabled={isSending}>×</button>
             </div>
 
-            <div className="checkout-content">
-              <p style={{ marginBottom: '20px', color: '#666' }}>
-                Entrez votre nom pour recevoir la confirmation de commande
-              </p>
+            <div className="modal-content">
               <input
                 type="text"
-                className="input-client"
-                placeholder="Votre nom complet"
+                className="input"
+                placeholder="Votre nom"
                 value={nomClient}
                 onChange={(e) => setNomClient(e.target.value)}
                 disabled={isSending}
               />
               <button
-                className="btn-envoyer"
+                className="submit-btn"
                 onClick={envoyerCommande}
                 disabled={isSending || !nomClient.trim()}
               >
