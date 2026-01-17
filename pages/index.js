@@ -68,14 +68,13 @@ export default function OLDAStore() {
   
   const totalArticles = panier.reduce((acc, i) => acc + i.quantite, 0);
 
-  const ajouterCommentaire = (productId, nomClient, texte) => {
-    if (!nomClient.trim() || !texte.trim()) return;
-    const newComment = { nom: nomClient, texte, date: new Date().toLocaleDateString('fr-FR') };
+  const ajouterCommentaire = (productId, texte) => {
+    if (!texte.trim()) return;
     setCommentaires(prev => ({
       ...prev,
-      [productId]: [...(prev[productId] || []), newComment]
+      [productId]: [...(prev[productId] || []), texte]
     }));
-    setNouveauCommentaire(prev => ({ ...prev, [productId]: { nom: '', texte: '' } }));
+    setNouveauCommentaire(prev => ({ ...prev, [productId]: '' }));
   };
 
   const generateOrderText = () => {
@@ -216,20 +215,19 @@ export default function OLDAStore() {
       {/* Products */}
       <main style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 120px' }}>
         {MUGS_DATA[activeTab].map((product) => (
-          <div key={product.id} style={{ marginBottom: 60 }}>
+          <div key={product.id} style={{ marginBottom: 50 }}>
             {/* Product Card */}
             <div style={{
               display: 'flex',
               gap: 40,
               alignItems: 'flex-start',
-              marginBottom: 30,
             }}>
               {/* Image à gauche */}
               <div style={{
-                width: 200,
-                height: 200,
+                width: 180,
+                height: 180,
                 background: '#ffffff',
-                borderRadius: 16,
+                borderRadius: 12,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -239,130 +237,87 @@ export default function OLDAStore() {
                 <img
                   src={product.image}
                   alt={product.nom}
-                  style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }}
+                  style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
                 />
               </div>
 
               {/* Infos à droite */}
-              <div style={{ flex: 1, paddingTop: 10 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 600, color: '#1d1d1f', marginBottom: 8 }}>
+              <div style={{ flex: 1, paddingTop: 8 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>
                   {product.nom}
                 </h2>
-                <p style={{ fontSize: 15, color: '#86868b', marginBottom: 4 }}>
+                <p style={{ fontSize: 14, color: '#86868b', marginBottom: 4 }}>
                   {product.couleur}
                 </p>
-                <p style={{ fontSize: 13, color: '#86868b', marginBottom: 24 }}>
+                <p style={{ fontSize: 12, color: '#ababab', marginBottom: 20 }}>
                   {product.reference}
                 </p>
 
                 {/* Quantité */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
                     background: '#f5f5f7',
-                    borderRadius: 10,
+                    borderRadius: 8,
                   }}>
                     <button
                       onClick={() => ajuster(product.id, -1)}
                       style={{
-                        width: 40, height: 40, border: 'none', background: 'none',
-                        fontSize: 20, color: getQte(product.id) <= 3 ? '#d2d2d7' : '#1d1d1f',
+                        width: 36, height: 36, border: 'none', background: 'none',
+                        fontSize: 18, color: getQte(product.id) <= 3 ? '#d2d2d7' : '#1d1d1f',
                         cursor: getQte(product.id) <= 3 ? 'not-allowed' : 'pointer',
                       }}
                     >−</button>
-                    <span style={{ width: 40, textAlign: 'center', fontSize: 16, fontWeight: 600 }}>
+                    <span style={{ width: 36, textAlign: 'center', fontSize: 15, fontWeight: 600 }}>
                       {getQte(product.id)}
                     </span>
                     <button
                       onClick={() => ajuster(product.id, 1)}
-                      style={{ width: 40, height: 40, border: 'none', background: 'none', fontSize: 20, cursor: 'pointer' }}
+                      style={{ width: 36, height: 36, border: 'none', background: 'none', fontSize: 18, cursor: 'pointer' }}
                     >+</button>
                   </div>
-                  <span style={{ fontSize: 12, color: '#86868b' }}>Minimum 3 unités</span>
+                  <span style={{ fontSize: 11, color: '#ababab' }}>Min. 3</span>
                 </div>
 
                 <button
                   onClick={() => ajouterAuPanier(product)}
                   style={{
-                    padding: '12px 28px', borderRadius: 10, border: 'none',
+                    padding: '10px 24px', borderRadius: 8, border: 'none',
                     background: addedProduct === product.id ? '#34c759' : '#0071e3',
-                    color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                    color: '#ffffff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
                   }}
                 >
-                  {addedProduct === product.id ? '✓ Ajouté' : 'Ajouter au panier'}
+                  {addedProduct === product.id ? '✓' : 'Ajouter'}
                 </button>
-              </div>
-            </div>
 
-            {/* Commentaires */}
-            <div style={{
-              background: '#f5f5f7',
-              borderRadius: 16,
-              padding: 24,
-            }}>
-              <h3 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 16 }}>
-                Commentaires
-              </h3>
-
-              {/* Liste des commentaires */}
-              {(commentaires[product.id] || []).map((c, i) => (
-                <div key={i} style={{
-                  background: '#ffffff',
-                  borderRadius: 10,
-                  padding: 14,
-                  marginBottom: 10,
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f' }}>{c.nom}</span>
-                    <span style={{ fontSize: 11, color: '#86868b' }}>{c.date}</span>
+                {/* Commentaire discret */}
+                <div style={{ marginTop: 20 }}>
+                  {(commentaires[product.id] || []).map((c, i) => (
+                    <p key={i} style={{ fontSize: 11, color: '#86868b', marginBottom: 4 }}>« {c} »</p>
+                  ))}
+                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                    <input
+                      type="text"
+                      placeholder="Laisser un commentaire..."
+                      value={nouveauCommentaire[product.id] || ''}
+                      onChange={e => setNouveauCommentaire(prev => ({ ...prev, [product.id]: e.target.value }))}
+                      style={{
+                        flex: 1, padding: '6px 10px', borderRadius: 6,
+                        border: '1px solid #e5e5e5', fontSize: 11, outline: 'none',
+                      }}
+                    />
+                    <button
+                      onClick={() => ajouterCommentaire(product.id, nouveauCommentaire[product.id] || '')}
+                      style={{
+                        padding: '6px 12px', borderRadius: 6, border: 'none',
+                        background: '#1d1d1f', color: '#fff', fontSize: 11, cursor: 'pointer',
+                      }}
+                    >
+                      OK
+                    </button>
                   </div>
-                  <p style={{ fontSize: 13, color: '#1d1d1f', margin: 0 }}>{c.texte}</p>
                 </div>
-              ))}
-
-              {/* Formulaire nouveau commentaire */}
-              <div style={{ marginTop: 16 }}>
-                <input
-                  type="text"
-                  placeholder="Votre nom"
-                  value={nouveauCommentaire[product.id]?.nom || ''}
-                  onChange={e => setNouveauCommentaire(prev => ({
-                    ...prev,
-                    [product.id]: { ...prev[product.id], nom: e.target.value }
-                  }))}
-                  style={{
-                    width: '100%', padding: '10px 14px', borderRadius: 8,
-                    border: '1px solid #e5e5e5', fontSize: 14, marginBottom: 8,
-                    boxSizing: 'border-box', outline: 'none',
-                  }}
-                />
-                <textarea
-                  placeholder="Votre commentaire..."
-                  value={nouveauCommentaire[product.id]?.texte || ''}
-                  onChange={e => setNouveauCommentaire(prev => ({
-                    ...prev,
-                    [product.id]: { ...prev[product.id], texte: e.target.value }
-                  }))}
-                  style={{
-                    width: '100%', padding: '10px 14px', borderRadius: 8,
-                    border: '1px solid #e5e5e5', fontSize: 14, resize: 'none',
-                    height: 70, boxSizing: 'border-box', outline: 'none',
-                  }}
-                />
-                <button
-                  onClick={() => ajouterCommentaire(
-                    product.id,
-                    nouveauCommentaire[product.id]?.nom || '',
-                    nouveauCommentaire[product.id]?.texte || ''
-                  )}
-                  style={{
-                    marginTop: 8, padding: '10px 20px', borderRadius: 8, border: 'none',
-                    background: '#1d1d1f', color: '#ffffff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-                  }}
-                >
-                  Publier
-                </button>
               </div>
             </div>
           </div>
@@ -434,7 +389,7 @@ export default function OLDAStore() {
                 borderBottom: '0.5px solid #f5f5f7',
               }}>
                 <div style={{
-                  width: 56, height: 56, borderRadius: 10,
+                  width: 50, height: 50, borderRadius: 8,
                   background: '#ffffff', border: '1px solid #e5e5e5',
                   overflow: 'hidden', flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -443,14 +398,14 @@ export default function OLDAStore() {
                 </div>
                 
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 600, color: '#1d1d1f', marginBottom: 2 }}>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', marginBottom: 2 }}>
                     {item.nom}
                   </h3>
-                  <p style={{ fontSize: 12, color: '#86868b', marginBottom: 8 }}>
+                  <p style={{ fontSize: 11, color: '#86868b', marginBottom: 8 }}>
                     {item.couleur} • {item.reference}
                   </p>
                   
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{
                       display: 'flex', alignItems: 'center',
                       background: '#f5f5f7', borderRadius: 6,
@@ -470,7 +425,7 @@ export default function OLDAStore() {
                     
                     <button
                       onClick={() => supprimerDuPanier(item.id)}
-                      style={{ border: 'none', background: 'none', fontSize: 12, color: '#0071e3', cursor: 'pointer' }}
+                      style={{ border: 'none', background: 'none', fontSize: 11, color: '#0071e3', cursor: 'pointer' }}
                     >
                       Supprimer
                     </button>
@@ -483,10 +438,6 @@ export default function OLDAStore() {
 
         {panier.length > 0 && (
           <div style={{ padding: '16px 20px 20px', borderTop: '0.5px solid #e5e5e5', background: '#fbfbfd' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-              <span style={{ fontSize: 14, color: '#86868b' }}>{totalArticles} article{totalArticles > 1 ? 's' : ''}</span>
-            </div>
-            
             <button
               onClick={() => { setCartOpen(false); setShowCheckout(true); }}
               style={{
@@ -513,7 +464,7 @@ export default function OLDAStore() {
           <div style={{
             position: 'fixed', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 'min(440px, calc(100vw - 48px))',
+            width: 'min(400px, calc(100vw - 48px))',
             maxHeight: 'calc(100vh - 100px)',
             background: '#ffffff', borderRadius: 20, zIndex: 3001,
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
@@ -530,12 +481,9 @@ export default function OLDAStore() {
                     <path d="M5 13l4 4L19 7"/>
                   </svg>
                 </div>
-                <h2 style={{ fontSize: 24, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
                   Commande envoyée !
                 </h2>
-                <p style={{ fontSize: 15, color: '#86868b' }}>
-                  Nous vous contacterons rapidement.
-                </p>
               </div>
             ) : (
               <>
@@ -543,7 +491,7 @@ export default function OLDAStore() {
                   padding: '20px 24px', borderBottom: '0.5px solid #e5e5e5',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 }}>
-                  <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f' }}>Finaliser la commande</h2>
+                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1d1d1f' }}>Commander</h2>
                   <button
                     onClick={() => setShowCheckout(false)}
                     style={{
@@ -559,94 +507,65 @@ export default function OLDAStore() {
                 </div>
 
                 <div style={{ padding: 24, maxHeight: 400, overflowY: 'auto' }}>
-                  <div style={{ marginBottom: 16 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
-                      Nom complet *
-                    </label>
-                    <input
-                      type="text"
-                      value={clientInfo.nom}
-                      onChange={e => setClientInfo({...clientInfo, nom: e.target.value})}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: 10,
-                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Nom complet *"
+                    value={clientInfo.nom}
+                    onChange={e => setClientInfo({...clientInfo, nom: e.target.value})}
+                    style={{
+                      width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
+                      boxSizing: 'border-box', marginBottom: 12,
+                    }}
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email *"
+                    value={clientInfo.email}
+                    onChange={e => setClientInfo({...clientInfo, email: e.target.value})}
+                    style={{
+                      width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
+                      boxSizing: 'border-box', marginBottom: 12,
+                    }}
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Téléphone *"
+                    value={clientInfo.tel}
+                    onChange={e => setClientInfo({...clientInfo, tel: e.target.value})}
+                    style={{
+                      width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
+                      boxSizing: 'border-box', marginBottom: 12,
+                    }}
+                  />
+                  <textarea
+                    placeholder="Adresse de livraison"
+                    value={clientInfo.adresse}
+                    onChange={e => setClientInfo({...clientInfo, adresse: e.target.value})}
+                    style={{
+                      width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
+                      resize: 'none', height: 70, boxSizing: 'border-box', marginBottom: 12,
+                    }}
+                  />
+                  <textarea
+                    placeholder="Message (optionnel)"
+                    value={clientInfo.message}
+                    onChange={e => setClientInfo({...clientInfo, message: e.target.value})}
+                    style={{
+                      width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
+                      resize: 'none', height: 50, boxSizing: 'border-box', marginBottom: 20,
+                    }}
+                  />
 
-                  <div style={{ marginBottom: 16 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      value={clientInfo.email}
-                      onChange={e => setClientInfo({...clientInfo, email: e.target.value})}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: 10,
-                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: 16 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
-                      Téléphone *
-                    </label>
-                    <input
-                      type="tel"
-                      value={clientInfo.tel}
-                      onChange={e => setClientInfo({...clientInfo, tel: e.target.value})}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: 10,
-                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: 16 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
-                      Adresse de livraison
-                    </label>
-                    <textarea
-                      value={clientInfo.adresse}
-                      onChange={e => setClientInfo({...clientInfo, adresse: e.target.value})}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: 10,
-                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
-                        resize: 'none', height: 80, boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ marginBottom: 16 }}>
-                    <label style={{ fontSize: 13, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
-                      Message (optionnel)
-                    </label>
-                    <textarea
-                      value={clientInfo.message}
-                      onChange={e => setClientInfo({...clientInfo, message: e.target.value})}
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: 10,
-                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
-                        resize: 'none', height: 60, boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  <div style={{
-                    background: '#f5f5f7', borderRadius: 12, padding: 16, marginBottom: 20,
-                  }}>
-                    <h3 style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', marginBottom: 12 }}>
-                      Récapitulatif
-                    </h3>
+                  <div style={{ background: '#f5f5f7', borderRadius: 10, padding: 14, marginBottom: 20 }}>
                     {panier.map(item => (
                       <div key={item.id} style={{
                         display: 'flex', justifyContent: 'space-between',
-                        fontSize: 13, color: '#1d1d1f', marginBottom: 6,
+                        fontSize: 12, color: '#1d1d1f', marginBottom: 4,
                       }}>
                         <span>{item.nom} {item.couleur}</span>
                         <span>x{item.quantite}</span>
@@ -658,12 +577,12 @@ export default function OLDAStore() {
                     onClick={envoyerCommande}
                     disabled={sending}
                     style={{
-                      width: '100%', padding: '14px 20px', borderRadius: 12, border: 'none',
+                      width: '100%', padding: '14px 20px', borderRadius: 10, border: 'none',
                       background: sending ? '#86868b' : '#1d1d1f',
-                      color: '#ffffff', fontSize: 15, fontWeight: 600, cursor: sending ? 'not-allowed' : 'pointer',
+                      color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: sending ? 'not-allowed' : 'pointer',
                     }}
                   >
-                    {sending ? 'Envoi...' : 'Envoyer la commande'}
+                    {sending ? 'Envoi...' : 'Envoyer'}
                   </button>
                 </div>
               </>
