@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 const MUGS_DATA = {
-  nouveautes: [{ id: 101, reference: 'NW 01', image: '/images/mugs/nouveaute1.jpg', couleur: 'Édition Aurore' }],
   olda: [
     { id: 1, reference: 'TC 01', image: '/images/mugs/roseblanc.jpg', couleur: 'Rose & Blanc' },
     { id: 2, reference: 'TC 02', image: '/images/mugs/rougeblanc.jpg', couleur: 'Rouge & Blanc' },
@@ -10,14 +9,15 @@ const MUGS_DATA = {
     { id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', couleur: 'Noir & Blanc' },
   ],
   exclusif: [{ id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', couleur: 'Tasse Signature' }],
+  tshirts: [{ id: 301, reference: 'TS 01', image: '/images/tshirts/logo.jpg', couleur: 'Coton Bio Noir' }],
   offres: [{ id: 201, reference: 'DS 01', image: '/images/mugs/logo.jpeg', couleur: 'Édition Limitée' }],
 };
 
 const formatTabName = (key) => {
   const names = {
-    nouveautes: "Nouveautés",
-    olda: "Collection OLDA",
-    exclusif: "Collection Signature",
+    olda: "Tasse Céramique OLDA",
+    exclusif: "Tasse Céramique Fuck",
+    tshirts: "T-Shirt",
     offres: "Offres Spéciales"
   };
   return names[key] || key;
@@ -340,41 +340,50 @@ export default function BoutiqueOlda() {
         }
 
         .modal-title {
-          font-size: 20px;
-          font-weight: 600;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
         }
 
         .close-btn {
-          width: 30px;
-          height: 30px;
+          width: 36px;
+          height: 36px;
           border: none;
           background: #f5f5f7;
           border-radius: 50%;
-          font-size: 20px;
+          font-size: 22px;
           color: #86868b;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+          background: #e8e8ed;
         }
 
         .modal-content {
-          padding: 20px;
+          padding: 16px 20px 20px;
         }
 
         /* CART ITEM */
         .cart-item {
           display: flex;
-          gap: 12px;
-          padding: 16px 0;
-          border-bottom: 0.5px solid #d2d2d7;
+          align-items: flex-start;
+          gap: 16px;
+          padding: 20px;
+          background: #f5f5f7;
+          border-radius: 12px;
+          margin-bottom: 12px;
         }
 
         .cart-item-image {
-          width: 60px;
-          height: 60px;
-          background: #f5f5f7;
-          border-radius: 8px;
+          width: 64px;
+          height: 64px;
+          background: white;
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -382,51 +391,55 @@ export default function BoutiqueOlda() {
         }
 
         .cart-item-image img {
-          width: 50px;
-          height: 50px;
+          width: 56px;
+          height: 56px;
           object-fit: contain;
         }
 
         .cart-item-info {
           flex: 1;
+          min-width: 0;
         }
 
         .cart-item-name {
-          font-size: 15px;
-          font-weight: 500;
+          font-size: 17px;
+          font-weight: 600;
+          color: #1d1d1f;
           margin-bottom: 4px;
         }
 
         .cart-item-ref {
-          font-size: 12px;
+          font-size: 13px;
           color: #86868b;
-          margin-bottom: 8px;
+          margin-bottom: 12px;
         }
 
         .cart-item-actions {
           display: flex;
-          gap: 8px;
+          gap: 12px;
           align-items: center;
         }
 
         .mini-stepper {
           display: flex;
           align-items: center;
-          background: #f5f5f7;
-          border-radius: 6px;
+          background: white;
+          border-radius: 8px;
+          border: 1px solid #d2d2d7;
         }
 
         .mini-btn {
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           border: none;
           background: transparent;
-          color: #06c;
-          font-size: 16px;
+          color: #1d1d1f;
+          font-size: 18px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
+          font-weight: 400;
         }
 
         .mini-btn:disabled {
@@ -434,19 +447,26 @@ export default function BoutiqueOlda() {
         }
 
         .mini-value {
-          min-width: 24px;
+          min-width: 32px;
           text-align: center;
-          font-size: 13px;
-          font-weight: 500;
+          font-size: 15px;
+          font-weight: 600;
+          color: #1d1d1f;
         }
 
         .delete-btn {
-          padding: 4px 10px;
-          background: transparent;
-          border: none;
-          color: #06c;
-          font-size: 13px;
+          padding: 6px 12px;
+          background: white;
+          border: 1px solid #d2d2d7;
+          border-radius: 8px;
+          color: #1d1d1f;
+          font-size: 14px;
           cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+          background: #f5f5f7;
         }
 
         .cart-empty {
@@ -456,38 +476,30 @@ export default function BoutiqueOlda() {
         }
 
         .cart-footer {
-          padding: 20px;
-          border-top: 0.5px solid #d2d2d7;
+          padding: 24px 20px;
+          padding-bottom: calc(24px + env(safe-area-inset-bottom));
+          background: white;
           position: sticky;
           bottom: 0;
-          background: white;
-        }
-
-        .cart-total {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 16px;
-          font-size: 17px;
-        }
-
-        .cart-total-label {
-          color: #86868b;
-        }
-
-        .cart-total-value {
-          font-weight: 600;
+          box-shadow: 0 -1px 0 0 rgba(0,0,0,0.05);
         }
 
         .checkout-btn {
           width: 100%;
-          padding: 14px;
+          padding: 16px;
           background: #06c;
           color: white;
           border: none;
           border-radius: 12px;
           font-size: 17px;
-          font-weight: 500;
+          font-weight: 600;
           cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 1px 4px rgba(0,102,204,0.2);
+        }
+
+        .checkout-btn:active {
+          transform: scale(0.98);
         }
 
         .checkout-btn:disabled {
