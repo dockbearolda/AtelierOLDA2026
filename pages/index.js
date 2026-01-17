@@ -8,19 +8,16 @@ const MUGS_DATA = {
     { id: 3, reference: 'TC 03', image: '/images/mugs/orangeblanc.jpg', couleur: 'Orange & Blanc' },
     { id: 4, reference: 'TC 04', image: '/images/mugs/vertblanc.jpg', couleur: 'Vert & Blanc' },
     { id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', couleur: 'Noir & Blanc' },
-    { id: 6, reference: 'TC 06', image: '/images/mugs/noirrose.JPG', couleur: 'Noir & Rose' },
-    { id: 7, reference: 'TC 07', image: '/images/mugs/noirrouge.JPG', couleur: 'Noir & Rouge' },
-    { id: 8, reference: 'TC 08', image: '/images/mugs/noirorange.JPG', couleur: 'Noir & Orange' },
-    { id: 9, reference: 'TC 09', image: '/images/mugs/noirjaune.JPG', couleur: 'Noir & Jaune' },
-    { id: 10, reference: 'TC 10', image: '/images/mugs/noirvert.JPG', couleur: 'Noir & Vert' }
   ],
   exclusif: [{ id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', couleur: 'Tasse Signature' }],
-  offres: [{ id: 201, reference: 'DS 01', image: '/images/mugs/logo.jpeg', couleur: 'Édition Limitée' }]
+  offres: [{ id: 201, reference: 'DS 01', image: '/images/mugs/logo.jpeg', couleur: 'Édition Limitée' }],
+  // Ajoutez vos futures collections ici, le menu défilera tout seul
 };
 
 export default function BoutiqueOlda() {
   const [activeTab, setActiveTab] = useState('olda');
   const [quantites, setQuantites] = useState({});
+  const [panier, setPanier] = useState([]);
 
   const getQte = (id) => quantites[id] || 3;
 
@@ -31,6 +28,23 @@ export default function BoutiqueOlda() {
       setQuantites({ ...quantites, [id]: nouvelle });
     }
   };
+
+  const ajouterAuPanier = (produit) => {
+    const qte = getQte(produit.id);
+    const nouvelArticle = { ...produit, quantite: qte };
+    
+    setPanier(prev => {
+      const existant = prev.find(item => item.id === produit.id);
+      if (existant) {
+        return prev.map(item => item.id === produit.id ? { ...item, quantite: item.quantite + qte } : item);
+      }
+      return [...prev, nouvelArticle];
+    });
+    
+    alert(`${qte} x ${produit.couleur} ajouté à votre collection.`);
+  };
+
+  const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
 
   const formatTabName = (key) => {
     const names = {
@@ -43,49 +57,65 @@ export default function BoutiqueOlda() {
   };
 
   return (
-    <div style={{ background: '#f5f5f7', minHeight: '100vh', color: '#1d1d1f', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+    <div style={{ background: '#f5f5f7', minHeight: '100vh', color: '#1d1d1f', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', paddingBottom: '100px' }}>
       <style>{`
-        .nav-header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.8); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 16px 0; }
-        .roulette { display: flex; overflow-x: auto; gap: 12px; padding: 0 20px; scrollbar-width: none; }
+        /* BARRE FIXE ET TOURNIQUET */
+        .nav-header { 
+          position: sticky; top: 0; z-index: 1000; 
+          background: rgba(255,255,255,0.85); backdrop-filter: saturate(180%) blur(20px); 
+          border-bottom: 1px solid rgba(0,0,0,0.08); padding: 12px 0;
+        }
+        .roulette { 
+          display: flex; overflow-x: auto; gap: 8px; padding: 0 20px; 
+          scrollbar-width: none; -webkit-overflow-scrolling: touch;
+        }
         .roulette::-webkit-scrollbar { display: none; }
         
         .collection-btn { 
-          flex: 0 0 auto; padding: 8px 20px; border-radius: 20px; border: none; 
-          font-weight: 500; font-size: 14px; background: rgba(0,0,0,0.05); color: #1d1d1f; 
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; 
+          flex: 0 0 auto; padding: 10px 22px; border-radius: 25px; border: none; 
+          font-weight: 500; font-size: 14px; background: rgba(0,0,0,0.04); color: #1d1d1f; 
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; white-space: nowrap;
         }
-        .collection-btn.active { background: #000; color: #fff; transform: scale(1.05); }
+        .collection-btn.active { background: #000; color: #fff; transform: scale(1.02); }
         
-        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 30px 20px; }
         
         .card { 
-          background: #fff; border-radius: 30px; padding: 24px; margin-bottom: 40px; 
-          box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: transform 0.3s ease;
+          background: #fff; border-radius: 28px; padding: 20px; margin-bottom: 30px; 
+          box-shadow: 0 8px 24px rgba(0,0,0,0.04);
         }
-        .img-box { background: #fbfbfd; border-radius: 22px; padding: 40px; text-align: center; margin-bottom: 24px; }
+        .img-box { background: #fbfbfd; border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 20px; }
         
-        /* STEPPER HIGH-END */
+        /* STEPPER */
         .stepper-lux { 
           display: flex; align-items: center; justify-content: space-between;
-          background: #f5f5f7; border-radius: 16px; width: 130px; height: 52px; 
-          padding: 0 8px; border: 1px solid rgba(0,0,0,0.02);
+          background: #f5f5f7; border-radius: 14px; width: 120px; height: 48px; 
+          padding: 0 6px;
         }
         .btn-step { 
-          border: none; background: transparent; width: 36px; height: 36px; 
-          font-size: 20px; font-weight: 300; cursor: pointer; color: #0071e3; 
+          border: none; background: transparent; width: 34px; height: 34px; 
+          font-size: 18px; color: #0071e3; cursor: pointer;
           display: flex; align-items: center; justify-content: center;
-          transition: background 0.2s; border-radius: 10px;
         }
-        .btn-step:active { background: rgba(0,0,0,0.05); }
-        .btn-step:disabled { color: #d2d2d7; cursor: default; }
-        .val-step { font-weight: 600; font-size: 17px; width: 30px; text-align: center; }
+        .btn-step:disabled { color: #d2d2d7; }
+        .val-step { font-weight: 600; font-size: 16px; width: 25px; text-align: center; }
         
         .btn-ajouter { 
-          flex: 1; margin-left: 16px; height: 52px; border: none; border-radius: 16px; 
-          background: #0071e3; color: #fff; font-weight: 600; font-size: 16px; 
-          cursor: pointer; transition: opacity 0.2s;
+          flex: 1; margin-left: 12px; height: 48px; border: none; border-radius: 14px; 
+          background: #0071e3; color: #fff; font-weight: 600; font-size: 15px; 
+          cursor: pointer; transition: transform 0.2s;
         }
-        .btn-ajouter:hover { opacity: 0.9; }
+        .btn-ajouter:active { transform: scale(0.98); }
+
+        /* PANIER FLOTTANT */
+        .cart-bar {
+          position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+          width: 90%; max-width: 400px; background: #000; color: #fff;
+          padding: 16px 24px; border-radius: 20px; display: flex;
+          justify-content: space-between; align-items: center;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.2); z-index: 1001;
+        }
+        .btn-checkout { background: #0071e3; border: none; color: #fff; padding: 8px 16px; border-radius: 10px; font-weight: 600; cursor: pointer;}
       `}</style>
 
       <nav className="nav-header">
@@ -103,45 +133,44 @@ export default function BoutiqueOlda() {
       </nav>
 
       <main className="container">
-        <h1 style={{ fontSize: '34px', fontWeight: '700', letterSpacing: '-0.5px', marginBottom: '30px' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px' }}>
           {formatTabName(activeTab)}
         </h1>
 
         {MUGS_DATA[activeTab].map(p => (
           <div key={p.id} className="card">
             <div className="img-box">
-              <img src={p.image} style={{ height: '240px', width: '100%', objectFit: 'contain' }} alt={p.couleur} />
+              <img src={p.image} style={{ height: '200px', width: '100%', objectFit: 'contain' }} alt={p.couleur} />
             </div>
-            <div style={{ padding: '0 8px' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '4px' }}>{p.couleur}</h2>
-              <p style={{ color: '#86868b', fontSize: '15px', marginBottom: '24px' }}>Référence {p.reference}</p>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div className="stepper-lux">
-                  <button 
-                    className="btn-step" 
-                    onClick={() => ajuster(p.id, -1)} 
-                    disabled={getQte(p.id) <= 3}
-                  >
-                    <span style={{ marginTop: '-2px' }}>−</span>
-                  </button>
-                  <div className="val-step">{getQte(p.id)}</div>
-                  <button 
-                    className="btn-step" 
-                    onClick={() => ajuster(p.id, 1)}
-                  >
-                    <span>+</span>
-                  </button>
-                </div>
-                
-                <button className="btn-ajouter">
-                  Ajouter au panier
-                </button>
+            <h2 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '4px' }}>{p.couleur}</h2>
+            <p style={{ color: '#86868b', fontSize: '14px', marginBottom: '20px' }}>Référence {p.reference}</p>
+            
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="stepper-lux">
+                <button className="btn-step" onClick={() => ajuster(p.id, -1)} disabled={getQte(p.id) <= 3}>−</button>
+                <div className="val-step">{getQte(p.id)}</div>
+                <button className="btn-step" onClick={() => ajuster(p.id, 1)}>+</button>
               </div>
+              <button className="btn-ajouter" onClick={() => ajouterAuPanier(p)}>
+                Ajouter
+              </button>
             </div>
           </div>
         ))}
       </main>
+
+      {/* PANIER VISIBLE SI ARTICLES PRÉSENTS */}
+      {panier.length > 0 && (
+        <div className="cart-bar">
+          <div>
+            <span style={{ opacity: 0.7, fontSize: '13px' }}>Votre sélection</span>
+            <div style={{ fontWeight: '600' }}>{totalArticles} articles</div>
+          </div>
+          <button className="btn-checkout" onClick={() => alert("Direction le paiement...")}>
+            Finaliser
+          </button>
+        </div>
+      )}
     </div>
   );
 }
