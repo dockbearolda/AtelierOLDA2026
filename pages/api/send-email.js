@@ -1,30 +1,33 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).send('Méthode non autorisée');
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Méthode non autorisée' });
 
-  const { nomClient, panier } = req.body;
+  const { client, articles } = req.body;
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { 
-      user: process.env.EMAIL_USER, 
-      pass: process.env.EMAIL_PASS 
-    }
-  });
+  if (!client || !client.nom || !client.email) {
+    return res.status(400).json({ error: 'Informations client manquantes' });
+  }
+
+  if (!articles || articles.length === 0) {
+    return res.status(400).json({ error: 'Panier vide' });
+  }
 
   const emailHtml = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 60px 20px; color: #1d1d1f; background-color: #f5f5f7;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.04);">
-        
+
         <div style="padding: 40px; border-bottom: 1px solid #f2f2f2;">
           <p style="text-transform: uppercase; letter-spacing: 3px; font-size: 12px; color: #86868b; margin: 0 0 10px 0; font-weight: 600;">Atelier OLDA</p>
-          <h1 style="font-size: 28px; font-weight: 700; margin: 0; color: #1d1d1f;">Confirmation de commande</h1>
-          <p style="font-size: 17px; color: #86868b; margin: 8px 0 0 0;">Client : ${nomClient}</p>
+          <h1 style="font-size: 28px; font-weight: 700; margin: 0; color: #1d1d1f;">Nouvelle commande</h1>
+          <p style="font-size: 17px; color: #86868b; margin: 8px 0 0 0;">Client : ${client.nom}</p>
+          <p style="font-size: 15px; color: #86868b; margin: 4px 0 0 0;">Email : ${client.email}</p>
         </div>
 
         <div style="padding: 20px 40px;">
-          ${panier.map(item => `
+          ${articles.map(item => `
             <div style="padding: 35px 0; border-bottom: 1px solid #f2f2f2;">
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -63,7 +66,7 @@ export default async function handler(req, res) {
           </p>
         </div>
       </div>
-      
+
       <div style="text-align: center; margin-top: 30px;">
         <p style="font-size: 12px; color: #86868b; letter-spacing: 0.5px;">&copy; 2026 Atelier OLDA — Document Confidentiel</p>
       </div>
@@ -71,14 +74,16 @@ export default async function handler(req, res) {
   `;
 
   try {
-    await transporter.sendMail({
-      from: '"Atelier OLDA" <votre-email@gmail.com>',
-      to: 'votre-email-de-reception@gmail.com',
-      subject: `NOUVELLE COMMANDE : ${nomClient}`,
+    const data = await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: 'charlie.jallon@gmail.com',
+      subject: `COMMANDE OLDA - ${client.nom}`,
       html: emailHtml,
     });
-    return res.status(200).json({ message: 'Commande envoyée avec succès' });
+
+    return res.status(200).json({ success: true, messageId: data.id });
   } catch (error) {
+    console.error("Erreur Resend:", error.message);
     return res.status(500).json({ error: error.message });
   }
 }
