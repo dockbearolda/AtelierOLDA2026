@@ -13,17 +13,7 @@ const MUGS_DATA = {
   offres: [{ id: 201, reference: 'DS 01', image: '/images/mugs/logo.jpeg', couleur: 'Édition Limitée', prix: 12.99 }],
 };
 
-const formatTabName = (key) => {
-  const names = {
-    nouveautes: "Nouveautés",
-    olda: "Collection OLDA",
-    exclusif: "Collection Signature",
-    offres: "Offres Spéciales"
-  };
-  return names[key] || key;
-};
-
-const Index = () => {
+export default function Index() {
   const [activeTab, setActiveTab] = useState('olda');
   const [quantites, setQuantites] = useState({});
   const [panier, setPanier] = useState([]);
@@ -33,6 +23,7 @@ const Index = () => {
   const [isSending, setIsSending] = useState(false);
 
   const getQte = (id) => quantites[id] || 3;
+  
   const ajuster = (id, delta) => {
     const v = getQte(id) + delta;
     if (v >= 3) setQuantites({ ...quantites, [id]: v });
@@ -62,114 +53,106 @@ const Index = () => {
         body: JSON.stringify({ nomClient, panier })
       });
       if (res.ok) {
+        alert('✅ Commande confirmée !');
         setPanier([]);
         setShowCheckoutModal(false);
         setCartOpen(false);
-        alert('✅ Commande confirmée.');
       }
-    } catch (e) { alert('Erreur'); }
+    } catch (e) { alert('Erreur réseau'); }
     finally { setIsSending(false); }
   };
 
   return (
-    <div className="apple-experience">
+    <div className="apple-page">
       <style>{`
-        :root { --bg: #ffffff; --secondary: #f5f5f7; --accent: #0071e3; --text: #1d1d1f; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        :root { --apple-blue: #0071e3; --apple-bg: #f5f5f7; }
+        .apple-page { font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #1d1d1f; background: #fff; min-height: 100vh; }
         
-        .nav { position: sticky; top: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .nav-inner { max-width: 1200px; margin: 0 auto; height: 54px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; }
-        .logo { font-weight: 700; font-size: 22px; letter-spacing: -0.03em; }
+        .nav-lux { position: sticky; top: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .nav-content { max-width: 1000px; margin: 0 auto; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .logo { font-weight: 600; font-size: 19px; letter-spacing: -0.5px; }
         
-        .cart-trigger { background: none; border: none; cursor: pointer; position: relative; font-size: 20px; }
-        .badge { position: absolute; top: -5px; right: -8px; background: var(--accent); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+        .tabs-container { display: flex; justify-content: center; gap: 30px; padding: 15px; border-bottom: 1px solid #eee; overflow-x: auto; }
+        .tab-link { font-size: 13px; font-weight: 500; opacity: 0.5; cursor: pointer; border: none; background: none; transition: 0.2s; }
+        .tab-link.active { opacity: 1; border-bottom: 1px solid #000; }
 
-        .tabs { display: flex; justify-content: center; gap: 32px; padding: 20px; border-bottom: 1px solid #f2f2f2; overflow-x: auto; scrollbar-width: none; }
-        .tab { font-size: 13px; font-weight: 500; opacity: 0.5; cursor: pointer; border: none; background: none; transition: 0.3s; }
-        .tab.active { opacity: 1; border-bottom: 2px solid #000; }
-
-        .content { max-width: 1200px; margin: 0 auto; padding: 60px 24px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
-        .product-card { background: var(--secondary); border-radius: 24px; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .hero-title { font-size: 40px; font-weight: 700; text-align: center; margin: 50px 0; letter-spacing: -1px; }
+        .grid-lux { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 0 20px 60px; max-width: 1200px; margin: 0 auto; }
         
-        .img-container { height: 250px; display: flex; align-items: center; margin-bottom: 30px; }
-        .img-container img { max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
-        
-        .lux-stepper { display: flex; align-items: center; background: #fff; border-radius: 40px; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; }
-        .step-btn { width: 36px; height: 36px; border: none; background: #fff; border-radius: 50%; cursor: pointer; font-size: 20px; }
-        .step-val { width: 50px; text-align: center; font-weight: 600; }
+        .card-lux { background: var(--apple-bg); border-radius: 22px; padding: 35px; text-align: center; transition: 0.3s; }
+        .img-wrap { height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
+        .img-wrap img { max-height: 100%; mix-blend-mode: multiply; }
 
-        .btn-add { background: var(--accent); color: #fff; border: none; padding: 12px 32px; border-radius: 30px; font-weight: 600; cursor: pointer; }
+        .stepper-high-end { display: inline-flex; align-items: center; background: #fff; border-radius: 30px; padding: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); margin-bottom: 20px; }
+        .s-btn { width: 34px; height: 34px; border-radius: 50%; border: none; background: #fff; cursor: pointer; font-size: 18px; }
+        .s-val { width: 45px; font-weight: 600; font-size: 15px; }
 
-        /* LE PANIER SIDE-DRAWER */
-        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); z-index: 2000; display: ${cartOpen ? 'block' : 'none'}; }
-        .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 450px; background: rgba(255,255,255,0.98); z-index: 2001; transform: translateX(${cartOpen ? '0' : '100%'}); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px; box-shadow: -20px 0 60px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
-        @media (max-width: 500px) { .drawer { width: 100%; } }
+        .btn-apple { background: var(--apple-blue); color: #fff; border: none; padding: 10px 25px; border-radius: 20px; font-weight: 600; cursor: pointer; }
 
-        .cart-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #f2f2f2; align-items: center; }
-        .cart-img { width: 80px; height: 80px; background: var(--secondary); border-radius: 12px; object-fit: contain; }
-        .btn-checkout { width: 100%; background: var(--accent); color: #fff; border: none; padding: 18px; border-radius: 16px; font-size: 17px; font-weight: 600; cursor: pointer; }
+        /* SIDE DRAWER PANIER */
+        .drawer-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); z-index: 2000; display: ${cartOpen ? 'block' : 'none'}; }
+        .drawer-side { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; background: #fff; z-index: 2001; transform: translateX(${cartOpen ? '0' : '100%'}); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px; box-shadow: -10px 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        @media (max-width: 500px) { .drawer-side { width: 100%; } }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .modal { background: #fff; padding: 40px; border-radius: 30px; width: 90%; max-width: 400px; text-align: center; }
-        .apple-input { width: 100%; box-sizing: border-box; padding: 15px; border-radius: 12px; border: 1px solid #d2d2d7; margin: 20px 0; font-size: 16px; }
+        .cart-item-lux { display: flex; gap: 15px; padding: 20px 0; border-bottom: 1px solid #f5f5f7; align-items: center; }
+        .item-img { width: 70px; height: 70px; background: var(--apple-bg); border-radius: 12px; object-fit: contain; }
+
+        .modal-lux { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: flex; align-items: center; justify-content: center; }
+        .modal-box { background: #fff; padding: 40px; border-radius: 28px; width: 90%; max-width: 400px; text-align: center; }
+        .apple-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #d2d2d7; margin: 20px 0; box-sizing: border-box; }
       `}</style>
 
-      <nav className="nav">
-        <div className="nav-inner">
-          <div className="logo">OLDA</div>
-          <button className="cart-trigger" onClick={() => setCartOpen(true)}>
-            🛍️ {totalArticles > 0 && <span className="badge">{totalArticles}</span>}
+      <nav className="nav-lux">
+        <div className="nav-content">
+          <div className="logo">Atelier OLDA</div>
+          <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '22px' }} onClick={() => setCartOpen(true)}>
+            🛍️ {totalArticles > 0 && <span style={{ fontSize: '12px', verticalAlign: 'top', background: '#000', color: '#fff', padding: '2px 6px', borderRadius: '10px' }}>{totalArticles}</span>}
           </button>
         </div>
       </nav>
 
-      <div className="tabs">
-        {Object.keys(MUGS_DATA).map(key => (
-          <button key={key} className={`tab ${activeTab === key ? 'active' : ''}`} onClick={() => setActiveTab(key)}>
-            {formatTabName(key)}
+      <div className="tabs-container">
+        {['nouveautes', 'olda', 'exclusif', 'offres'].map(k => (
+          <button key={k} className={`tab-link ${activeTab === k ? 'active' : ''}`} onClick={() => setActiveTab(k)}>
+            {k === 'olda' ? 'Collection OLDA' : k.charAt(0).toUpperCase() + k.slice(1)}
           </button>
         ))}
       </div>
 
-      <main className="content">
-        <h1 style={{ fontSize: '42px', fontWeight: 700, textAlign: 'center', marginBottom: '50px', letterSpacing: '-0.04em' }}>
-          {formatTabName(activeTab)}
-        </h1>
+      <h1 className="hero-title">Achetez vos Mugs.</h1>
 
-        <div className="grid">
-          {MUGS_DATA[activeTab].map(p => (
-            <div key={p.id} className="product-card">
-              <div className="img-container"><img src={p.image} alt="" /></div>
-              <h2 style={{ fontSize: '24px', margin: '0 0 10px 0' }}>{p.couleur}</h2>
-              <p style={{ color: '#86868b', fontSize: '18px', marginBottom: '24px' }}>{p.prix.toFixed(2)} €</p>
-              <div className="lux-stepper">
-                <button className="step-btn" onClick={() => ajuster(p.id, -1)}>−</button>
-                <div className="step-val">{getQte(p.id)}</div>
-                <button className="step-btn" onClick={() => ajuster(p.id, 1)}>+</button>
-              </div>
-              <button className="btn-add" onClick={() => ajouterAuPanier(p)}>Ajouter au panier</button>
+      <main className="grid-lux">
+        {MUGS_DATA[activeTab].map(p => (
+          <div key={p.id} className="card-lux">
+            <div className="img-wrap"><img src={p.image} alt="" /></div>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '22px' }}>{p.couleur}</h3>
+            <p style={{ color: '#86868b', marginBottom: '25px' }}>{p.prix.toFixed(2)} €</p>
+            <div className="stepper-high-end">
+              <button className="s-btn" onClick={() => ajuster(p.id, -1)}>−</button>
+              <div className="s-val">{getQte(p.id)}</div>
+              <button className="s-btn" onClick={() => ajuster(p.id, 1)}>+</button>
             </div>
-          ))}
-        </div>
+            <br />
+            <button className="btn-apple" onClick={() => ajouterAuPanier(p)}>Ajouter au panier</button>
+          </div>
+        ))}
       </main>
 
-      <div className="drawer-overlay" onClick={() => setCartOpen(false)} />
-      <div className="drawer">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '30px', fontWeight: 700 }}>Panier</h2>
+      <div className="drawer-mask" onClick={() => setCartOpen(false)} />
+      <div className="drawer-side">
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '28px', fontWeight: 700 }}>Panier</h2>
           <button style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer' }} onClick={() => setCartOpen(false)}>✕</button>
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          {panier.length === 0 ? <p>Votre panier est vide.</p> : panier.map(item => (
-            <div key={item.id} className="cart-item">
-              <img src={item.image} className="cart-img" alt="" />
+          {panier.map(item => (
+            <div key={item.id} className="cart-item-lux">
+              <img src={item.image} className="item-img" alt="" />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600 }}>{item.couleur}</div>
-                <div style={{ color: '#86868b', fontSize: '14px' }}>{item.quantite} × {item.prix}€</div>
-                <button style={{ background: 'none', border: 'none', color: '#0071e3', fontSize: '12px', cursor: 'pointer', padding: 0 }} onClick={() => supprimerDuPanier(item.id)}>Supprimer</button>
+                <div style={{ fontSize: '13px', color: '#86868b' }}>{item.quantite} × {item.prix}€</div>
               </div>
-              <div style={{ fontWeight: 600 }}>{(item.prix * item.quantite).toFixed(2)}€</div>
+              <button style={{ border: 'none', background: 'none', color: 'var(--apple-blue)', cursor: 'pointer' }} onClick={() => supprimerDuPanier(item.id)}>Supprimer</button>
             </div>
           ))}
         </div>
@@ -179,25 +162,25 @@ const Index = () => {
               <span>Total</span>
               <span>{totalPrix.toFixed(2)} €</span>
             </div>
-            <button className="btn-checkout" onClick={() => { setCartOpen(false); setShowCheckoutModal(true); }}>Commander</button>
+            <button className="btn-apple" style={{ width: '100%', padding: '16px', fontSize: '17px' }} onClick={() => { setCartOpen(false); setShowCheckoutModal(true); }}>
+              Passer la commande
+            </button>
           </div>
         )}
       </div>
 
       {showCheckoutModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2 style={{ fontSize: '28px', fontWeight: 700 }}>Confirmation</h2>
-            <input className="apple-input" placeholder="Votre nom complet" value={nomClient} onChange={(e) => setNomClient(e.target.value)} />
-            <button className="btn-checkout" onClick={envoyerCommande} disabled={isSending || !nomClient.trim()}>
+        <div className="modal-lux">
+          <div className="modal-box">
+            <h2>Votre Nom</h2>
+            <input className="apple-input" value={nomClient} onChange={e => setNomClient(e.target.value)} placeholder="Jean Dupont" />
+            <button className="btn-apple" style={{ width: '100%' }} onClick={envoyerCommande} disabled={isSending || !nomClient.trim()}>
               {isSending ? 'Envoi...' : 'Confirmer'}
             </button>
-            <p style={{ marginTop: '20px', cursor: 'pointer', color: '#0071e3' }} onClick={() => setShowCheckoutModal(false)}>Annuler</p>
+            <p style={{ marginTop: '15px', color: 'var(--apple-blue)', cursor: 'pointer' }} onClick={() => setShowCheckoutModal(false)}>Annuler</p>
           </div>
         </div>
       )}
     </div>
   );
-};
-
-export default Index;
+}
