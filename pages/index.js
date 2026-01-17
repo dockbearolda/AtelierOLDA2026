@@ -36,8 +36,7 @@ export default function OLDAStore() {
   const [panier, setPanier] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [addedProduct, setAddedProduct] = useState(null);
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [clientInfo, setClientInfo] = useState({ nom: '', email: '', tel: '', adresse: '', message: '' });
+  const [clientInfo, setClientInfo] = useState({ nom: '', email: '' });
   const [orderSent, setOrderSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [commentaires, setCommentaires] = useState({});
@@ -81,22 +80,17 @@ export default function OLDAStore() {
     let text = `NOUVELLE COMMANDE OLDA\n\n`;
     text += `CLIENT:\n`;
     text += `Nom: ${clientInfo.nom}\n`;
-    text += `Email: ${clientInfo.email}\n`;
-    text += `Téléphone: ${clientInfo.tel}\n`;
-    text += `Adresse: ${clientInfo.adresse}\n\n`;
+    text += `Email: ${clientInfo.email}\n\n`;
     text += `ARTICLES:\n`;
     panier.forEach(item => {
       text += `- ${item.nom} ${item.couleur} (${item.reference}) x${item.quantite}\n`;
     });
-    if (clientInfo.message) {
-      text += `\nMESSAGE:\n${clientInfo.message}`;
-    }
     return text;
   };
 
   const envoyerCommande = () => {
-    if (!clientInfo.nom || !clientInfo.email || !clientInfo.tel) {
-      alert('Merci de remplir tous les champs obligatoires');
+    if (!clientInfo.nom || !clientInfo.email) {
+      alert('Merci de remplir tous les champs');
       return;
     }
     
@@ -108,13 +102,14 @@ export default function OLDAStore() {
     setTimeout(() => {
       setSending(false);
       setOrderSent(true);
-      setTimeout(() => {
-        setShowCheckout(false);
-        setOrderSent(false);
-        setPanier([]);
-        setClientInfo({ nom: '', email: '', tel: '', adresse: '', message: '' });
-      }, 3000);
     }, 1000);
+  };
+
+  const fermerEtReset = () => {
+    setCartOpen(false);
+    setOrderSent(false);
+    setPanier([]);
+    setClientInfo({ nom: '', email: '' });
   };
 
   return (
@@ -296,27 +291,27 @@ export default function OLDAStore() {
                   {(commentaires[product.id] || []).map((c, i) => (
                     <p key={i} style={{ fontSize: 11, color: '#86868b', marginBottom: 4 }}>« {c} »</p>
                   ))}
-                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                    <input
-                      type="text"
-                      placeholder="Laisser un commentaire..."
-                      value={nouveauCommentaire[product.id] || ''}
-                      onChange={e => setNouveauCommentaire(prev => ({ ...prev, [product.id]: e.target.value }))}
-                      style={{
-                        flex: 1, padding: '6px 10px', borderRadius: 6,
-                        border: '1px solid #e5e5e5', fontSize: 11, outline: 'none',
-                      }}
-                    />
-                    <button
-                      onClick={() => ajouterCommentaire(product.id, nouveauCommentaire[product.id] || '')}
-                      style={{
-                        padding: '6px 12px', borderRadius: 6, border: 'none',
-                        background: '#1d1d1f', color: '#fff', fontSize: 11, cursor: 'pointer',
-                      }}
-                    >
-                      OK
-                    </button>
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Laisser un commentaire..."
+                    value={nouveauCommentaire[product.id] || ''}
+                    onChange={e => setNouveauCommentaire(prev => ({ ...prev, [product.id]: e.target.value }))}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        ajouterCommentaire(product.id, nouveauCommentaire[product.id] || '');
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      maxWidth: 280,
+                      padding: '8px 12px',
+                      borderRadius: 8,
+                      border: '1px solid #e5e5e5',
+                      fontSize: 12,
+                      outline: 'none',
+                      color: '#1d1d1f',
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -326,7 +321,7 @@ export default function OLDAStore() {
 
       {/* Cart Overlay */}
       <div
-        onClick={() => setCartOpen(false)}
+        onClick={() => { if (!orderSent) setCartOpen(false); }}
         style={{
           position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.5)',
           backdropFilter: 'blur(8px)', zIndex: 2000,
@@ -338,7 +333,7 @@ export default function OLDAStore() {
       {/* Cart Dropdown */}
       <div style={{
         position: 'fixed', top: 56, right: 24,
-        width: 'min(380px, calc(100vw - 48px))', maxHeight: 'calc(100vh - 100px)',
+        width: 'min(400px, calc(100vw - 48px))', maxHeight: 'calc(100vh - 100px)',
         background: '#ffffff', borderRadius: 18, zIndex: 2001,
         opacity: cartOpen ? 1 : 0, visibility: cartOpen ? 'visible' : 'hidden',
         transform: cartOpen ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.98)',
@@ -351,245 +346,181 @@ export default function OLDAStore() {
           background: '#ffffff', transform: 'rotate(45deg)', borderRadius: 3,
         }} />
 
-        <div style={{
-          padding: '20px 20px 16px', borderBottom: '0.5px solid #e5e5e5',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <h2 style={{ fontSize: 17, fontWeight: 600, color: '#1d1d1f' }}>Panier</h2>
-          <button
-            onClick={() => setCartOpen(false)}
-            style={{
-              width: 28, height: 28, borderRadius: 14, border: 'none',
-              background: '#f5f5f7', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#86868b" strokeWidth="2.5">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
-        </div>
-
-        <div style={{ flex: 1, overflowY: 'auto', padding: '4px 0', maxHeight: 320 }}>
-          {panier.length === 0 ? (
+        {orderSent ? (
+          /* Message de remerciement */
+          <div style={{ padding: '60px 40px', textAlign: 'center' }}>
             <div style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              justifyContent: 'center', padding: '48px 24px', color: '#86868b',
+              width: 64, height: 64, borderRadius: 32, background: '#34c759',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 24px',
             }}>
-              <svg width="48" height="48" viewBox="0 0 17 20" fill="none">
-                <path d="M4.5 5C4.5 2.51472 6.51472 0.5 9 0.5C11.4853 0.5 13.5 2.51472 13.5 5" stroke="#d2d2d7" strokeWidth="1.5" fill="none"/>
-                <path d="M1.5 6.5H16.5L15.5 18.5H2.5L1.5 6.5Z" stroke="#d2d2d7" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3">
+                <path d="M5 13l4 4L19 7"/>
               </svg>
-              <p style={{ marginTop: 16, fontSize: 15 }}>Votre panier est vide</p>
             </div>
-          ) : (
-            panier.map(item => (
-              <div key={item.id} style={{
-                display: 'flex', gap: 14, padding: '14px 20px',
-                borderBottom: '0.5px solid #f5f5f7',
-              }}>
-                <div style={{
-                  width: 50, height: 50, borderRadius: 8,
-                  background: '#ffffff', border: '1px solid #e5e5e5',
-                  overflow: 'hidden', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <img src={item.image} alt={item.nom} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
-                </div>
-                
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', marginBottom: 2 }}>
-                    {item.nom}
-                  </h3>
-                  <p style={{ fontSize: 11, color: '#86868b', marginBottom: 8 }}>
-                    {item.couleur} • {item.reference}
-                  </p>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{
-                      display: 'flex', alignItems: 'center',
-                      background: '#f5f5f7', borderRadius: 6,
-                    }}>
-                      <button
-                        onClick={() => modifierQuantite(item.id, item.quantite - 1)}
-                        style={{ width: 24, height: 24, border: 'none', background: 'none', fontSize: 14, cursor: 'pointer' }}
-                      >−</button>
-                      <span style={{ width: 24, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>
-                        {item.quantite}
-                      </span>
-                      <button
-                        onClick={() => modifierQuantite(item.id, item.quantite + 1)}
-                        style={{ width: 24, height: 24, border: 'none', background: 'none', fontSize: 14, cursor: 'pointer' }}
-                      >+</button>
-                    </div>
-                    
-                    <button
-                      onClick={() => supprimerDuPanier(item.id)}
-                      style={{ border: 'none', background: 'none', fontSize: 11, color: '#0071e3', cursor: 'pointer' }}
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {panier.length > 0 && (
-          <div style={{ padding: '16px 20px 20px', borderTop: '0.5px solid #e5e5e5', background: '#fbfbfd' }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', marginBottom: 12, lineHeight: 1.3 }}>
+              Atelier OLDA vous remercie pour votre commande
+            </h2>
+            <p style={{ fontSize: 14, color: '#86868b', marginBottom: 30 }}>
+              Nous vous contacterons très bientôt.
+            </p>
             <button
-              onClick={() => { setCartOpen(false); setShowCheckout(true); }}
+              onClick={fermerEtReset}
               style={{
-                width: '100%', padding: '12px 20px', borderRadius: 10, border: 'none',
-                background: '#0071e3', color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                padding: '12px 32px', borderRadius: 10, border: 'none',
+                background: '#1d1d1f', color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: 'pointer',
               }}
             >
-              Commander
+              Fermer
             </button>
           </div>
-        )}
-      </div>
-
-      {/* Checkout Modal */}
-      {showCheckout && (
-        <>
-          <div
-            onClick={() => setShowCheckout(false)}
-            style={{
-              position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.5)',
-              backdropFilter: 'blur(8px)', zIndex: 3000,
-            }}
-          />
-          <div style={{
-            position: 'fixed', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 'min(400px, calc(100vw - 48px))',
-            maxHeight: 'calc(100vh - 100px)',
-            background: '#ffffff', borderRadius: 20, zIndex: 3001,
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-            overflow: 'hidden',
-          }}>
-            {orderSent ? (
-              <div style={{ padding: 60, textAlign: 'center' }}>
-                <div style={{
-                  width: 64, height: 64, borderRadius: 32, background: '#34c759',
+        ) : (
+          <>
+            {/* Header */}
+            <div style={{
+              padding: '20px 24px', borderBottom: '0.5px solid #e5e5e5',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <h2 style={{ fontSize: 17, fontWeight: 600, color: '#1d1d1f' }}>Votre commande</h2>
+              <button
+                onClick={() => setCartOpen(false)}
+                style={{
+                  width: 28, height: 28, borderRadius: 14, border: 'none',
+                  background: '#f5f5f7', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  margin: '0 auto 20px',
-                }}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3">
-                    <path d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f', marginBottom: 8 }}>
-                  Commande envoyée !
-                </h2>
-              </div>
-            ) : (
-              <>
+                }}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#86868b" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Contenu */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
+              {panier.length === 0 ? (
                 <div style={{
-                  padding: '20px 24px', borderBottom: '0.5px solid #e5e5e5',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  justifyContent: 'center', padding: '40px 20px', color: '#86868b',
                 }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#1d1d1f' }}>Commander</h2>
-                  <button
-                    onClick={() => setShowCheckout(false)}
-                    style={{
-                      width: 28, height: 28, borderRadius: 14, border: 'none',
-                      background: '#f5f5f7', cursor: 'pointer',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#86868b" strokeWidth="2.5">
-                      <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                  </button>
+                  <svg width="48" height="48" viewBox="0 0 17 20" fill="none">
+                    <path d="M4.5 5C4.5 2.51472 6.51472 0.5 9 0.5C11.4853 0.5 13.5 2.51472 13.5 5" stroke="#d2d2d7" strokeWidth="1.5" fill="none"/>
+                    <path d="M1.5 6.5H16.5L15.5 18.5H2.5L1.5 6.5Z" stroke="#d2d2d7" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+                  </svg>
+                  <p style={{ marginTop: 16, fontSize: 15 }}>Votre panier est vide</p>
                 </div>
-
-                <div style={{ padding: 24, maxHeight: 400, overflowY: 'auto' }}>
-                  <input
-                    type="text"
-                    placeholder="Nom complet *"
-                    value={clientInfo.nom}
-                    onChange={e => setClientInfo({...clientInfo, nom: e.target.value})}
-                    style={{
-                      width: '100%', padding: '12px 14px', borderRadius: 10,
-                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
-                      boxSizing: 'border-box', marginBottom: 12,
-                    }}
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email *"
-                    value={clientInfo.email}
-                    onChange={e => setClientInfo({...clientInfo, email: e.target.value})}
-                    style={{
-                      width: '100%', padding: '12px 14px', borderRadius: 10,
-                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
-                      boxSizing: 'border-box', marginBottom: 12,
-                    }}
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Téléphone *"
-                    value={clientInfo.tel}
-                    onChange={e => setClientInfo({...clientInfo, tel: e.target.value})}
-                    style={{
-                      width: '100%', padding: '12px 14px', borderRadius: 10,
-                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
-                      boxSizing: 'border-box', marginBottom: 12,
-                    }}
-                  />
-                  <textarea
-                    placeholder="Adresse de livraison"
-                    value={clientInfo.adresse}
-                    onChange={e => setClientInfo({...clientInfo, adresse: e.target.value})}
-                    style={{
-                      width: '100%', padding: '12px 14px', borderRadius: 10,
-                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
-                      resize: 'none', height: 70, boxSizing: 'border-box', marginBottom: 12,
-                    }}
-                  />
-                  <textarea
-                    placeholder="Message (optionnel)"
-                    value={clientInfo.message}
-                    onChange={e => setClientInfo({...clientInfo, message: e.target.value})}
-                    style={{
-                      width: '100%', padding: '12px 14px', borderRadius: 10,
-                      border: '1px solid #e5e5e5', fontSize: 14, outline: 'none',
-                      resize: 'none', height: 50, boxSizing: 'border-box', marginBottom: 20,
-                    }}
-                  />
-
-                  <div style={{ background: '#f5f5f7', borderRadius: 10, padding: 14, marginBottom: 20 }}>
+              ) : (
+                <>
+                  {/* Articles */}
+                  <div style={{ marginBottom: 24 }}>
                     {panier.map(item => (
                       <div key={item.id} style={{
-                        display: 'flex', justifyContent: 'space-between',
-                        fontSize: 12, color: '#1d1d1f', marginBottom: 4,
+                        display: 'flex', gap: 14, padding: '14px 0',
+                        borderBottom: '0.5px solid #f0f0f0',
                       }}>
-                        <span>{item.nom} {item.couleur}</span>
-                        <span>x{item.quantite}</span>
+                        <div style={{
+                          width: 50, height: 50, borderRadius: 8,
+                          background: '#ffffff', border: '1px solid #e5e5e5',
+                          overflow: 'hidden', flexShrink: 0,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <img src={item.image} alt={item.nom} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
+                        </div>
+                        
+                        <div style={{ flex: 1 }}>
+                          <h3 style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f', marginBottom: 2 }}>
+                            {item.nom}
+                          </h3>
+                          <p style={{ fontSize: 11, color: '#86868b', marginBottom: 8 }}>
+                            {item.couleur} • {item.reference}
+                          </p>
+                          
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{
+                              display: 'flex', alignItems: 'center',
+                              background: '#f5f5f7', borderRadius: 6,
+                            }}>
+                              <button
+                                onClick={() => modifierQuantite(item.id, item.quantite - 1)}
+                                style={{ width: 24, height: 24, border: 'none', background: 'none', fontSize: 14, cursor: 'pointer' }}
+                              >−</button>
+                              <span style={{ width: 24, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>
+                                {item.quantite}
+                              </span>
+                              <button
+                                onClick={() => modifierQuantite(item.id, item.quantite + 1)}
+                                style={{ width: 24, height: 24, border: 'none', background: 'none', fontSize: 14, cursor: 'pointer' }}
+                              >+</button>
+                            </div>
+                            
+                            <button
+                              onClick={() => supprimerDuPanier(item.id)}
+                              style={{ border: 'none', background: 'none', fontSize: 11, color: '#0071e3', cursor: 'pointer' }}
+                            >
+                              Supprimer
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
 
+                  {/* Formulaire pro */}
+                  <div style={{ marginBottom: 20 }}>
+                    <label style={{ fontSize: 12, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
+                      Nom
+                    </label>
+                    <input
+                      type="text"
+                      value={clientInfo.nom}
+                      onChange={e => setClientInfo({...clientInfo, nom: e.target.value})}
+                      style={{
+                        width: '100%', padding: '14px 16px', borderRadius: 10,
+                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
+                        boxSizing: 'border-box', marginBottom: 16,
+                        transition: 'border-color 0.2s',
+                      }}
+                      onFocus={e => e.target.style.borderColor = '#0071e3'}
+                      onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                    />
+
+                    <label style={{ fontSize: 12, fontWeight: 500, color: '#1d1d1f', display: 'block', marginBottom: 6 }}>
+                      Adresse mail
+                    </label>
+                    <input
+                      type="email"
+                      value={clientInfo.email}
+                      onChange={e => setClientInfo({...clientInfo, email: e.target.value})}
+                      style={{
+                        width: '100%', padding: '14px 16px', borderRadius: 10,
+                        border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
+                        boxSizing: 'border-box',
+                        transition: 'border-color 0.2s',
+                      }}
+                      onFocus={e => e.target.style.borderColor = '#0071e3'}
+                      onBlur={e => e.target.style.borderColor = '#e5e5e5'}
+                    />
+                  </div>
+
+                  {/* Bouton Commander */}
                   <button
                     onClick={envoyerCommande}
                     disabled={sending}
                     style={{
-                      width: '100%', padding: '14px 20px', borderRadius: 10, border: 'none',
-                      background: sending ? '#86868b' : '#1d1d1f',
-                      color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: sending ? 'not-allowed' : 'pointer',
+                      width: '100%', padding: '16px 20px', borderRadius: 12, border: 'none',
+                      background: sending ? '#86868b' : '#0071e3',
+                      color: '#ffffff', fontSize: 15, fontWeight: 600, cursor: sending ? 'not-allowed' : 'pointer',
+                      transition: 'background 0.2s',
                     }}
                   >
-                    {sending ? 'Envoi...' : 'Envoyer'}
+                    {sending ? 'Envoi en cours...' : 'Commander'}
                   </button>
-                </div>
-              </>
-            )}
-          </div>
-        </>
-      )}
+                </>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
