@@ -3,9 +3,13 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
+  console.log('📧 API send-email appelée');
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'Méthode non autorisée' });
 
   const { client, articles } = req.body;
+  console.log('Client:', client);
+  console.log('Articles:', articles?.length, 'article(s)');
 
   if (!client || !client.nom || !client.email) {
     return res.status(400).json({ error: 'Informations client manquantes' });
@@ -74,6 +78,15 @@ export default async function handler(req, res) {
   `;
 
   try {
+    // Vérifier si la clé API est configurée
+    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 'your_resend_api_key_here') {
+      console.error('❌ RESEND_API_KEY non configurée dans .env.local');
+      return res.status(500).json({
+        error: 'Clé API Resend non configurée. Veuillez configurer RESEND_API_KEY dans .env.local'
+      });
+    }
+
+    console.log('📨 Envoi de l\'email via Resend...');
     const data = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to: 'charlie.jallon@gmail.com',
@@ -81,9 +94,10 @@ export default async function handler(req, res) {
       html: emailHtml,
     });
 
+    console.log('✅ Email envoyé avec succès, ID:', data.id);
     return res.status(200).json({ success: true, messageId: data.id });
   } catch (error) {
-    console.error("Erreur Resend:", error.message);
+    console.error("❌ Erreur Resend:", error);
     return res.status(500).json({ error: error.message });
   }
 }
