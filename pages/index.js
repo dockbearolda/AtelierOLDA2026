@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
 const MUGS_DATA = {
-  nouveautes: [{ id: 101, reference: 'NW 01', image: '/images/mugs/nouveaute1.jpg', couleur: 'Édition Aurore', prix: 16.99 }],
+  nouveautes: [{ id: 101, reference: 'NW 01', image: '/images/mugs/nouveaute1.jpg', couleur: 'Édition Aurore' }],
   olda: [
-    { id: 1, reference: 'TC 01', image: '/images/mugs/roseblanc.jpg', couleur: 'Rose & Blanc', prix: 14.99 },
-    { id: 2, reference: 'TC 02', image: '/images/mugs/rougeblanc.jpg', couleur: 'Rouge & Blanc', prix: 14.99 },
-    { id: 3, reference: 'TC 03', image: '/images/mugs/orangeblanc.jpg', couleur: 'Orange & Blanc', prix: 14.99 },
-    { id: 4, reference: 'TC 04', image: '/images/mugs/vertblanc.jpg', couleur: 'Vert & Blanc', prix: 14.99 },
-    { id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', couleur: 'Noir & Blanc', prix: 14.99 },
+    { id: 1, reference: 'TC 01', image: '/images/mugs/roseblanc.jpg', couleur: 'Rose & Blanc' },
+    { id: 2, reference: 'TC 02', image: '/images/mugs/rougeblanc.jpg', couleur: 'Rouge & Blanc' },
+    { id: 3, reference: 'TC 03', image: '/images/mugs/orangeblanc.jpg', couleur: 'Orange & Blanc' },
+    { id: 4, reference: 'TC 04', image: '/images/mugs/vertblanc.jpg', couleur: 'Vert & Blanc' },
+    { id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', couleur: 'Noir & Blanc' },
   ],
-  exclusif: [{ id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', couleur: 'Tasse Signature', prix: 18.99 }],
-  offres: [{ id: 201, reference: 'DS 01', image: '/images/mugs/logo.jpeg', couleur: 'Édition Limitée', prix: 12.99 }],
+  exclusif: [{ id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', couleur: 'Tasse Signature' }],
+  offres: [{ id: 201, reference: 'DS 01', image: '/images/mugs/logo.jpeg', couleur: 'Édition Limitée' }],
 };
 
 const formatTabName = (key) => {
@@ -105,7 +105,6 @@ export default function BoutiqueOlda() {
   };
 
   const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
-  const totalPrix = panier.reduce((acc, item) => acc + (item.prix * item.quantite), 0);
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif' }}>
@@ -217,11 +216,11 @@ export default function BoutiqueOlda() {
         }
 
         .product-image {
-          width: 80px;
-          height: 80px;
+          width: 50px;
+          height: 50px;
           flex-shrink: 0;
           background: #f5f5f7;
-          border-radius: 12px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -229,8 +228,8 @@ export default function BoutiqueOlda() {
         }
 
         .product-image img {
-          width: 70px;
-          height: 70px;
+          width: 45px;
+          height: 45px;
           object-fit: contain;
         }
 
@@ -249,12 +248,6 @@ export default function BoutiqueOlda() {
           font-size: 17px;
           font-weight: 600;
           color: #1d1d1f;
-          margin-bottom: 4px;
-        }
-
-        .product-price {
-          font-size: 14px;
-          color: #86868b;
         }
 
         /* CONTROLS */
@@ -566,7 +559,6 @@ export default function BoutiqueOlda() {
             <div className="product-info">
               <div className="product-ref">{p.reference}</div>
               <div className="product-name">{p.couleur}</div>
-              <div className="product-price">{p.prix.toFixed(2)}€</div>
             </div>
             <div className="product-controls">
               <div className="stepper">
@@ -637,9 +629,6 @@ export default function BoutiqueOlda() {
                         </button>
                       </div>
                     </div>
-                    <div style={{ fontWeight: '500' }}>
-                      {(item.prix * item.quantite).toFixed(2)}€
-                    </div>
                   </div>
                 ))
               )}
@@ -647,10 +636,6 @@ export default function BoutiqueOlda() {
 
             {panier.length > 0 && (
               <div className="cart-footer">
-                <div className="cart-total">
-                  <span className="cart-total-label">Total</span>
-                  <span className="cart-total-value">{totalPrix.toFixed(2)}€</span>
-                </div>
                 <button
                   className="checkout-btn"
                   onClick={() => {
@@ -658,7 +643,7 @@ export default function BoutiqueOlda() {
                     setShowCheckoutModal(true);
                   }}
                 >
-                  Commander
+                  Commander ({totalArticles} {totalArticles > 1 ? 'articles' : 'article'})
                 </button>
               </div>
             )}
