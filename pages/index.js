@@ -62,7 +62,6 @@ export default function AppleStyleStore() {
       background: '#ffffff',
       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif',
       WebkitFontSmoothing: 'antialiased',
-      MozOsxFontSmoothing: 'grayscale',
     }}>
       {/* Navigation */}
       <nav style={{
@@ -92,6 +91,7 @@ export default function AppleStyleStore() {
             OLDA
           </div>
           
+          {/* Apple-style Bag Icon */}
           <button 
             onClick={() => setCartOpen(true)}
             style={{
@@ -103,27 +103,23 @@ export default function AppleStyleStore() {
               borderRadius: 8,
               transition: 'background 0.2s',
             }}
-            onMouseEnter={e => e.target.style.background = 'rgba(0,0,0,0.04)'}
-            onMouseLeave={e => e.target.style.background = 'none'}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" strokeWidth="2">
-              <path d="M6 6h15l-1.5 9h-12z"/>
-              <circle cx="9" cy="20" r="1"/>
-              <circle cx="18" cy="20" r="1"/>
-              <path d="M6 6L5 3H2"/>
+            <svg width="18" height="18" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.5 5C4.5 2.51472 6.51472 0.5 9 0.5C11.4853 0.5 13.5 2.51472 13.5 5" stroke="#1d1d1f" strokeWidth="1.5" fill="none"/>
+              <path d="M1.5 6.5H16.5L15.5 18.5H2.5L1.5 6.5Z" stroke="#1d1d1f" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
             </svg>
             {totalArticles > 0 && (
               <span style={{
                 position: 'absolute',
-                top: 2,
-                right: 2,
+                top: 0,
+                right: 0,
                 background: '#0071e3',
                 color: 'white',
-                fontSize: 10,
-                fontWeight: 600,
-                minWidth: 16,
-                height: 16,
-                borderRadius: 8,
+                fontSize: 9,
+                fontWeight: 700,
+                minWidth: 14,
+                height: 14,
+                borderRadius: 7,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -134,34 +130,6 @@ export default function AppleStyleStore() {
           </button>
         </div>
       </nav>
-
-      {/* Hero Section */}
-      <section style={{
-        textAlign: 'center',
-        padding: '80px 24px 40px',
-        background: 'linear-gradient(180deg, #fbfbfd 0%, #ffffff 100%)',
-      }}>
-        <h1 style={{
-          fontSize: 'clamp(40px, 8vw, 64px)',
-          fontWeight: 700,
-          letterSpacing: '-0.04em',
-          color: '#1d1d1f',
-          marginBottom: 12,
-          lineHeight: 1.1,
-        }}>
-          Atelier OLDA
-        </h1>
-        <p style={{
-          fontSize: 'clamp(17px, 3vw, 21px)',
-          color: '#86868b',
-          fontWeight: 400,
-          letterSpacing: '-0.01em',
-          maxWidth: 500,
-          margin: '0 auto',
-        }}>
-          Des mugs d'exception, pensés pour sublimer chaque instant.
-        </p>
-      </section>
 
       {/* Tabs */}
       <div style={{
@@ -210,133 +178,117 @@ export default function AppleStyleStore() {
       <main style={{
         maxWidth: 1200,
         margin: '0 auto',
-        padding: '60px 24px 120px',
+        padding: '40px 24px 120px',
       }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: 24,
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: 20,
         }}>
           {MUGS_DATA[activeTab].map((product, index) => (
             <article
               key={product.id}
               style={{
                 background: '#fbfbfd',
-                borderRadius: 24,
+                borderRadius: 18,
                 overflow: 'hidden',
                 transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s',
-                cursor: 'default',
-                animation: `fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s both`,
+                animation: `fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.08}s both`,
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-8px)';
-                e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.12)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              {/* Product Image */}
+              {/* Product Image - Compact */}
               <div style={{
-                aspectRatio: '1',
+                height: 100,
                 background: 'linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: 40,
+                padding: 16,
               }}>
                 <img
                   src={product.image}
                   alt={product.couleur}
                   style={{
-                    width: '80%',
-                    height: '80%',
+                    height: 68,
+                    width: 68,
                     objectFit: 'contain',
-                    transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
-                  onMouseEnter={e => e.target.style.transform = 'scale(1.05)'}
+                  onMouseEnter={e => e.target.style.transform = 'scale(1.08)'}
                   onMouseLeave={e => e.target.style.transform = 'scale(1)'}
                 />
               </div>
 
-              {/* Product Info */}
-              <div style={{ padding: '28px 28px 32px' }}>
-                <div style={{
-                  fontSize: 10,
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#0071e3',
-                  marginBottom: 8,
-                }}>
-                  {product.reference}
-                </div>
-                
-                <h2 style={{
-                  fontSize: 24,
-                  fontWeight: 600,
-                  letterSpacing: '-0.02em',
-                  color: '#1d1d1f',
-                  marginBottom: 4,
-                }}>
-                  {product.couleur}
-                </h2>
-                
-                <p style={{
-                  fontSize: 14,
-                  color: '#86868b',
-                  marginBottom: 20,
-                }}>
-                  {product.description}
-                </p>
-
-                <div style={{
-                  fontSize: 17,
-                  fontWeight: 600,
-                  color: '#1d1d1f',
-                  marginBottom: 24,
-                }}>
-                  {product.prix.toFixed(2)} €
+              {/* Product Info - Compact */}
+              <div style={{ padding: '16px 20px 20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                  <div>
+                    <h2 style={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      letterSpacing: '-0.01em',
+                      color: '#1d1d1f',
+                      marginBottom: 2,
+                    }}>
+                      {product.couleur}
+                    </h2>
+                    <p style={{
+                      fontSize: 12,
+                      color: '#86868b',
+                    }}>
+                      {product.description}
+                    </p>
+                  </div>
+                  <div style={{
+                    fontSize: 15,
+                    fontWeight: 600,
+                    color: '#1d1d1f',
+                  }}>
+                    {product.prix.toFixed(2)} €
+                  </div>
                 </div>
 
-                {/* Quantity Selector */}
+                {/* Quantity + Add Button Row */}
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 16,
-                  marginBottom: 20,
+                  gap: 10,
+                  marginTop: 14,
                 }}>
-                  <span style={{ fontSize: 13, color: '#86868b' }}>Quantité</span>
+                  {/* Stepper */}
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
                     background: '#ffffff',
-                    borderRadius: 12,
+                    borderRadius: 8,
                     border: '1px solid #e5e5e5',
-                    overflow: 'hidden',
                   }}>
                     <button
                       onClick={() => ajuster(product.id, -1)}
                       style={{
-                        width: 40,
-                        height: 40,
+                        width: 32,
+                        height: 32,
                         border: 'none',
                         background: 'none',
-                        fontSize: 20,
+                        fontSize: 18,
                         color: getQte(product.id) <= 1 ? '#d2d2d7' : '#1d1d1f',
                         cursor: getQte(product.id) <= 1 ? 'not-allowed' : 'pointer',
-                        transition: 'background 0.2s',
                       }}
-                      onMouseEnter={e => e.target.style.background = '#f5f5f7'}
-                      onMouseLeave={e => e.target.style.background = 'none'}
                     >
                       −
                     </button>
                     <span style={{
-                      width: 48,
+                      width: 32,
                       textAlign: 'center',
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: 600,
                       color: '#1d1d1f',
                     }}>
@@ -345,54 +297,38 @@ export default function AppleStyleStore() {
                     <button
                       onClick={() => ajuster(product.id, 1)}
                       style={{
-                        width: 40,
-                        height: 40,
+                        width: 32,
+                        height: 32,
                         border: 'none',
                         background: 'none',
-                        fontSize: 20,
+                        fontSize: 18,
                         color: '#1d1d1f',
                         cursor: 'pointer',
-                        transition: 'background 0.2s',
                       }}
-                      onMouseEnter={e => e.target.style.background = '#f5f5f7'}
-                      onMouseLeave={e => e.target.style.background = 'none'}
                     >
                       +
                     </button>
                   </div>
-                </div>
 
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => ajouterAuPanier(product)}
-                  style={{
-                    width: '100%',
-                    padding: '14px 24px',
-                    borderRadius: 12,
-                    border: 'none',
-                    background: addedProduct === product.id ? '#34c759' : '#0071e3',
-                    color: '#ffffff',
-                    fontSize: 15,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: addedProduct === product.id ? 'scale(0.98)' : 'scale(1)',
-                  }}
-                  onMouseEnter={e => {
-                    if (addedProduct !== product.id) {
-                      e.target.style.background = '#0077ed';
-                      e.target.style.transform = 'scale(1.02)';
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (addedProduct !== product.id) {
-                      e.target.style.background = '#0071e3';
-                      e.target.style.transform = 'scale(1)';
-                    }
-                  }}
-                >
-                  {addedProduct === product.id ? '✓ Ajouté' : 'Ajouter au panier'}
-                </button>
+                  {/* Add Button */}
+                  <button
+                    onClick={() => ajouterAuPanier(product)}
+                    style={{
+                      flex: 1,
+                      padding: '10px 16px',
+                      borderRadius: 8,
+                      border: 'none',
+                      background: addedProduct === product.id ? '#34c759' : '#0071e3',
+                      color: '#ffffff',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
+                  >
+                    {addedProduct === product.id ? '✓ Ajouté' : 'Ajouter'}
+                  </button>
+                </div>
               </div>
             </article>
           ))}
@@ -405,43 +341,60 @@ export default function AppleStyleStore() {
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.4)',
-          backdropFilter: 'blur(4px)',
-          WebkitBackdropFilter: 'blur(4px)',
+          background: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
           zIndex: 2000,
           opacity: cartOpen ? 1 : 0,
           visibility: cartOpen ? 'visible' : 'hidden',
-          transition: 'opacity 0.4s, visibility 0.4s',
+          transition: 'opacity 0.35s, visibility 0.35s',
         }}
       />
 
-      {/* Cart Drawer */}
+      {/* Apple-style Cart Dropdown */}
       <div style={{
         position: 'fixed',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        width: 'min(420px, 100vw)',
+        top: 56,
+        right: 24,
+        width: 'min(380px, calc(100vw - 48px))',
+        maxHeight: 'calc(100vh - 100px)',
         background: '#ffffff',
+        borderRadius: 18,
         zIndex: 2001,
-        transform: cartOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 0.5s cubic-bezier(0.32, 0.72, 0, 1)',
+        opacity: cartOpen ? 1 : 0,
+        visibility: cartOpen ? 'visible' : 'hidden',
+        transform: cartOpen ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.98)',
+        transition: 'all 0.35s cubic-bezier(0.32, 0.72, 0, 1)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.08)',
         display: 'flex',
         flexDirection: 'column',
-        boxShadow: cartOpen ? '-20px 0 60px rgba(0, 0, 0, 0.15)' : 'none',
+        overflow: 'hidden',
       }}>
+        {/* Small Arrow */}
+        <div style={{
+          position: 'absolute',
+          top: -8,
+          right: 28,
+          width: 16,
+          height: 16,
+          background: '#ffffff',
+          transform: 'rotate(45deg)',
+          borderRadius: 3,
+          boxShadow: '-2px -2px 4px rgba(0, 0, 0, 0.04)',
+        }} />
+
         {/* Cart Header */}
         <div style={{
-          padding: '24px 24px 20px',
+          padding: '20px 20px 16px',
           borderBottom: '0.5px solid #e5e5e5',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
           <h2 style={{
-            fontSize: 24,
-            fontWeight: 700,
-            letterSpacing: '-0.02em',
+            fontSize: 17,
+            fontWeight: 600,
+            letterSpacing: '-0.01em',
             color: '#1d1d1f',
           }}>
             Panier
@@ -449,9 +402,9 @@ export default function AppleStyleStore() {
           <button
             onClick={() => setCartOpen(false)}
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 16,
+              width: 28,
+              height: 28,
+              borderRadius: 14,
               border: 'none',
               background: '#f5f5f7',
               cursor: 'pointer',
@@ -460,10 +413,8 @@ export default function AppleStyleStore() {
               justifyContent: 'center',
               transition: 'background 0.2s',
             }}
-            onMouseEnter={e => e.target.style.background = '#e5e5e5'}
-            onMouseLeave={e => e.target.style.background = '#f5f5f7'}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" strokeWidth="2.5">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#86868b" strokeWidth="2.5">
               <path d="M18 6L6 18M6 6l12 12"/>
             </svg>
           </button>
@@ -473,7 +424,8 @@ export default function AppleStyleStore() {
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '8px 24px',
+          padding: '4px 0',
+          maxHeight: 320,
         }}>
           {panier.length === 0 ? (
             <div style={{
@@ -481,16 +433,14 @@ export default function AppleStyleStore() {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              height: '100%',
+              padding: '48px 24px',
               color: '#86868b',
             }}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d2d2d7" strokeWidth="1.5">
-                <path d="M6 6h15l-1.5 9h-12z"/>
-                <circle cx="9" cy="20" r="1"/>
-                <circle cx="18" cy="20" r="1"/>
-                <path d="M6 6L5 3H2"/>
+              <svg width="48" height="48" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.5 5C4.5 2.51472 6.51472 0.5 9 0.5C11.4853 0.5 13.5 2.51472 13.5 5" stroke="#d2d2d7" strokeWidth="1.5" fill="none"/>
+                <path d="M1.5 6.5H16.5L15.5 18.5H2.5L1.5 6.5Z" stroke="#d2d2d7" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
               </svg>
-              <p style={{ marginTop: 16, fontSize: 17 }}>Votre panier est vide</p>
+              <p style={{ marginTop: 16, fontSize: 15 }}>Votre panier est vide</p>
             </div>
           ) : (
             panier.map(item => (
@@ -498,15 +448,15 @@ export default function AppleStyleStore() {
                 key={item.id}
                 style={{
                   display: 'flex',
-                  gap: 16,
-                  padding: '20px 0',
+                  gap: 14,
+                  padding: '14px 20px',
                   borderBottom: '0.5px solid #f5f5f7',
                 }}
               >
                 <div style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 12,
+                  width: 56,
+                  height: 56,
+                  borderRadius: 10,
                   background: '#f5f5f7',
                   overflow: 'hidden',
                   flexShrink: 0,
@@ -523,18 +473,28 @@ export default function AppleStyleStore() {
                 </div>
                 
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <h3 style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    color: '#1d1d1f',
-                    marginBottom: 4,
-                  }}>
-                    {item.couleur}
-                  </h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <h3 style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: '#1d1d1f',
+                      marginBottom: 2,
+                    }}>
+                      {item.couleur}
+                    </h3>
+                    <span style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: '#1d1d1f',
+                    }}>
+                      {(item.prix * item.quantite).toFixed(2)} €
+                    </span>
+                  </div>
+                  
                   <p style={{
-                    fontSize: 13,
+                    fontSize: 12,
                     color: '#86868b',
-                    marginBottom: 12,
+                    marginBottom: 8,
                   }}>
                     {item.prix.toFixed(2)} € × {item.quantite}
                   </p>
@@ -548,16 +508,16 @@ export default function AppleStyleStore() {
                       display: 'flex',
                       alignItems: 'center',
                       background: '#f5f5f7',
-                      borderRadius: 8,
+                      borderRadius: 6,
                     }}>
                       <button
                         onClick={() => modifierQuantite(item.id, item.quantite - 1)}
                         style={{
-                          width: 28,
-                          height: 28,
+                          width: 24,
+                          height: 24,
                           border: 'none',
                           background: 'none',
-                          fontSize: 16,
+                          fontSize: 14,
                           cursor: 'pointer',
                           color: '#1d1d1f',
                         }}
@@ -565,9 +525,9 @@ export default function AppleStyleStore() {
                         −
                       </button>
                       <span style={{
-                        width: 28,
+                        width: 24,
                         textAlign: 'center',
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: 600,
                       }}>
                         {item.quantite}
@@ -575,11 +535,11 @@ export default function AppleStyleStore() {
                       <button
                         onClick={() => modifierQuantite(item.id, item.quantite + 1)}
                         style={{
-                          width: 28,
-                          height: 28,
+                          width: 24,
+                          height: 24,
                           border: 'none',
                           background: 'none',
-                          fontSize: 16,
+                          fontSize: 14,
                           cursor: 'pointer',
                           color: '#1d1d1f',
                         }}
@@ -591,11 +551,10 @@ export default function AppleStyleStore() {
                     <button
                       onClick={() => supprimerDuPanier(item.id)}
                       style={{
-                        padding: '4px 10px',
-                        borderRadius: 6,
+                        padding: 0,
                         border: 'none',
                         background: 'none',
-                        fontSize: 13,
+                        fontSize: 12,
                         color: '#0071e3',
                         cursor: 'pointer',
                       }}
@@ -603,14 +562,6 @@ export default function AppleStyleStore() {
                       Supprimer
                     </button>
                   </div>
-                </div>
-                
-                <div style={{
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: '#1d1d1f',
-                }}>
-                  {(item.prix * item.quantite).toFixed(2)} €
                 </div>
               </div>
             ))
@@ -620,7 +571,7 @@ export default function AppleStyleStore() {
         {/* Cart Footer */}
         {panier.length > 0 && (
           <div style={{
-            padding: 24,
+            padding: '16px 20px 20px',
             borderTop: '0.5px solid #e5e5e5',
             background: '#fbfbfd',
           }}>
@@ -628,16 +579,16 @@ export default function AppleStyleStore() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: 20,
+              marginBottom: 16,
             }}>
               <span style={{
-                fontSize: 15,
+                fontSize: 14,
                 color: '#86868b',
               }}>
                 Total
               </span>
               <span style={{
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: 700,
                 letterSpacing: '-0.02em',
                 color: '#1d1d1f',
@@ -649,23 +600,15 @@ export default function AppleStyleStore() {
             <button
               style={{
                 width: '100%',
-                padding: '16px 24px',
-                borderRadius: 12,
+                padding: '12px 20px',
+                borderRadius: 10,
                 border: 'none',
-                background: '#1d1d1f',
+                background: '#0071e3',
                 color: '#ffffff',
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: 600,
                 cursor: 'pointer',
-                transition: 'transform 0.2s, background 0.2s',
-              }}
-              onMouseEnter={e => {
-                e.target.style.background = '#000000';
-                e.target.style.transform = 'scale(1.02)';
-              }}
-              onMouseLeave={e => {
-                e.target.style.background = '#1d1d1f';
-                e.target.style.transform = 'scale(1)';
+                transition: 'background 0.2s',
               }}
             >
               Commander
@@ -673,9 +616,9 @@ export default function AppleStyleStore() {
             
             <p style={{
               textAlign: 'center',
-              fontSize: 12,
+              fontSize: 11,
               color: '#86868b',
-              marginTop: 12,
+              marginTop: 10,
             }}>
               Livraison gratuite • Retours sous 14 jours
             </p>
@@ -683,12 +626,11 @@ export default function AppleStyleStore() {
         )}
       </div>
 
-      {/* CSS Animation */}
       <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
