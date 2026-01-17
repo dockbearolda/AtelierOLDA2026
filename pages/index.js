@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 
 const MUGS_DATA = {
   nouveautes: [
-    { id: 101, reference: 'NW 01', image: '/images/mugs/nouveaute1.jpg', nom: 'Édition Aurore', description: 'Notre dernière création' }
+    { id: 101, reference: 'NW 01', image: '/images/mugs/nouveaute1.jpg', nom: 'Édition Aurore', couleur: 'Aurore' }
   ],
   olda: [
-    { id: 1, reference: 'TC 01', image: '/images/mugs/roseblanc.jpg', nom: 'Rose & Blanc', description: 'Élégance quotidienne' },
-    { id: 2, reference: 'TC 02', image: '/images/mugs/rougeblanc.jpg', nom: 'Rouge & Blanc', description: 'Passion incarnée' },
-    { id: 3, reference: 'TC 03', image: '/images/mugs/orangeblanc.jpg', nom: 'Orange & Blanc', description: 'Énergie positive' },
-    { id: 4, reference: 'TC 04', image: '/images/mugs/vertblanc.jpg', nom: 'Vert & Blanc', description: 'Nature apaisante' },
-    { id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', nom: 'Noir & Blanc', description: 'Classique intemporel' },
+    { id: 1, reference: 'TC 01', image: '/images/mugs/roseblanc.jpg', nom: 'Tasse Céramique', couleur: 'Rose & Blanc' },
+    { id: 2, reference: 'TC 02', image: '/images/mugs/rougeblanc.jpg', nom: 'Tasse Céramique', couleur: 'Rouge & Blanc' },
+    { id: 3, reference: 'TC 03', image: '/images/mugs/orangeblanc.jpg', nom: 'Tasse Céramique', couleur: 'Orange & Blanc' },
+    { id: 4, reference: 'TC 04', image: '/images/mugs/vertblanc.jpg', nom: 'Tasse Céramique', couleur: 'Vert & Blanc' },
+    { id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', nom: 'Tasse Céramique', couleur: 'Noir & Blanc' },
   ],
   fuck: [
-    { id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', nom: 'Fuck Blanc & Noir', description: 'Édition signature' },
+    { id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', nom: 'Tasse Céramique Fuck', couleur: 'Blanc & Noir' },
   ],
   tshirt: [
-    { id: 21, reference: 'TS 01', image: 'À REMPLIR', nom: 'À REMPLIR', description: 'À REMPLIR' },
+    { id: 21, reference: 'TS 01', image: 'À REMPLIR', nom: 'À REMPLIR', couleur: 'À REMPLIR' },
   ],
   offres: [
-    { id: 201, reference: 'PR 01', image: '/images/mugs/logo.jpeg', nom: 'Édition Limitée', description: 'Offre spéciale' }
+    { id: 201, reference: 'PR 01', image: '/images/mugs/logo.jpeg', nom: 'Édition Limitée', couleur: 'À REMPLIR' }
   ],
 };
 
@@ -40,11 +40,13 @@ export default function OLDAStore() {
   const [clientInfo, setClientInfo] = useState({ nom: '', email: '', tel: '', adresse: '', message: '' });
   const [orderSent, setOrderSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [commentaires, setCommentaires] = useState({});
+  const [nouveauCommentaire, setNouveauCommentaire] = useState({});
 
-  const getQte = (id) => quantites[id] || 1;
+  const getQte = (id) => quantites[id] || 3;
   const ajuster = (id, delta) => {
     const v = getQte(id) + delta;
-    if (v >= 1 && v <= 99) setQuantites({ ...quantites, [id]: v });
+    if (v >= 3 && v <= 99) setQuantites({ ...quantites, [id]: v });
   };
 
   const ajouterAuPanier = (p) => {
@@ -60,11 +62,21 @@ export default function OLDAStore() {
 
   const supprimerDuPanier = (id) => setPanier(prev => prev.filter(i => i.id !== id));
   const modifierQuantite = (id, newQte) => {
-    if (newQte < 1) supprimerDuPanier(id);
+    if (newQte < 3) supprimerDuPanier(id);
     else setPanier(prev => prev.map(i => i.id === id ? { ...i, quantite: newQte } : i));
   };
   
   const totalArticles = panier.reduce((acc, i) => acc + i.quantite, 0);
+
+  const ajouterCommentaire = (productId, nomClient, texte) => {
+    if (!nomClient.trim() || !texte.trim()) return;
+    const newComment = { nom: nomClient, texte, date: new Date().toLocaleDateString('fr-FR') };
+    setCommentaires(prev => ({
+      ...prev,
+      [productId]: [...(prev[productId] || []), newComment]
+    }));
+    setNouveauCommentaire(prev => ({ ...prev, [productId]: { nom: '', texte: '' } }));
+  };
 
   const generateOrderText = () => {
     let text = `NOUVELLE COMMANDE OLDA\n\n`;
@@ -75,7 +87,7 @@ export default function OLDAStore() {
     text += `Adresse: ${clientInfo.adresse}\n\n`;
     text += `ARTICLES:\n`;
     panier.forEach(item => {
-      text += `- ${item.nom} (${item.reference}) x${item.quantite}\n`;
+      text += `- ${item.nom} ${item.couleur} (${item.reference}) x${item.quantite}\n`;
     });
     if (clientInfo.message) {
       text += `\nMESSAGE:\n${clientInfo.message}`;
@@ -90,10 +102,8 @@ export default function OLDAStore() {
     }
     
     setSending(true);
-    
     const subject = encodeURIComponent(`Commande OLDA - ${clientInfo.nom}`);
     const body = encodeURIComponent(generateOrderText());
-    
     window.location.href = `mailto:charlie.jallon@gmail.com?subject=${subject}&body=${body}`;
     
     setTimeout(() => {
@@ -153,19 +163,9 @@ export default function OLDAStore() {
             </svg>
             {totalArticles > 0 && (
               <span style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                background: '#0071e3',
-                color: 'white',
-                fontSize: 9,
-                fontWeight: 700,
-                minWidth: 14,
-                height: 14,
-                borderRadius: 7,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                position: 'absolute', top: 0, right: 0, background: '#0071e3',
+                color: 'white', fontSize: 9, fontWeight: 700, minWidth: 14, height: 14,
+                borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {totalArticles}
               </span>
@@ -203,7 +203,6 @@ export default function OLDAStore() {
                 fontSize: 13,
                 fontWeight: 500,
                 cursor: 'pointer',
-                transition: 'all 0.3s',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
               }}
@@ -215,95 +214,159 @@ export default function OLDAStore() {
       </div>
 
       {/* Products */}
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px 120px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: 16,
-        }}>
-          {MUGS_DATA[activeTab].map((product, index) => (
-            <article
-              key={product.id}
-              style={{
-                background: '#fbfbfd',
-                borderRadius: 18,
-                overflow: 'hidden',
-                transition: 'transform 0.4s, box-shadow 0.4s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
+      <main style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 120px' }}>
+        {MUGS_DATA[activeTab].map((product) => (
+          <div key={product.id} style={{ marginBottom: 60 }}>
+            {/* Product Card */}
+            <div style={{
+              display: 'flex',
+              gap: 40,
+              alignItems: 'flex-start',
+              marginBottom: 30,
+            }}>
+              {/* Image à gauche */}
               <div style={{
-                height: 100,
-                background: 'linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%)',
+                width: 200,
+                height: 200,
+                background: '#ffffff',
+                borderRadius: 16,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                flexShrink: 0,
+                border: '1px solid #e5e5e5',
               }}>
                 <img
                   src={product.image}
                   alt={product.nom}
-                  style={{ height: 68, width: 68, objectFit: 'contain' }}
+                  style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }}
                 />
               </div>
 
-              <div style={{ padding: '14px 18px 18px' }}>
-                <span style={{ fontSize: 10, fontWeight: 600, color: '#86868b' }}>
-                  {product.reference}
-                </span>
-                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginTop: 4, marginBottom: 2 }}>
+              {/* Infos à droite */}
+              <div style={{ flex: 1, paddingTop: 10 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 600, color: '#1d1d1f', marginBottom: 8 }}>
                   {product.nom}
                 </h2>
-                <p style={{ fontSize: 12, color: '#86868b', marginBottom: 14 }}>
-                  {product.description}
+                <p style={{ fontSize: 15, color: '#86868b', marginBottom: 4 }}>
+                  {product.couleur}
+                </p>
+                <p style={{ fontSize: 13, color: '#86868b', marginBottom: 24 }}>
+                  {product.reference}
                 </p>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {/* Quantité */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    background: '#ffffff',
-                    borderRadius: 8,
-                    border: '1px solid #e5e5e5',
+                    background: '#f5f5f7',
+                    borderRadius: 10,
                   }}>
                     <button
                       onClick={() => ajuster(product.id, -1)}
                       style={{
-                        width: 32, height: 32, border: 'none', background: 'none',
-                        fontSize: 18, color: getQte(product.id) <= 1 ? '#d2d2d7' : '#1d1d1f',
-                        cursor: getQte(product.id) <= 1 ? 'not-allowed' : 'pointer',
+                        width: 40, height: 40, border: 'none', background: 'none',
+                        fontSize: 20, color: getQte(product.id) <= 3 ? '#d2d2d7' : '#1d1d1f',
+                        cursor: getQte(product.id) <= 3 ? 'not-allowed' : 'pointer',
                       }}
                     >−</button>
-                    <span style={{ width: 28, textAlign: 'center', fontSize: 14, fontWeight: 600 }}>
+                    <span style={{ width: 40, textAlign: 'center', fontSize: 16, fontWeight: 600 }}>
                       {getQte(product.id)}
                     </span>
                     <button
                       onClick={() => ajuster(product.id, 1)}
-                      style={{ width: 32, height: 32, border: 'none', background: 'none', fontSize: 18, cursor: 'pointer' }}
+                      style={{ width: 40, height: 40, border: 'none', background: 'none', fontSize: 20, cursor: 'pointer' }}
                     >+</button>
                   </div>
-
-                  <button
-                    onClick={() => ajouterAuPanier(product)}
-                    style={{
-                      flex: 1, padding: '10px 14px', borderRadius: 8, border: 'none',
-                      background: addedProduct === product.id ? '#34c759' : '#0071e3',
-                      color: '#ffffff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-                    }}
-                  >
-                    {addedProduct === product.id ? '✓' : 'Ajouter'}
-                  </button>
+                  <span style={{ fontSize: 12, color: '#86868b' }}>Minimum 3 unités</span>
                 </div>
+
+                <button
+                  onClick={() => ajouterAuPanier(product)}
+                  style={{
+                    padding: '12px 28px', borderRadius: 10, border: 'none',
+                    background: addedProduct === product.id ? '#34c759' : '#0071e3',
+                    color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                  }}
+                >
+                  {addedProduct === product.id ? '✓ Ajouté' : 'Ajouter au panier'}
+                </button>
               </div>
-            </article>
-          ))}
-        </div>
+            </div>
+
+            {/* Commentaires */}
+            <div style={{
+              background: '#f5f5f7',
+              borderRadius: 16,
+              padding: 24,
+            }}>
+              <h3 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 16 }}>
+                Commentaires
+              </h3>
+
+              {/* Liste des commentaires */}
+              {(commentaires[product.id] || []).map((c, i) => (
+                <div key={i} style={{
+                  background: '#ffffff',
+                  borderRadius: 10,
+                  padding: 14,
+                  marginBottom: 10,
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#1d1d1f' }}>{c.nom}</span>
+                    <span style={{ fontSize: 11, color: '#86868b' }}>{c.date}</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: '#1d1d1f', margin: 0 }}>{c.texte}</p>
+                </div>
+              ))}
+
+              {/* Formulaire nouveau commentaire */}
+              <div style={{ marginTop: 16 }}>
+                <input
+                  type="text"
+                  placeholder="Votre nom"
+                  value={nouveauCommentaire[product.id]?.nom || ''}
+                  onChange={e => setNouveauCommentaire(prev => ({
+                    ...prev,
+                    [product.id]: { ...prev[product.id], nom: e.target.value }
+                  }))}
+                  style={{
+                    width: '100%', padding: '10px 14px', borderRadius: 8,
+                    border: '1px solid #e5e5e5', fontSize: 14, marginBottom: 8,
+                    boxSizing: 'border-box', outline: 'none',
+                  }}
+                />
+                <textarea
+                  placeholder="Votre commentaire..."
+                  value={nouveauCommentaire[product.id]?.texte || ''}
+                  onChange={e => setNouveauCommentaire(prev => ({
+                    ...prev,
+                    [product.id]: { ...prev[product.id], texte: e.target.value }
+                  }))}
+                  style={{
+                    width: '100%', padding: '10px 14px', borderRadius: 8,
+                    border: '1px solid #e5e5e5', fontSize: 14, resize: 'none',
+                    height: 70, boxSizing: 'border-box', outline: 'none',
+                  }}
+                />
+                <button
+                  onClick={() => ajouterCommentaire(
+                    product.id,
+                    nouveauCommentaire[product.id]?.nom || '',
+                    nouveauCommentaire[product.id]?.texte || ''
+                  )}
+                  style={{
+                    marginTop: 8, padding: '10px 20px', borderRadius: 8, border: 'none',
+                    background: '#1d1d1f', color: '#ffffff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                  }}
+                >
+                  Publier
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </main>
 
       {/* Cart Overlay */}
@@ -372,9 +435,11 @@ export default function OLDAStore() {
               }}>
                 <div style={{
                   width: 56, height: 56, borderRadius: 10,
-                  background: '#f5f5f7', overflow: 'hidden', flexShrink: 0,
+                  background: '#ffffff', border: '1px solid #e5e5e5',
+                  overflow: 'hidden', flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <img src={item.image} alt={item.nom} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={item.image} alt={item.nom} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
                 </div>
                 
                 <div style={{ flex: 1 }}>
@@ -382,7 +447,7 @@ export default function OLDAStore() {
                     {item.nom}
                   </h3>
                   <p style={{ fontSize: 12, color: '#86868b', marginBottom: 8 }}>
-                    {item.reference}
+                    {item.couleur} • {item.reference}
                   </p>
                   
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -455,9 +520,7 @@ export default function OLDAStore() {
             overflow: 'hidden',
           }}>
             {orderSent ? (
-              <div style={{
-                padding: 60, textAlign: 'center',
-              }}>
+              <div style={{ padding: 60, textAlign: 'center' }}>
                 <div style={{
                   width: 64, height: 64, borderRadius: 32, background: '#34c759',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -509,7 +572,6 @@ export default function OLDAStore() {
                         border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
                         boxSizing: 'border-box',
                       }}
-                      placeholder="Jean Dupont"
                     />
                   </div>
 
@@ -526,7 +588,6 @@ export default function OLDAStore() {
                         border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
                         boxSizing: 'border-box',
                       }}
-                      placeholder="jean@email.com"
                     />
                   </div>
 
@@ -543,7 +604,6 @@ export default function OLDAStore() {
                         border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
                         boxSizing: 'border-box',
                       }}
-                      placeholder="06 12 34 56 78"
                     />
                   </div>
 
@@ -559,7 +619,6 @@ export default function OLDAStore() {
                         border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
                         resize: 'none', height: 80, boxSizing: 'border-box',
                       }}
-                      placeholder="123 Rue Example, 75001 Paris"
                     />
                   </div>
 
@@ -575,7 +634,6 @@ export default function OLDAStore() {
                         border: '1px solid #e5e5e5', fontSize: 15, outline: 'none',
                         resize: 'none', height: 60, boxSizing: 'border-box',
                       }}
-                      placeholder="Instructions spéciales..."
                     />
                   </div>
 
@@ -590,7 +648,7 @@ export default function OLDAStore() {
                         display: 'flex', justifyContent: 'space-between',
                         fontSize: 13, color: '#1d1d1f', marginBottom: 6,
                       }}>
-                        <span>{item.nom}</span>
+                        <span>{item.nom} {item.couleur}</span>
                         <span>x{item.quantite}</span>
                       </div>
                     ))}
