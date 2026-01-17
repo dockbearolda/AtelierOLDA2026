@@ -1,4 +1,4 @@
-import React, { useState } from ‘react’;
+import React, { useState, useEffect } from 'react';
 
 const MUGS_DATA = {
 nouveautes: [{ id: 101, reference: ‘NW 01’, image: ‘/images/mugs/nouveaute1.jpg’, couleur: ‘Édition Aurore’, prix: 16.99 }],
@@ -24,10 +24,31 @@ return names[key] || key;
 };
 
 export default function BoutiqueOlda() {
-const [activeTab, setActiveTab] = useState(‘olda’);
+const [activeTab, setActiveTab] = useState('olda');
 const [quantites, setQuantites] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
+
+// Charger le panier depuis localStorage au démarrage
+useEffect(() => {
+const panierSauvegarde = localStorage.getItem('olda-panier');
+if (panierSauvegarde) {
+try {
+setPanier(JSON.parse(panierSauvegarde));
+} catch (e) {
+console.error('Erreur lors du chargement du panier:', e);
+}
+}
+}, []);
+
+// Sauvegarder le panier dans localStorage à chaque modification
+useEffect(() => {
+if (panier.length > 0) {
+localStorage.setItem('olda-panier', JSON.stringify(panier));
+} else {
+localStorage.removeItem('olda-panier');
+}
+}, [panier]);
 
 const getQte = (id) => quantites[id] || 3;
 
