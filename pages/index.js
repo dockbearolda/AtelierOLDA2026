@@ -23,7 +23,8 @@ const formatTabName = (key) => {
   return names[key] || key;
 };
 
-export default function Index() {
+// COMPOSANT PRINCIPAL EXPORTÉ PAR DÉFAUT
+const BoutiqueIndex = () => {
   const [activeTab, setActiveTab] = useState('olda');
   const [quantites, setQuantites] = useState({});
   const [panier, setPanier] = useState([]);
@@ -32,17 +33,11 @@ export default function Index() {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  // --- LOGIQUE ---
   const getQte = (id) => quantites[id] || 3;
   const ajuster = (id, delta) => {
     const nouvelle = getQte(id) + delta;
     if (nouvelle >= 3) setQuantites({ ...quantites, [id]: nouvelle });
   };
-  const modifierPanier = (id, nouvelleQte) => {
-    if (nouvelleQte < 3) return;
-    setPanier(prev => prev.map(item => item.id === id ? { ...item, quantite: nouvelleQte } : item));
-  };
-  const supprimerDuPanier = (id) => setPanier(prev => prev.filter(item => item.id !== id));
   
   const ajouterAuPanier = (produit) => {
     const qte = getQte(produit.id);
@@ -51,7 +46,6 @@ export default function Index() {
       if (existant) return prev.map(item => item.id === produit.id ? { ...item, quantite: item.quantite + qte } : item);
       return [...prev, { ...produit, quantite: qte }];
     });
-    setQuantites({ ...quantites, [produit.id]: 3 });
     setCartOpen(true);
   };
 
@@ -59,207 +53,113 @@ export default function Index() {
     if (!nomClient.trim()) return;
     setIsSending(true);
     try {
-      const response = await fetch('/api/send-email', {
+      const res = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nomClient, panier })
       });
-      if (response.ok) {
-        alert('✅ Commande confirmée avec succès !');
+      if (res.ok) {
+        alert('✅ Commande envoyée !');
         setPanier([]);
-        setNomClient('');
         setShowCheckoutModal(false);
-        setCartOpen(false);
-      } else {
-        alert('❌ Erreur lors de l’envoi de la commande.');
       }
-    } catch (e) {
-      alert('❌ Erreur de connexion.');
-    } finally {
-      setIsSending(false);
-    }
+    } catch (e) { alert('❌ Erreur'); }
+    finally { setIsSending(false); }
   };
 
   const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
   const totalPrix = panier.reduce((acc, item) => acc + (item.prix * item.quantite), 0);
 
   return (
-    <div className="apple-store">
+    <div style={{ backgroundColor: '#fff', color: '#1d1d1f', fontFamily: '-apple-system, sans-serif', minHeight: '100vh' }}>
       <style>{`
-        :root {
-          --apple-bg: #ffffff;
-          --apple-grey: #f5f5f7;
-          --apple-text: #1d1d1f;
-          --apple-blue: #0071e3;
-        }
-
-        .apple-store {
-          background: var(--apple-bg);
-          color: var(--apple-text);
-          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-          -webkit-font-smoothing: antialiased;
-          min-height: 100vh;
-        }
-
-        /* HEADER */
-        .header {
-          position: sticky; top: 0; z-index: 1000;
-          background: rgba(255, 255, 255, 0.8); backdrop-filter: saturate(180%) blur(20px);
-          border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .header-wrap {
-          max-width: 1024px; margin: 0 auto; height: 48px;
-          display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
-        }
-        .brand { font-weight: 600; font-size: 20px; letter-spacing: -0.5px; cursor: pointer; }
-        .cart-btn { background: none; border: none; cursor: pointer; font-size: 18px; position: relative; }
-        .dot { position: absolute; top: -2px; right: -5px; background: var(--apple-blue); color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-
-        /* NAV COLLECTIONS */
-        .collections-nav {
-          display: flex; gap: 30px; justify-content: center; padding: 12px 0;
-          background: var(--apple-bg); overflow-x: auto; scrollbar-width: none;
-        }
-        .col-item { font-size: 12px; opacity: 0.6; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .col-item.active { opacity: 1; font-weight: 600; border-bottom: 1px solid #000; }
-
-        /* GRID */
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-        .title { font-size: 40px; font-weight: 700; text-align: center; margin-bottom: 40px; letter-spacing: -1px; }
+        .apple-nav { position: sticky; top: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); z-index: 100; border-bottom: 1px solid #eee; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .tabs { display: flex; gap: 20px; justify-content: center; padding: 20px; overflow-x: auto; }
+        .tab-btn { font-size: 13px; cursor: pointer; opacity: 0.6; border: none; background: none; }
+        .tab-btn.active { opacity: 1; font-weight: 600; border-bottom: 1px solid #000; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1100px; margin: 0 auto; }
+        .apple-card { background: #f5f5f7; border-radius: 20px; padding: 30px; text-align: center; }
+        .stepper-lux { display: inline-flex; background: #fff; border-radius: 25px; padding: 5px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .step-btn { width: 30px; height: 30px; border: none; background: none; cursor: pointer; font-size: 18px; }
+        .add-btn { background: #0071e3; color: #fff; border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; font-weight: 500; }
         
-        .grid {
-          display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;
-        }
-        .card {
-          background: var(--apple-grey); border-radius: 18px; padding: 30px;
-          display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease;
-        }
-        .card:hover { transform: scale(1.02); }
-        .img-box { height: 200px; margin-bottom: 20px; display: flex; align-items: center; }
-        .img-box img { max-height: 100%; object-fit: contain; }
-        
-        /* STEPPER HAUT DE GAMME */
-        .stepper {
-          display: flex; align-items: center; background: white; border-radius: 30px;
-          padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px;
-        }
-        .s-btn { width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
-        .s-val { width: 40px; text-align: center; font-weight: 600; font-size: 14px; }
-
-        .add-btn {
-          background: var(--apple-blue); color: white; border: none; border-radius: 20px;
-          padding: 8px 20px; font-weight: 500; cursor: pointer; transition: 0.2s;
-        }
-        .add-btn:hover { background: #0077ed; }
-
-        /* APPLE DRAWER PANIER */
-        .drawer {
-          position: fixed; top: 0; right: 0; bottom: 0; width: 400px;
-          background: rgba(255,255,255,0.95); backdrop-filter: blur(25px);
-          z-index: 2000; padding: 40px; box-shadow: -10px 0 50px rgba(0,0,0,0.05);
-          transform: translateX(${cartOpen ? '0' : '100%'});
-          transition: transform 0.5s cubic-bezier(0.2, 1, 0.2, 1);
-        }
-        @media (max-width: 500px) { .drawer { width: 100%; } }
-
-        .drawer-row { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
-        .row-img { width: 64px; height: 64px; background: var(--apple-grey); border-radius: 10px; object-fit: contain; }
-        
-        .checkout-btn {
-          width: 100%; background: var(--apple-blue); color: white; border: none;
-          padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;
-        }
-        
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 1500; display: ${cartOpen ? 'block' : 'none'}; }
-
-        /* MODAL */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 40px; border-radius: 22px; width: 90%; max-width: 400px; text-align: center; }
-        .apple-input { width: 100%; padding: 14px; border: 1px solid #d2d2d7; border-radius: 10px; margin: 20px 0; font-size: 16px; outline-color: var(--apple-blue); }
+        /* APPLE DRAWER */
+        .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 380px; background: #fff; z-index: 200; transform: translateX(${cartOpen ? '0' : '100%'}); transition: 0.4s ease; padding: 30px; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 150; display: ${cartOpen ? 'block' : 'none'}; }
       `}</style>
 
-      <header className="header">
-        <div className="header-wrap">
-          <div className="brand">OLDA</div>
-          <button className="cart-btn" onClick={() => setCartOpen(true)}>
-            🛍️ {totalArticles > 0 && <span className="dot">{totalArticles}</span>}
-          </button>
-        </div>
-      </header>
-
-      <nav className="collections-nav">
-        {Object.keys(MUGS_DATA).map(key => (
-          <div key={key} className={`col-item ${activeTab === key ? 'active' : ''}`} onClick={() => setActiveTab(key)}>
-            {formatTabName(key)}
-          </div>
-        ))}
+      <nav className="apple-nav">
+        <span style={{ fontWeight: 700, fontSize: '20px' }}>OLDA</span>
+        <button onClick={() => setCartOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px' }}>
+          🛍️ {totalArticles > 0 && <span style={{ fontSize: '14px', background: '#0071e3', color: '#fff', padding: '2px 8px', borderRadius: '10px' }}>{totalArticles}</span>}
+        </button>
       </nav>
 
-      <main className="container">
-        <h1 className="title">{formatTabName(activeTab)}</h1>
-        <div className="grid">
-          {MUGS_DATA[activeTab].map((p) => (
-            <div key={p.id} className="card">
-              <div className="img-box"><img src={p.image} alt={p.couleur} /></div>
-              <h3 style={{ margin: '0 0 5px 0', fontSize: '22px' }}>{p.couleur}</h3>
-              <p style={{ margin: '0 0 20px 0', color: '#86868b' }}>{p.prix.toFixed(2)} €</p>
-              
-              <div className="stepper">
-                <button className="s-btn" onClick={() => ajuster(p.id, -1)}>−</button>
-                <div className="s-val">{getQte(p.id)}</div>
-                <button className="s-btn" onClick={() => ajuster(p.id, 1)}>+</button>
-              </div>
-              
-              <button className="add-btn" onClick={() => ajouterAuPanier(p)}>Ajouter au panier</button>
+      <div className="tabs">
+        {Object.keys(MUGS_DATA).map(key => (
+          <button key={key} className={`tab-btn ${activeTab === key ? 'active' : ''}`} onClick={() => setActiveTab(key)}>
+            {formatTabName(key)}
+          </button>
+        ))}
+      </div>
+
+      <main className="product-grid">
+        {MUGS_DATA[activeTab].map(p => (
+          <div key={p.id} className="apple-card">
+            <img src={p.image} alt="" style={{ height: '180px', marginBottom: '20px', objectFit: 'contain' }} />
+            <h3 style={{ margin: '0 0 10px 0' }}>{p.couleur}</h3>
+            <p style={{ color: '#86868b', marginBottom: '20px' }}>{p.prix.toFixed(2)} €</p>
+            <div className="stepper-lux">
+              <button className="step-btn" onClick={() => ajuster(p.id, -1)}>−</button>
+              <span style={{ width: '40px', lineHeight: '30px' }}>{getQte(p.id)}</span>
+              <button className="step-btn" onClick={() => ajuster(p.id, 1)}>+</button>
             </div>
-          ))}
-        </div>
+            <br />
+            <button className="add-btn" onClick={() => ajouterAuPanier(p)}>Ajouter</button>
+          </div>
+        ))}
       </main>
 
       <div className="overlay" onClick={() => setCartOpen(false)} />
       <div className="drawer">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: 700 }}>Panier</h2>
-          <span style={{ fontSize: '24px', cursor: 'pointer' }} onClick={() => setCartOpen(false)}>✕</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+          <h2>Panier</h2>
+          <button onClick={() => setCartOpen(false)} style={{ border: 'none', background: 'none', fontSize: '24px' }}>✕</button>
         </div>
-        
-        <div style={{ flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
-          {panier.length === 0 ? <p style={{ color: '#86868b' }}>Votre panier est vide.</p> : panier.map(item => (
-            <div key={item.id} className="drawer-row">
-              <img src={item.image} className="row-img" alt="" />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: '15px' }}>{item.couleur}</div>
-                <div style={{ fontSize: '13px', color: '#86868b' }}>{item.quantite} × {item.prix}€</div>
-              </div>
-              <button style={{ border: 'none', background: 'none', color: '#0071e3', fontSize: '13px', cursor: 'pointer' }} onClick={() => supprimerDuPanier(item.id)}>Supprimer</button>
+        {panier.map(item => (
+          <div key={item.id} style={{ display: 'flex', gap: '15px', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+            <img src={item.image} alt="" style={{ width: '50px', height: '50px', background: '#f5f5f7', borderRadius: '8px' }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600 }}>{item.couleur}</div>
+              <div style={{ fontSize: '13px', color: '#86868b' }}>{item.quantite} x {item.prix} €</div>
             </div>
-          ))}
-        </div>
-
+          </div>
+        ))}
         {panier.length > 0 && (
-          <div style={{ borderTop: '1px solid #f5f5f7', paddingTop: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', fontSize: '18px', fontWeight: 600 }}>
+          <div style={{ marginTop: '30px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '18px', marginBottom: '20px' }}>
               <span>Total</span>
               <span>{totalPrix.toFixed(2)} €</span>
             </div>
-            <button className="checkout-btn" onClick={() => { setCartOpen(false); setShowCheckoutModal(true); }}>Commander</button>
+            <button className="add-btn" style={{ width: '100%', padding: '15px' }} onClick={() => setShowCheckoutModal(true)}>Commander</button>
           </div>
         )}
       </div>
 
       {showCheckoutModal && (
-        <div className="modal-bg">
-          <div className="modal">
-            <h2 style={{ fontSize: '24px', fontWeight: 700 }}>Confirmation</h2>
-            <p style={{ fontSize: '14px', color: '#86868b', marginTop: '10px' }}>Saisissez votre nom pour finaliser votre commande de {totalPrix.toFixed(2)} €.</p>
-            <input className="apple-input" placeholder="Nom complet" value={nomClient} onChange={(e) => setNomClient(e.target.value)} />
-            <button className="checkout-btn" onClick={envoyerCommande} disabled={isSending || !nomClient.trim()}>
-              {isSending ? 'Envoi...' : 'Confirmer la commande'}
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', padding: '40px', borderRadius: '25px', width: '90%', maxWidth: '400px', textAlign: 'center' }}>
+            <h2>Confirmation</h2>
+            <input className="apple-input" style={{ width: '100%', padding: '15px', margin: '20px 0', borderRadius: '12px', border: '1px solid #d2d2d7' }} placeholder="Nom complet" value={nomClient} onChange={(e) => setNomClient(e.target.value)} />
+            <button className="add-btn" style={{ width: '100%' }} onClick={envoyerCommande} disabled={isSending || !nomClient.trim()}>
+              {isSending ? 'Envoi...' : 'Confirmer'}
             </button>
-            <div style={{ marginTop: '20px', color: '#0071e3', cursor: 'pointer', fontSize: '14px' }} onClick={() => setShowCheckoutModal(false)}>Annuler</div>
+            <p onClick={() => setShowCheckoutModal(false)} style={{ color: '#0071e3', cursor: 'pointer', marginTop: '15px' }}>Annuler</p>
           </div>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default BoutiqueIndex;
