@@ -71,14 +71,17 @@ export default async function handler(req, res) {
   `;
 
   try {
+    console.log('📨 Envoi de l\'email via Gmail...');
     await transporter.sendMail({
-      from: '"Atelier OLDA" <votre-email@gmail.com>',
-      to: 'votre-email-de-reception@gmail.com',
+      from: '"Atelier OLDA" <charlie.jallon@gmail.com>',
+      to: 'charlie.jallon@gmail.com',
       subject: `NOUVELLE COMMANDE : ${nomClient}`,
       html: emailHtml,
     });
+    console.log('✅ Email envoyé avec succès !');
     return res.status(200).json({ message: 'Commande envoyée avec succès' });
   } catch (error) {
+    console.error('❌ Erreur d\'envoi:', error);
     return res.status(500).json({ error: error.message });
   }
 }
