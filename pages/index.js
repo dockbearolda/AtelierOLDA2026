@@ -24,10 +24,14 @@ return names[key] || key;
 };
 
 export default function BoutiqueOlda() {
-const [activeTab, setActiveTab] = useState(‘olda’);
+const [activeTab, setActiveTab] = useState('olda');
 const [quantites, setQuantites] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
+const [checkoutOpen, setCheckoutOpen] = useState(false);
+const [formData, setFormData] = useState({ nom: '', email: '', telephone: '', adresse: '' });
+const [loading, setLoading] = useState(false);
+const [orderSuccess, setOrderSuccess] = useState(false);
 
 const getQte = (id) => quantites[id] || 3;
 
@@ -66,6 +70,55 @@ setQuantites({ …quantites, [produit.id]: 3 });
 
 const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
 const totalPrix = panier.reduce((acc, item) => acc + (item.prix * item.quantite), 0);
+
+const handleCheckout = () => {
+setCartOpen(false);
+setCheckoutOpen(true);
+};
+
+const handleSubmitOrder = async (e) => {
+e.preventDefault();
+if (!formData.nom || !formData.email) {
+alert('Veuillez remplir au moins votre nom et email');
+return;
+}
+
+setLoading(true);
+try {
+const response = await fetch('/api/send-email', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+nomClient: formData.nom,
+email: formData.email,
+telephone: formData.telephone,
+adresse: formData.adresse,
+panier: panier.map(item => ({
+reference: item.reference,
+couleur: item.couleur,
+quantite: item.quantite,
+prix: item.prix
+}))
+})
+});
+
+if (response.ok) {
+setOrderSuccess(true);
+setPanier([]);
+setFormData({ nom: '', email: '', telephone: '', adresse: '' });
+setTimeout(() => {
+setCheckoutOpen(false);
+setOrderSuccess(false);
+}, 3000);
+} else {
+alert('Erreur lors de l\'envoi de la commande. Veuillez réessayer.');
+}
+} catch (error) {
+alert('Erreur: ' + error.message);
+} finally {
+setLoading(false);
+}
+};
 
 return (
 <div style={{ background: ‘#fafbfc’, minHeight: ‘100vh’, color: ‘#1a1a1a’, fontFamily: “‘Clash Display’, ‘Outfit’, -apple-system, BlinkMacSystemFont, sans-serif” }}>
@@ -629,6 +682,195 @@ return (
         font-size: 13px;
       }
     }
+
+    /* CHECKOUT FORM MODAL */
+    .checkout-modal {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 28px 28px 0 0;
+      z-index: 1001;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .checkout-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: white;
+      border-radius: 28px 28px 0 0;
+      z-index: 10;
+    }
+
+    .checkout-content {
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #000;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    }
+
+    .form-input::placeholder {
+      color: #999;
+    }
+
+    .order-summary {
+      background: #f5f5f7;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .order-summary h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 16px 0;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .order-item-name {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .order-item-qty {
+      font-weight: 600;
+      color: #000;
+    }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      margin-top: 16px;
+      border-top: 2px solid rgba(0,0,0,0.1);
+    }
+
+    .order-total-label {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .order-total-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e63946;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(135deg, #000 0%, #333 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: bounce 0.6s ease-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #000;
+    }
+
+    .success-text {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   `}</style>
 
   {/* HEADER */}
@@ -757,11 +999,114 @@ return (
               <span className="summary-label">Total ({totalArticles} articles)</span>
               <span className="summary-value price-total">{totalPrix.toFixed(2)}€</span>
             </div>
-            <button className="btn-checkout" onClick={() => alert("Direction le paiement...")}>
+            <button className="btn-checkout" onClick={handleCheckout}>
               Finaliser la commande
             </button>
           </div>
         )}
+      </div>
+    </>
+  )}
+
+  {/* CHECKOUT MODAL */}
+  {checkoutOpen && (
+    <>
+      <div className="cart-overlay" onClick={() => !loading && setCheckoutOpen(false)} />
+      <div className="checkout-modal">
+        <div className="checkout-header">
+          <h2>Finaliser la commande</h2>
+          <button className="btn-close" onClick={() => !loading && setCheckoutOpen(false)}>×</button>
+        </div>
+
+        <div className="checkout-content">
+          {orderSuccess ? (
+            <div className="success-message">
+              <div className="success-icon">✓</div>
+              <h3 className="success-title">Commande envoyée !</h3>
+              <p className="success-text">
+                Merci pour votre commande.<br />
+                Nous vous contacterons très bientôt.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="order-summary">
+                <h3>Récapitulatif</h3>
+                {panier.map(item => (
+                  <div key={item.id} className="order-item">
+                    <span className="order-item-name">
+                      {item.couleur} <span style={{ color: '#999', fontSize: '12px' }}>({item.reference})</span>
+                    </span>
+                    <span className="order-item-qty">× {item.quantite}</span>
+                  </div>
+                ))}
+                <div className="order-total">
+                  <span className="order-total-label">Total</span>
+                  <span className="order-total-price">{totalPrix.toFixed(2)}€</span>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmitOrder}>
+                <div className="form-group">
+                  <label className="form-label">Nom complet *</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Ex: Marie Dupont"
+                    value={formData.nom}
+                    onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Email *</label>
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="Ex: marie@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Téléphone</label>
+                  <input
+                    type="tel"
+                    className="form-input"
+                    placeholder="Ex: 06 12 34 56 78"
+                    value={formData.telephone}
+                    onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Adresse de livraison</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Ex: 123 Rue de la Paix, 75000 Paris"
+                    value={formData.adresse}
+                    onChange={(e) => setFormData({ ...formData, adresse: e.target.value })}
+                  />
+                </div>
+
+                <button type="submit" className="btn-submit" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <span className="spinner"></span>
+                      Envoi en cours...
+                    </>
+                  ) : (
+                    'Confirmer la commande'
+                  )}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
       </div>
     </>
   )}

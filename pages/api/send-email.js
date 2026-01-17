@@ -3,15 +3,19 @@ import nodemailer from 'nodemailer';
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Méthode non autorisée');
 
-  const { nomClient, panier } = req.body;
+  const { nomClient, email, telephone, adresse, panier } = req.body;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
-    auth: { 
-      user: process.env.EMAIL_USER, 
-      pass: process.env.EMAIL_PASS 
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
+
+  // Calculer le total
+  const totalQuantite = panier.reduce((acc, item) => acc + item.quantite, 0);
+  const totalPrix = panier.reduce((acc, item) => acc + (item.prix * item.quantite), 0);
 
   const emailHtml = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 60px 20px; color: #1d1d1f; background-color: #f5f5f7;">
@@ -19,8 +23,13 @@ export default async function handler(req, res) {
         
         <div style="padding: 40px; border-bottom: 1px solid #f2f2f2;">
           <p style="text-transform: uppercase; letter-spacing: 3px; font-size: 12px; color: #86868b; margin: 0 0 10px 0; font-weight: 600;">Atelier OLDA</p>
-          <h1 style="font-size: 28px; font-weight: 700; margin: 0; color: #1d1d1f;">Confirmation de commande</h1>
-          <p style="font-size: 17px; color: #86868b; margin: 8px 0 0 0;">Client : ${nomClient}</p>
+          <h1 style="font-size: 28px; font-weight: 700; margin: 0; color: #1d1d1f;">Nouvelle Commande</h1>
+          <div style="margin-top: 20px; padding: 16px; background: #f9f9fb; border-radius: 8px;">
+            <p style="font-size: 15px; color: #1d1d1f; margin: 0 0 8px 0;"><strong>Client:</strong> ${nomClient}</p>
+            ${email ? `<p style="font-size: 15px; color: #1d1d1f; margin: 0 0 8px 0;"><strong>Email:</strong> ${email}</p>` : ''}
+            ${telephone ? `<p style="font-size: 15px; color: #1d1d1f; margin: 0 0 8px 0;"><strong>Téléphone:</strong> ${telephone}</p>` : ''}
+            ${adresse ? `<p style="font-size: 15px; color: #1d1d1f; margin: 0;"><strong>Adresse:</strong> ${adresse}</p>` : ''}
+          </div>
         </div>
 
         <div style="padding: 20px 40px;">
@@ -35,6 +44,9 @@ export default async function handler(req, res) {
                     <h2 style="margin: 8px 0; font-size: 20px; font-weight: 600; color: #1d1d1f;">
                       ${item.couleur}
                     </h2>
+                    <p style="margin: 8px 0 0 0; font-size: 16px; color: #86868b;">
+                      ${item.prix.toFixed(2)}€ × ${item.quantite} = <strong style="color: #1d1d1f;">${(item.prix * item.quantite).toFixed(2)}€</strong>
+                    </p>
                     ${item.commentaire ? `
                       <div style="margin-top: 12px; padding: 10px 15px; background-color: #f9f9fb; border-left: 2px solid #d2d2d7; border-radius: 4px;">
                         <p style="margin: 0; color: #424245; font-size: 14px; line-height: 1.5;">
@@ -53,6 +65,15 @@ export default async function handler(req, res) {
               </table>
             </div>
           `).join('')}
+
+          <div style="padding: 30px 0; text-align: right;">
+            <p style="margin: 0 0 8px 0; font-size: 14px; color: #86868b;">
+              Total: ${totalQuantite} article${totalQuantite > 1 ? 's' : ''}
+            </p>
+            <p style="margin: 0; font-size: 32px; font-weight: 700; color: #e63946;">
+              ${totalPrix.toFixed(2)}€
+            </p>
+          </div>
         </div>
 
         <div style="padding: 40px; background-color: #fafafa; text-align: center;">
@@ -72,13 +93,14 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail({
-      from: '"Atelier OLDA" <votre-email@gmail.com>',
-      to: 'votre-email-de-reception@gmail.com',
-      subject: `NOUVELLE COMMANDE : ${nomClient}`,
+      from: `"Atelier OLDA" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_DESTINATAIRE || process.env.EMAIL_USER,
+      subject: `🛍️ NOUVELLE COMMANDE : ${nomClient}`,
       html: emailHtml,
     });
     return res.status(200).json({ message: 'Commande envoyée avec succès' });
   } catch (error) {
+    console.error('Erreur envoi email:', error);
     return res.status(500).json({ error: error.message });
   }
 }
