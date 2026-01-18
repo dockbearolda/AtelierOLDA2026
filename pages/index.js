@@ -79,7 +79,6 @@ alert("Merci de remplir tous les champs");
 return;
 }
 
-```
 if (panier.length === 0) {
   alert("Votre panier est vide");
   return;
@@ -124,7 +123,6 @@ try {
   alert("Erreur d envoi: " + (err.text || "Verifiez votre template EmailJS et vos identifiants"));
   setSending(false);
 }
-```
 
 };
 
@@ -168,7 +166,6 @@ totalArticles > 0 && React.createElement("span", { style: styles.badge }, totalA
 )
 ),
 
-```
 React.createElement("nav", { style: styles.nav },
   tabs.map(function(tab) {
     return React.createElement("button", {
@@ -267,7 +264,6 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
     )
   )
 )
-```
 
 );
 }
