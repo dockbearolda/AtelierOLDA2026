@@ -77,37 +77,86 @@ export default function OLDAStore() {
     setNouveauCommentaire(prev => ({ ...prev, [productId]: '' }));
   };
 
-  const generateOrderText = () => {
-    let text = `NOUVELLE COMMANDE OLDA\n\n`;
-    text += `CLIENT:\n`;
-    text += `Nom: ${clientInfo.nom}\n`;
-    text += `Email: ${clientInfo.email}\n\n`;
-    text += `ARTICLES:\n`;
-    panier.forEach(item => {
-      text += `- ${item.nom} ${item.couleur} (${item.reference}) x${item.quantite}\n`;
-      if (item.commentaire && item.commentaire.length > 0) {
-        text += `  Commentaire: ${item.commentaire.join(', ')}\n`;
-      }
-    });
-    return text;
-  };
-
-  const envoyerCommande = () => {
+  const envoyerCommande = async () => {
     if (!clientInfo.nom || !clientInfo.email) {
       alert('Merci de remplir tous les champs');
       return;
     }
     
     setSending(true);
-    const subject = encodeURIComponent(`Commande OLDA - ${clientInfo.nom}`);
-    const body = encodeURIComponent(generateOrderText());
-    
-    window.open(`mailto:charlie.jallon@gmail.com?subject=${subject}&body=${body}`, '_blank');
-    
-    setTimeout(() => {
+
+    // Génération du contenu HTML de l'email
+    let articlesHtml = panier.map(item => {
+      let html = `<tr>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.nom}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.couleur}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.reference}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.quantite}</td>
+      </tr>`;
+      if (item.commentaire && item.commentaire.length > 0) {
+        html += `<tr>
+          <td colspan="4" style="padding: 8px 12px; background: #f9f9f9; font-style: italic; color: #666;">
+            Commentaire : ${item.commentaire.join(', ')}
+          </td>
+        </tr>`;
+      }
+      return html;
+    }).join('');
+
+    const emailHtml = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #1d1d1f; font-size: 24px; margin-bottom: 30px;">Nouvelle commande OLDA</h1>
+        
+        <div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+          <h2 style="font-size: 16px; color: #1d1d1f; margin-bottom: 12px;">Client</h2>
+          <p style="margin: 0; color: #1d1d1f;"><strong>Nom :</strong> ${clientInfo.nom}</p>
+          <p style="margin: 8px 0 0; color: #1d1d1f;"><strong>Email :</strong> ${clientInfo.email}</p>
+        </div>
+
+        <h2 style="font-size: 16px; color: #1d1d1f; margin-bottom: 12px;">Articles commandés</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+          <thead>
+            <tr style="background: #1d1d1f; color: white;">
+              <th style="padding: 12px; text-align: left;">Produit</th>
+              <th style="padding: 12px; text-align: left;">Couleur</th>
+              <th style="padding: 12px; text-align: left;">Réf.</th>
+              <th style="padding: 12px; text-align: left;">Qté</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${articlesHtml}
+          </tbody>
+        </table>
+
+        <p style="color: #86868b; font-size: 14px;">Cet email a été envoyé automatiquement depuis le site OLDA.</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch('/api/send-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: 'charlie.jallon@gmail.com',
+          subject: `Nouvelle commande OLDA - ${clientInfo.nom}`,
+          html: emailHtml,
+          replyTo: clientInfo.email,
+        }),
+      });
+
+      if (response.ok) {
+        setOrderSent(true);
+      } else {
+        alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+    } finally {
       setSending(false);
-      setOrderSent(true);
-    }, 500);
+    }
   };
 
   const fermerEtReset = () => {
@@ -221,7 +270,6 @@ export default function OLDAStore() {
             borderBottom: '1px solid #f0f0f0',
           }}>
             <div style={{ display: 'flex', gap: 20 }}>
-              {/* Image parfaitement alignée */}
               <div style={{
                 width: 120,
                 display: 'flex',
@@ -239,14 +287,12 @@ export default function OLDAStore() {
                 />
               </div>
 
-              {/* Infos alignées */}
               <div style={{ 
                 flex: 1, 
                 display: 'flex', 
                 flexDirection: 'column',
                 justifyContent: 'space-between',
               }}>
-                {/* Haut : infos produit */}
                 <div>
                   <h2 style={{ 
                     fontSize: 17, 
@@ -265,7 +311,6 @@ export default function OLDAStore() {
                   </p>
                 </div>
 
-                {/* Milieu : quantité */}
                 <div style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
@@ -323,7 +368,6 @@ export default function OLDAStore() {
                   </button>
                 </div>
 
-                {/* Bas : commentaire */}
                 <div>
                   {(commentaires[product.id] || []).map((c, i) => (
                     <p key={i} style={{ 
@@ -398,7 +442,6 @@ export default function OLDAStore() {
         flexDirection: 'column',
         boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.15)',
       }}>
-        {/* Handle */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'center', 
@@ -462,7 +505,6 @@ export default function OLDAStore() {
           </div>
         ) : (
           <>
-            {/* Header */}
             <div style={{
               padding: '0 24px 16px',
               display: 'flex',
@@ -492,7 +534,6 @@ export default function OLDAStore() {
               </button>
             </div>
 
-            {/* Content */}
             <div style={{ 
               flex: 1, 
               overflowY: 'auto', 
@@ -517,7 +558,6 @@ export default function OLDAStore() {
                 </div>
               ) : (
                 <>
-                  {/* Articles */}
                   {panier.map(item => (
                     <div key={item.id} style={{
                       padding: '20px 0',
@@ -571,7 +611,6 @@ export default function OLDAStore() {
                             {item.reference}
                           </p>
                           
-                          {/* Commentaire dans le panier */}
                           {item.commentaire && item.commentaire.length > 0 && (
                             <div style={{
                               background: '#f9f9f9',
@@ -592,7 +631,6 @@ export default function OLDAStore() {
                             </div>
                           )}
                           
-                          {/* Quantité */}
                           <div style={{
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -637,7 +675,6 @@ export default function OLDAStore() {
                     </div>
                   ))}
 
-                  {/* Formulaire */}
                   <div style={{ padding: '24px 0' }}>
                     <h3 style={{ 
                       fontSize: 15, 
@@ -710,7 +747,6 @@ export default function OLDAStore() {
               )}
             </div>
 
-            {/* Bouton Commander */}
             {panier.length > 0 && (
               <div style={{ 
                 padding: '20px 24px 40px',
