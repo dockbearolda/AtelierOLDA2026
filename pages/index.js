@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 
 const MUGS_DATA = {
@@ -40,6 +40,10 @@ export default function OLDAStore() {
   const [clientInfo, setClientInfo] = useState({ nom: '', email: '' });
   const [orderSent, setOrderSent] = useState(false);
   const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    emailjs.init('063h32x');
+  }, []);
 
   const getQte = (id) => quantites[id] || 3;
   const getCommentaire = (id) => commentaires[id] || '';
@@ -83,7 +87,7 @@ export default function OLDAStore() {
     setSending(true);
 
     let commandeHTML = '';
-    panier.forEach((item, index) => {
+    panier.forEach((item) => {
       commandeHTML += `${item.nom} ${item.couleur}\n`;
       commandeHTML += `Référence: ${item.reference}\n`;
       commandeHTML += `Quantité: ${item.quantite}\n`;
@@ -100,19 +104,17 @@ export default function OLDAStore() {
     };
 
     try {
-      const response = await emailjs.send(
+      await emailjs.send(
         'service_063h32x',
         'template_1qwnkwd',
-        templateParams,
-        '063h32x'
+        templateParams
       );
 
-      console.log('Email envoyé avec succès:', response);
       setSending(false);
       setOrderSent(true);
     } catch (err) {
-      console.error('Erreur EmailJS complète:', err);
-      alert(`Erreur: ${err.text || err.message || 'Vérifiez votre configuration EmailJS'}`);
+      console.error('Erreur EmailJS:', err);
+      alert(`Erreur d'envoi: ${err.text || 'Vérifiez votre template EmailJS et vos identifiants'}`);
       setSending(false);
     }
   };
@@ -126,17 +128,32 @@ export default function OLDAStore() {
 
   const totalArticles = panier.reduce((sum, item) => sum + item.quantite, 0);
 
+  const getTabStyle = (tabKey) => {
+    const baseStyle = { ...styles.tab };
+    if (activeTab === tabKey) {
+      if (tabKey === 'nouveautes') {
+        return { ...baseStyle, ...styles.tabActive, backgroundColor: '#0071e3', color: 'white' };
+      } else if (tabKey === 'offres') {
+        return { ...baseStyle, ...styles.tabActive, backgroundColor: '#ff3b30', color: 'white' };
+      }
+      return { ...baseStyle, ...styles.tabActive };
+    } else {
+      if (tabKey === 'nouveautes') {
+        return { ...baseStyle, backgroundColor: '#e8f2ff', color: '#0071e3' };
+      } else if (tabKey === 'offres') {
+        return { ...baseStyle, backgroundColor: '#ffe5e5', color: '#ff3b30' };
+      }
+      return baseStyle;
+    }
+  };
+
   return (
     <div style={styles.container}>
       <header style={styles.header}>
         <img src="/images/mugs/logo.jpeg" alt="OLDA" style={styles.logo} />
-        <h1 style={styles.title}>OLDA</h1>
         <button onClick={() => setCartOpen(true)} style={styles.cartButton}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 2L11 8H21L17 12L19 18L13 14L7 18L9 12L5 8H15L17 2H9Z" />
-            <circle cx="9" cy="21" r="1" fill="currentColor" />
-            <circle cx="20" cy="21" r="1" fill="currentColor" />
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="currentColor">
+            <path d="M4.5 6.5h11c1.38 0 2.5 1.12 2.5 2.5v10c0 1.93-1.57 3.5-3.5 3.5h-9C3.57 22.5 2 20.93 2 19V9c0-1.38 1.12-2.5 2.5-2.5zm5.5-5c1.93 0 3.5 1.57 3.5 3.5V6h-7V5c0-1.93 1.57-3.5 3.5-3.5z"/>
           </svg>
           {totalArticles > 0 && <span style={styles.badge}>{totalArticles}</span>}
         </button>
@@ -147,10 +164,7 @@ export default function OLDAStore() {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            style={{
-              ...styles.tab,
-              ...(activeTab === tab.key ? styles.tabActive : {})
-            }}
+            style={getTabStyle(tab.key)}
           >
             {tab.label}
           </button>
@@ -295,16 +309,6 @@ const styles = {
     height: '40px',
     width: 'auto',
     objectFit: 'contain'
-  },
-  title: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    margin: 0,
-    fontSize: '28px',
-    fontWeight: '600',
-    color: '#1d1d1f',
-    letterSpacing: '-0.5px'
   },
   cartButton: {
     backgroundColor: 'transparent',
