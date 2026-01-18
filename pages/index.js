@@ -1,43 +1,43 @@
-import React, { useState } from ‘react’;
-import emailjs from ‘@emailjs/browser’;
+import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 const MUGS_DATA = {
 nouveautes: [
-{ id: 101, reference: ‘NW 01’, image: ‘/images/mugs/nouveaute1.jpg’, nom: ‘Édition Aurore’, couleur: ‘Aurore’ }
+{ id: 101, reference: 'NW 01', image: '/images/mugs/nouveaute1.jpg', nom: 'Édition Aurore', couleur: 'Aurore' }
 ],
 olda: [
-{ id: 1, reference: ‘TC 01’, image: ‘/images/mugs/roseblanc.jpg’, nom: ‘Tasse Céramique’, couleur: ‘Rose & Blanc’ },
-{ id: 2, reference: ‘TC 02’, image: ‘/images/mugs/rougeblanc.jpg’, nom: ‘Tasse Céramique’, couleur: ‘Rouge & Blanc’ },
-{ id: 3, reference: ‘TC 03’, image: ‘/images/mugs/orangeblanc.jpg’, nom: ‘Tasse Céramique’, couleur: ‘Orange & Blanc’ },
-{ id: 4, reference: ‘TC 04’, image: ‘/images/mugs/vertblanc.jpg’, nom: ‘Tasse Céramique’, couleur: ‘Vert & Blanc’ },
-{ id: 5, reference: ‘TC 05’, image: ‘/images/mugs/noirblanc.jpg’, nom: ‘Tasse Céramique’, couleur: ‘Noir & Blanc’ },
+{ id: 1, reference: 'TC 01', image: '/images/mugs/roseblanc.jpg', nom: 'Tasse Céramique', couleur: 'Rose & Blanc' },
+{ id: 2, reference: 'TC 02', image: '/images/mugs/rougeblanc.jpg', nom: 'Tasse Céramique', couleur: 'Rouge & Blanc' },
+{ id: 3, reference: 'TC 03', image: '/images/mugs/orangeblanc.jpg', nom: 'Tasse Céramique', couleur: 'Orange & Blanc' },
+{ id: 4, reference: 'TC 04', image: '/images/mugs/vertblanc.jpg', nom: 'Tasse Céramique', couleur: 'Vert & Blanc' },
+{ id: 5, reference: 'TC 05', image: '/images/mugs/noirblanc.jpg', nom: 'Tasse Céramique', couleur: 'Noir & Blanc' },
 ],
 fuck: [
-{ id: 11, reference: ‘TF 01’, image: ‘/images/mugs/Fuckblancnoir.JPG’, nom: ‘Tasse Céramique Fuck’, couleur: ‘Blanc & Noir’ },
+{ id: 11, reference: 'TF 01', image: '/images/mugs/Fuckblancnoir.JPG', nom: 'Tasse Céramique Fuck', couleur: 'Blanc & Noir' },
 ],
 tshirt: [
-{ id: 21, reference: ‘TS 01’, image: ‘À REMPLIR’, nom: ‘À REMPLIR’, couleur: ‘À REMPLIR’ },
+{ id: 21, reference: 'TS 01', image: 'À REMPLIR', nom: 'À REMPLIR', couleur: 'À REMPLIR' },
 ],
 offres: [
-{ id: 201, reference: ‘PR 01’, image: ‘/images/mugs/logo.jpeg’, nom: ‘Édition Limitée’, couleur: ‘À REMPLIR’ }
+{ id: 201, reference: 'PR 01', image: '/images/mugs/logo.jpeg', nom: 'Édition Limitée', couleur: 'À REMPLIR' }
 ],
 };
 
 const tabs = [
-{ key: ‘nouveautes’, label: ‘Nouveautés’ },
-{ key: ‘olda’, label: ‘Tasse Céramique OLDA’ },
-{ key: ‘fuck’, label: ‘Tasse Céramique Fuck’ },
-{ key: ‘tshirt’, label: ‘T-Shirt’ },
-{ key: ‘offres’, label: ‘Offres Promotionnelles’ },
+{ key: 'nouveautes', label: 'Nouveautés' },
+{ key: 'olda', label: 'Tasse Céramique OLDA' },
+{ key: 'fuck', label: 'Tasse Céramique Fuck' },
+{ key: 'tshirt', label: 'T-Shirt' },
+{ key: 'offres', label: 'Offres Promotionnelles' },
 ];
 
 export default function OLDAStore() {
-const [activeTab, setActiveTab] = useState(‘olda’);
+const [activeTab, setActiveTab] = useState('olda');
 const [quantites, setQuantites] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
 const [addedProduct, setAddedProduct] = useState(null);
-const [clientInfo, setClientInfo] = useState({ nom: ‘’, email: ‘’ });
+const [clientInfo, setClientInfo] = useState({ nom: '', email: '' });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [commentaires, setCommentaires] = useState({});
@@ -117,7 +117,7 @@ const fermerEtReset = () => {
 setCartOpen(false);
 setOrderSent(false);
 setPanier([]);
-setClientInfo({ nom: ‘’, email: ‘’ });
+setClientInfo({ nom: '', email: '' });
 };
 
 const totalArticles = panier.reduce((sum, item) => sum + item.quantite, 0);
