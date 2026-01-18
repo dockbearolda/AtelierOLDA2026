@@ -3,7 +3,7 @@ import emailjs from ‘@emailjs/browser’;
 
 const MUGS_DATA = {
 nouveautes: [
-{ id: 101, reference: ‘NW 01’, image: ‘/images/mugs/nouveaute1.jpg’, nom: ‘Édition Aurore’, couleur: ‘Aurore’ }
+{ id: 101, reference: ‘SM 01’, image: ‘/images/mugs/nouveaute1.jpg’, nom: ‘Support Mobile Acrylique’, couleur: ‘’ }
 ],
 olda: [
 { id: 1, reference: ‘TC 01’, image: ‘/images/mugs/roseblanc.jpg’, nom: ‘Tasse Céramique’, couleur: ‘Rose & Blanc’ },
@@ -16,10 +16,10 @@ fuck: [
 { id: 11, reference: ‘TF 01’, image: ‘/images/mugs/Fuckblancnoir.JPG’, nom: ‘Tasse Céramique Fuck’, couleur: ‘Blanc & Noir’ }
 ],
 tshirt: [
-{ id: 21, reference: ‘TS 01’, image: ‘À REMPLIR’, nom: ‘À REMPLIR’, couleur: ‘À REMPLIR’ }
+{ id: 21, reference: ‘H-001’, image: ‘/images/mugs/tshirt.jpg’, nom: ‘T-shirt Homme Oversize’, couleur: ‘Noir’ }
 ],
 offres: [
-{ id: 201, reference: ‘PR 01’, image: ‘/images/mugs/logo.jpeg’, nom: ‘Édition Limitée’, couleur: ‘À REMPLIR’ }
+{ id: 201, reference: ‘DB-001’, image: ‘/images/mugs/decapsuleur.jpg’, nom: ‘Décapsuleur Bois’, couleur: ‘’ }
 ]
 };
 
@@ -89,9 +89,10 @@ setSending(true);
 
 let commandeHTML = '';
 panier.forEach((item) => {
+  const productName = item.couleur ? `${item.nom} ${item.couleur}` : item.nom;
   commandeHTML += `
     <div class="product-row">
-      <div class="product-name">${item.nom} ${item.couleur}</div>
+      <div class="product-name">${productName}</div>
       <div class="product-qty">${item.quantite}</div>
       <div class="product-check"><div class="checkbox"></div></div>
     </div>
@@ -166,8 +167,9 @@ return (
 <header style={styles.header}>
 <img src="/images/mugs/logo.jpeg" alt="OLDA" style={styles.logo} />
 <button onClick={() => setCartOpen(true)} style={styles.cartButton}>
-<svg width="20" height="24" viewBox="0 0 20 24" fill="currentColor">
-<path d="M4.5 6.5h11c1.38 0 2.5 1.12 2.5 2.5v10c0 1.93-1.57 3.5-3.5 3.5h-9C3.57 22.5 2 20.93 2 19V9c0-1.38 1.12-2.5 2.5-2.5zm5.5-5c1.93 0 3.5 1.57 3.5 3.5V6h-7V5c0-1.93 1.57-3.5 3.5-3.5z"/>
+<svg width="22" height="26" viewBox="0 0 22 26" fill="none" stroke="#86868b" strokeWidth="1.5">
+<path d="M4 7h14a2 2 0 012 2v12a3 3 0 01-3 3H5a3 3 0 01-3-3V9a2 2 0 012-2z"/>
+<path d="M7 7V5a4 4 0 118 0v2"/>
 </svg>
 {totalArticles > 0 && <span style={styles.badge}>{totalArticles}</span>}
 </button>
@@ -198,7 +200,7 @@ return (
           />
         </div>
         <h3 style={styles.productName}>{product.nom}</h3>
-        <p style={styles.productColor}>{product.couleur}</p>
+        {product.couleur && <p style={styles.productColor}>{product.couleur}</p>}
         <p style={styles.productRef}>Réf: {product.reference}</p>
 
         <div style={styles.quantityControl}>
@@ -252,7 +254,7 @@ return (
                       <div style={{ flex: 1 }}>
                         <p style={styles.cartItemName}>{item.nom}</p>
                         <p style={styles.cartItemDetails}>
-                          {item.couleur} × {item.quantite}
+                          {item.couleur ? `${item.couleur} × ${item.quantite}` : `× ${item.quantite}`}
                         </p>
                         {item.commentaire && (
                           <p style={styles.cartItemComment}>Note: {item.commentaire}</p>
@@ -332,8 +334,7 @@ backgroundColor: ‘transparent’,
 border: ‘none’,
 cursor: ‘pointer’,
 position: ‘relative’,
-padding: ‘8px’,
-color: ‘#1d1d1f’
+padding: ‘8px’
 },
 badge: {
 position: ‘absolute’,
