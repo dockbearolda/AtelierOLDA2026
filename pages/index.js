@@ -34,6 +34,7 @@ const tabs = [
 export default function OLDAStore() {
   const [activeTab, setActiveTab] = useState('olda');
   const [quantites, setQuantites] = useState({});
+  const [commentaires, setCommentaires] = useState({});
   const [panier, setPanier] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [clientInfo, setClientInfo] = useState({ nom: '', email: '' });
@@ -41,20 +42,26 @@ export default function OLDAStore() {
   const [sending, setSending] = useState(false);
 
   const getQte = (id) => quantites[id] || 3;
+  const getCommentaire = (id) => commentaires[id] || '';
 
   const ajuster = (id, delta) => {
     const v = getQte(id) + delta;
     if (v >= 3 && v <= 99) setQuantites({ ...quantites, [id]: v });
   };
 
+  const updateCommentaire = (id, value) => {
+    setCommentaires({ ...commentaires, [id]: value });
+  };
+
   const ajouterAuPanier = (p) => {
     const qte = getQte(p.id);
+    const commentaire = getCommentaire(p.id);
     setPanier(prev => {
       const existant = prev.find(i => i.id === p.id);
       if (existant) {
-        return prev.map(i => i.id === p.id ? { ...i, quantite: i.quantite + qte } : i);
+        return prev.map(i => i.id === p.id ? { ...i, quantite: i.quantite + qte, commentaire } : i);
       }
-      return [...prev, { ...p, quantite: qte }];
+      return [...prev, { ...p, quantite: qte, commentaire }];
     });
   };
 
@@ -75,31 +82,37 @@ export default function OLDAStore() {
 
     setSending(true);
 
-    let commandeTexte = '';
-    panier.forEach((item) => {
-      commandeTexte += `• ${item.nom} ${item.couleur} (${item.reference}) x${item.quantite}\n`;
+    let commandeHTML = '';
+    panier.forEach((item, index) => {
+      commandeHTML += `${item.nom} ${item.couleur}\n`;
+      commandeHTML += `Référence: ${item.reference}\n`;
+      commandeHTML += `Quantité: ${item.quantite}\n`;
+      if (item.commentaire) {
+        commandeHTML += `Note: ${item.commentaire}\n`;
+      }
+      commandeHTML += '\n';
     });
 
     const templateParams = {
       client_nom: clientInfo.nom,
       client_email: clientInfo.email,
-      commande: commandeTexte,
-      to_email: 'charlie.jallon@gmail.com'
+      commande: commandeHTML
     };
 
     try {
-      await emailjs.send(
+      const response = await emailjs.send(
         'service_063h32x',
         'template_1qwnkwd',
         templateParams,
         '063h32x'
       );
 
+      console.log('Email envoyé avec succès:', response);
       setSending(false);
       setOrderSent(true);
     } catch (err) {
-      console.error('Erreur:', err);
-      alert('Erreur lors de l\'envoi. Vérifiez votre configuration EmailJS.');
+      console.error('Erreur EmailJS complète:', err);
+      alert(`Erreur: ${err.text || err.message || 'Vérifiez votre configuration EmailJS'}`);
       setSending(false);
     }
   };
@@ -116,9 +129,15 @@ export default function OLDAStore() {
   return (
     <div style={styles.container}>
       <header style={styles.header}>
+        <img src="/images/mugs/logo.jpeg" alt="OLDA" style={styles.logo} />
         <h1 style={styles.title}>OLDA</h1>
         <button onClick={() => setCartOpen(true)} style={styles.cartButton}>
-          <span style={styles.cartIcon}>🛍</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M9 2L11 8H21L17 12L19 18L13 14L7 18L9 12L5 8H15L17 2H9Z" />
+            <circle cx="9" cy="21" r="1" fill="currentColor" />
+            <circle cx="20" cy="21" r="1" fill="currentColor" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+          </svg>
           {totalArticles > 0 && <span style={styles.badge}>{totalArticles}</span>}
         </button>
       </header>
@@ -159,6 +178,14 @@ export default function OLDAStore() {
               <button onClick={() => ajuster(product.id, 1)} style={styles.qtyButton}>+</button>
             </div>
 
+            <textarea
+              placeholder="Note (optionnel)"
+              value={getCommentaire(product.id)}
+              onChange={(e) => updateCommentaire(product.id, e.target.value)}
+              style={styles.commentaire}
+              rows="2"
+            />
+
             <button onClick={() => ajouterAuPanier(product)} style={styles.addButton}>
               Ajouter au panier
             </button>
@@ -193,9 +220,14 @@ export default function OLDAStore() {
                     <div style={styles.cartItems}>
                       {panier.map(item => (
                         <div key={item.id} style={styles.cartItem}>
-                          <div>
+                          <div style={{ flex: 1 }}>
                             <p style={styles.cartItemName}>{item.nom}</p>
-                            <p style={styles.cartItemDetails}>{item.couleur} × {item.quantite}</p>
+                            <p style={styles.cartItemDetails}>
+                              {item.couleur} × {item.quantite}
+                            </p>
+                            {item.commentaire && (
+                              <p style={styles.cartItemComment}>Note: {item.commentaire}</p>
+                            )}
                           </div>
                           <button onClick={() => supprimerDuPanier(item.id)} style={styles.deleteButton}>
                             ×
@@ -250,7 +282,7 @@ const styles = {
   },
   header: {
     backgroundColor: 'white',
-    padding: '20px 40px',
+    padding: '16px 40px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -259,7 +291,15 @@ const styles = {
     top: 0,
     zIndex: 100
   },
+  logo: {
+    height: '40px',
+    width: 'auto',
+    objectFit: 'contain'
+  },
   title: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
     margin: 0,
     fontSize: '28px',
     fontWeight: '600',
@@ -270,12 +310,9 @@ const styles = {
     backgroundColor: 'transparent',
     border: 'none',
     cursor: 'pointer',
-    fontSize: '24px',
     position: 'relative',
-    padding: '8px'
-  },
-  cartIcon: {
-    display: 'block'
+    padding: '8px',
+    color: '#1d1d1f'
   },
   badge: {
     position: 'absolute',
@@ -286,7 +323,9 @@ const styles = {
     borderRadius: '10px',
     padding: '2px 6px',
     fontSize: '12px',
-    fontWeight: '600'
+    fontWeight: '600',
+    minWidth: '20px',
+    textAlign: 'center'
   },
   nav: {
     backgroundColor: 'white',
@@ -329,7 +368,7 @@ const styles = {
   },
   imageContainer: {
     height: '200px',
-    backgroundColor: '#f5f5f7',
+    backgroundColor: 'white',
     borderRadius: '12px',
     marginBottom: '16px',
     display: 'flex',
@@ -363,7 +402,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: '16px',
-    marginBottom: '16px'
+    marginBottom: '12px'
   },
   qtyButton: {
     width: '36px',
@@ -383,6 +422,18 @@ const styles = {
     fontWeight: '600',
     minWidth: '30px',
     textAlign: 'center'
+  },
+  commentaire: {
+    width: '100%',
+    padding: '10px',
+    border: '1px solid #e5e5e7',
+    borderRadius: '8px',
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    resize: 'none',
+    marginBottom: '12px',
+    boxSizing: 'border-box',
+    color: '#1d1d1f'
   },
   addButton: {
     width: '100%',
@@ -450,7 +501,7 @@ const styles = {
   cartItem: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     padding: '16px 0',
     borderBottom: '1px solid #f5f5f7'
   },
@@ -461,9 +512,15 @@ const styles = {
     color: '#1d1d1f'
   },
   cartItemDetails: {
-    margin: 0,
+    margin: '0 0 4px 0',
     fontSize: '14px',
     color: '#6e6e73'
+  },
+  cartItemComment: {
+    margin: '4px 0 0 0',
+    fontSize: '13px',
+    color: '#86868b',
+    fontStyle: 'italic'
   },
   deleteButton: {
     background: 'none',
