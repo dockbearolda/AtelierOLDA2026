@@ -184,7 +184,7 @@ return baseStyle;
 };
 
 return React.createElement("div", { style: styles.container },
-React.createElement("header", { style: styles.header },
+!showHomepage && React.createElement("header", { style: styles.header },
 React.createElement("img", {
 src: "/images/mugs/logo.jpeg",
 alt: "OLDA",
@@ -202,8 +202,14 @@ totalArticles > 0 && React.createElement("span", { style: styles.badge }, totalA
 
 showHomepage ? React.createElement("div", { style: styles.homepage },
 React.createElement("div", { style: styles.homepageContent, className: "homepage-content" },
-React.createElement("h1", { style: styles.homepageTitle }, "Atelier OLDA"),
-React.createElement("p", { style: styles.homepageSubtitle }, "Cr\u00e9ations uniques et personnalis\u00e9es"),
+React.createElement("img", {
+src: "/images/mugs/logo.jpeg",
+alt: "Atelier OLDA",
+style: styles.homepageLogo,
+className: "homepage-logo"
+}),
+React.createElement("h1", { style: styles.homepageTitle, className: "homepage-title" }, "Atelier OLDA"),
+React.createElement("p", { style: styles.homepageSubtitle, className: "homepage-subtitle" }, "Cr\u00e9ations uniques et personnalis\u00e9es"),
 React.createElement("div", { style: styles.categoryGrid },
 tabs.map(function(tab) {
 return React.createElement("button", {
@@ -243,7 +249,7 @@ React.createElement("div", { style: styles.navContainer },
 
 React.createElement("main", { style: styles.main },
   MUGS_DATA[activeTab] && MUGS_DATA[activeTab].map(function(product) {
-    return React.createElement("div", { key: product.id, style: styles.card },
+    return React.createElement("div", { key: product.id, style: styles.card, className: "product-card" },
       React.createElement("div", { style: styles.imageContainer },
         React.createElement("img", {
           src: product.image,
@@ -253,7 +259,7 @@ React.createElement("main", { style: styles.main },
         })
       ),
       React.createElement("h3", { style: styles.productName }, product.nom),
-      product.couleur && React.createElement("p", { style: styles.productColor }, product.couleur),
+      product.couleur && React.createElement("p", { style: styles.productColor, className: "product-color" }, product.couleur),
       React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
 
       React.createElement("div", { style: styles.quantityControl },
@@ -342,7 +348,7 @@ minHeight: "100vh",
 backgroundColor: "#f5f5f7"
 },
 homepage: {
-minHeight: "calc(100vh - 73px)",
+minHeight: "100vh",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
@@ -353,6 +359,12 @@ textAlign: "center",
 padding: "40px",
 maxWidth: "900px",
 margin: "0 auto"
+},
+homepageLogo: {
+width: "200px",
+height: "auto",
+objectFit: "contain",
+marginBottom: "32px"
 },
 homepageTitle: {
 fontSize: "56px",

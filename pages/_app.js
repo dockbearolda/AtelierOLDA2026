@@ -45,11 +45,11 @@ function MyApp({ Component, pageProps }) {
 
         /* Responsive layout for products */
         @media (max-width: 767px) {
-          /* Mobile: 1 column */
+          /* Mobile: 2 columns compact */
           main {
-            padding: 20px 16px !important;
-            grid-template-columns: 1fr !important;
-            gap: 16px !important;
+            padding: 16px 12px !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
           }
 
           /* Reduce header padding on mobile */
@@ -63,8 +63,19 @@ function MyApp({ Component, pageProps }) {
           }
 
           /* Homepage adjustments */
-          h1 {
-            font-size: 36px !important;
+          .homepage-logo {
+            width: 140px !important;
+            height: auto !important;
+            margin-bottom: 24px !important;
+          }
+
+          .homepage-title {
+            font-size: 28px !important;
+          }
+
+          .homepage-subtitle {
+            font-size: 16px !important;
+            margin-bottom: 32px !important;
           }
 
           .homepage-content {
@@ -76,9 +87,26 @@ function MyApp({ Component, pageProps }) {
             grid-template-columns: 1fr !important;
           }
 
-          /* Card image height on mobile */
-          .card img {
-            height: 180px !important;
+          /* Product cards on mobile */
+          .product-card {
+            padding: 12px !important;
+          }
+
+          .product-card img {
+            height: 140px !important;
+          }
+
+          .product-card h3 {
+            font-size: 13px !important;
+          }
+
+          .product-card .product-color {
+            font-size: 11px !important;
+          }
+
+          .product-card button {
+            font-size: 12px !important;
+            padding: 10px 16px !important;
           }
         }
 
