@@ -1,52 +1,58 @@
-import React, { useState, useEffect } from “react”;
-import emailjs from “@emailjs/browser”;
+import React, { useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 
 const MUGS_DATA = {
 nouveautes: [
-{ id: 101, reference: “SM 01”, image: “/images/mugs/nouveaute1.jpg”, nom: “Support Mobile Acrylique”, couleur: “” }
+{ id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
 olda: [
-{ id: 1, reference: “TC 01”, image: “/images/mugs/roseblanc.jpg”, nom: “Tasse Ceramique”, couleur: “Rose & Blanc” },
-{ id: 2, reference: “TC 02”, image: “/images/mugs/rougeblanc.jpg”, nom: “Tasse Ceramique”, couleur: “Rouge & Blanc” },
-{ id: 3, reference: “TC 03”, image: “/images/mugs/orangeblanc.jpg”, nom: “Tasse Ceramique”, couleur: “Orange & Blanc” },
-{ id: 4, reference: “TC 04”, image: “/images/mugs/vertblanc.jpg”, nom: “Tasse Ceramique”, couleur: “Vert & Blanc” },
-{ id: 5, reference: “TC 05”, image: “/images/mugs/noirblanc.jpg”, nom: “Tasse Ceramique”, couleur: “Noir & Blanc” }
+{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc" },
+{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc" },
+{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique", couleur: "Orange & Blanc" },
+{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique", couleur: "Vert & Blanc" },
+{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique", couleur: "Noir & Blanc" }
 ],
 fuck: [
-{ id: 11, reference: “TF 01”, image: “/images/mugs/Fuckblancnoir.JPG”, nom: “Tasse Ceramique Fuck”, couleur: “Blanc & Noir” }
+{ id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
 ],
 tshirt: [
-{ id: 21, reference: “H-001”, image: “/images/mugs/tshirt.jpg”, nom: “T-shirt Homme Oversize”, couleur: “Noir” }
+{ id: 21, reference: "H-001", image: "/images/mugs/tshirt.jpg", nom: "T-shirt Homme Oversize", couleur: "Noir" }
 ],
 offres: [
-{ id: 201, reference: “DB-001”, image: “/images/mugs/decapsuleur.jpg”, nom: “Decapsuleur Bois”, couleur: “” }
+{ id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
 ]
 };
 
 const tabs = [
-{ key: “nouveautes”, label: “Nouveautes” },
-{ key: “olda”, label: “Tasse Ceramique OLDA” },
-{ key: “fuck”, label: “Tasse Ceramique Fuck” },
-{ key: “tshirt”, label: “T-Shirt” },
-{ key: “offres”, label: “Offres Promotionnelles” }
+{ key: "nouveautes", label: "Nouveautes" },
+{ key: "olda", label: "Tasse Ceramique OLDA" },
+{ key: "fuck", label: "Tasse Ceramique Fuck" },
+{ key: "tshirt", label: "T-Shirt" },
+{ key: "offres", label: "Offres Promotionnelles" }
 ];
 
 export default function OLDAStore() {
-const [activeTab, setActiveTab] = useState(“olda”);
+const [showHomepage, setShowHomepage] = useState(true);
+const [activeTab, setActiveTab] = useState("olda");
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
-const [clientInfo, setClientInfo] = useState({ nom: “”, email: “” });
+const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 
+var navigateToCategory = function(category) {
+setActiveTab(category);
+setShowHomepage(false);
+};
+
 useEffect(function() {
-emailjs.init(“Y9NKwhNvCNtb_SRry”);
+emailjs.init("Y9NKwhNvCNtb_SRry");
 }, []);
 
 var getQte = function(id) { return quantites[id] || 3; };
-var getCommentaire = function(id) { return commentaires[id] || “”; };
+var getCommentaire = function(id) { return commentaires[id] || ""; };
 
 var ajuster = function(id, delta) {
 var v = getQte(id) + delta;
@@ -75,64 +81,85 @@ setPanier(function(prev) { return prev.filter(function(item) { return item.id !=
 
 var envoyerCommande = async function() {
 if (!clientInfo.nom || !clientInfo.email) {
-alert(“Merci de remplir tous les champs”);
+alert("Merci de remplir tous les champs");
 return;
 }
 
-```
 if (panier.length === 0) {
-  alert("Votre panier est vide");
-  return;
+alert("Votre panier est vide");
+return;
 }
 
 setSending(true);
 
-var commandeHTML = "";
-panier.forEach(function(item) {
-  var productName = item.couleur ? item.nom + " " + item.couleur : item.nom;
-  commandeHTML += "<div class=\"product-row\"><div class=\"product-name\">" + productName + "</div><div class=\"product-qty\">" + item.quantite + "</div><div class=\"product-check\"><div class=\"checkbox\"></div></div></div>";
+var now = new Date();
+var orderNumber = "OLDA-" + now.getFullYear() + ("0" + (now.getMonth() + 1)).slice(-2) + ("0" + now.getDate()).slice(-2) + "-" + ("0" + now.getHours()).slice(-2) + ("0" + now.getMinutes()).slice(-2) + ("0" + now.getSeconds()).slice(-2);
+
+var productsHTML = "";
+panier.forEach(function(item, index) {
+var productLine = "<tr style='border-bottom: 1px solid #f5f5f7;'>";
+productLine += "<td style='padding: 20px 0; font-size: 15px; color: #1d1d1f;'>";
+productLine += "<div style='font-weight: 500;'>" + item.nom + (item.couleur ? " - " + item.couleur : "") + "</div>";
+if (item.commentaire) {
+productLine += "<div style='margin-top: 8px; font-size: 13px; color: #86868b; font-style: italic;'>Note: " + item.commentaire + "</div>";
+}
+productLine += "</td>";
+productLine += "<td style='padding: 20px 0; text-align: right; font-size: 18px; font-weight: 600; color: #ff3b30;'>" + item.quantite + "</td>";
+productLine += "</tr>";
+productsHTML += productLine;
 });
 
-var now = new Date();
-var dateStr = now.toLocaleDateString("fr-FR", { 
-  weekday: "long", 
-  year: "numeric", 
-  month: "long", 
-  day: "numeric",
-  hour: "2-digit",
-  minute: "2-digit"
+var dateStr = now.toLocaleDateString("fr-FR", {
+weekday: "long",
+year: "numeric",
+month: "long",
+day: "numeric",
+hour: "2-digit",
+minute: "2-digit"
 });
+
+var emailHTML = "<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>";
+emailHTML += "<body style='margin: 0; padding: 40px 20px; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;'>";
+emailHTML += "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff;'>";
+emailHTML += "<div style='text-align: left; margin-bottom: 40px;'><img src='https://raw.githubusercontent.com/yourusername/AtelierOLDA2026/main/public/images/mugs/logo.jpeg' alt='OLDA' style='height: 60px; width: auto;' /></div>";
+emailHTML += "<div style='margin-bottom: 30px;'><h1 style='margin: 0; font-size: 28px; font-weight: 600; color: #1d1d1f;'>" + clientInfo.nom + "</h1></div>";
+emailHTML += "<div style='margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #1d1d1f;'><div style='font-size: 16px; color: #86868b; margin-bottom: 4px;'>Commande</div><div style='font-size: 20px; font-weight: 600; color: #1d1d1f;'>" + orderNumber + "</div><div style='font-size: 13px; color: #86868b; margin-top: 8px;'>" + dateStr + "</div></div>";
+emailHTML += "<table style='width: 100%; border-collapse: collapse; margin-bottom: 40px;'>";
+emailHTML += productsHTML;
+emailHTML += "</table>";
+emailHTML += "<div style='text-align: center; padding-top: 40px; border-top: 1px solid #f5f5f7; color: #86868b; font-size: 12px;'>Atelier OLDA &copy; " + now.getFullYear() + "</div>";
+emailHTML += "</div></body></html>";
 
 var templateParams = {
-  client_nom: clientInfo.nom,
-  client_email: clientInfo.email,
-  order_date: dateStr,
-  commande: commandeHTML
+client_nom: clientInfo.nom,
+client_email: clientInfo.email,
+order_number: orderNumber,
+order_date: dateStr,
+commande_html: emailHTML,
+to_email: "contact@atelierolda.com"
 };
 
 try {
-  await emailjs.send(
-    "service_vbspize",
-    "template_kvrjlfu",
-    templateParams
-  );
+await emailjs.send(
+"service_vbspize",
+"template_kvrjlfu",
+templateParams
+);
 
-  setSending(false);
-  setOrderSent(true);
+setSending(false);
+setOrderSent(true);
 } catch (err) {
-  console.error("Erreur EmailJS:", err);
-  alert("Erreur d envoi: " + (err.text || "Verifiez votre template EmailJS et vos identifiants"));
-  setSending(false);
+console.error("Erreur EmailJS:", err);
+alert("Erreur d envoi: " + (err.text || "Verifiez votre template EmailJS et vos identifiants"));
+setSending(false);
 }
-```
-
 };
 
 var fermerEtReset = function() {
 setCartOpen(false);
 setOrderSent(false);
 setPanier([]);
-setClientInfo({ nom: “”, email: “” });
+setClientInfo({ nom: "", email: "" });
 };
 
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
@@ -140,43 +167,78 @@ var totalArticles = panier.reduce(function(sum, item) { return sum + item.quanti
 var getTabStyle = function(tabKey) {
 var baseStyle = Object.assign({}, styles.tab);
 if (activeTab === tabKey) {
-if (tabKey === “nouveautes”) {
-return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: “#0071e3”, color: “white” });
-} else if (tabKey === “offres”) {
-return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: “#ff3b30”, color: “white” });
+if (tabKey === "nouveautes") {
+return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
+} else if (tabKey === "offres") {
+return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
 }
 return Object.assign({}, baseStyle, styles.tabActive);
 } else {
-if (tabKey === “nouveautes”) {
-return Object.assign({}, baseStyle, { backgroundColor: “#e8f2ff”, color: “#0071e3” });
-} else if (tabKey === “offres”) {
-return Object.assign({}, baseStyle, { backgroundColor: “#ffe5e5”, color: “#ff3b30” });
+if (tabKey === "nouveautes") {
+return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
+} else if (tabKey === "offres") {
+return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
 }
 return baseStyle;
 }
 };
 
-return React.createElement(“div”, { style: styles.container },
-React.createElement(“header”, { style: styles.header },
-React.createElement(“img”, { src: “/images/mugs/logo.jpeg”, alt: “OLDA”, style: styles.logo }),
-React.createElement(“button”, { onClick: function() { setCartOpen(true); }, style: styles.cartButton },
-React.createElement(“svg”, { width: “22”, height: “26”, viewBox: “0 0 22 26”, fill: “none”, stroke: “#86868b”, strokeWidth: “1.5” },
-React.createElement(“path”, { d: “M4 7h14a2 2 0 012 2v12a3 3 0 01-3 3H5a3 3 0 01-3-3V9a2 2 0 012-2z” }),
-React.createElement(“path”, { d: “M7 7V5a4 4 0 118 0v2” })
+return React.createElement("div", { style: styles.container },
+React.createElement("header", { style: styles.header },
+React.createElement("img", {
+src: "/images/mugs/logo.jpeg",
+alt: "OLDA",
+style: styles.logo,
+onClick: function() { setShowHomepage(true); }
+}),
+React.createElement("button", { onClick: function() { setCartOpen(true); }, style: styles.cartButton },
+React.createElement("svg", { width: "22", height: "26", viewBox: "0 0 22 26", fill: "none", stroke: "#86868b", strokeWidth: "1.5" },
+React.createElement("path", { d: "M4 7h14a2 2 0 012 2v12a3 3 0 01-3 3H5a3 3 0 01-3-3V9a2 2 0 012-2z" }),
+React.createElement("path", { d: "M7 7V5a4 4 0 118 0v2" })
 ),
-totalArticles > 0 && React.createElement(“span”, { style: styles.badge }, totalArticles)
+totalArticles > 0 && React.createElement("span", { style: styles.badge }, totalArticles)
 )
 ),
 
-```
-React.createElement("nav", { style: styles.nav },
-  tabs.map(function(tab) {
-    return React.createElement("button", {
-      key: tab.key,
-      onClick: function() { setActiveTab(tab.key); },
-      style: getTabStyle(tab.key)
-    }, tab.label);
-  })
+showHomepage ? React.createElement("div", { style: styles.homepage },
+React.createElement("div", { style: styles.homepageContent },
+React.createElement("h1", { style: styles.homepageTitle }, "Atelier OLDA"),
+React.createElement("p", { style: styles.homepageSubtitle }, "Cr\u00e9ations uniques et personnalis\u00e9es"),
+React.createElement("div", { style: styles.categoryGrid },
+tabs.map(function(tab) {
+return React.createElement("button", {
+key: tab.key,
+onClick: function() { navigateToCategory(tab.key); },
+style: tab.key === "nouveautes" ? Object.assign({}, styles.categoryCard, styles.categoryCardNew) :
+tab.key === "offres" ? Object.assign({}, styles.categoryCard, styles.categoryCardPromo) :
+styles.categoryCard
+},
+tab.key === "nouveautes" && React.createElement("span", { style: styles.categoryBadge }, "Nouveau"),
+tab.key === "offres" && React.createElement("span", { style: styles.categoryBadgePromo }, "Promo"),
+React.createElement("span", { style: styles.categoryLabel }, tab.label)
+);
+})
+)
+)
+) : React.createElement(React.Fragment, null,
+
+React.createElement("div", { style: styles.navContainer },
+  React.createElement("div", { style: styles.navGradientLeft }),
+  React.createElement("nav", { style: styles.nav },
+    tabs.map(function(tab) {
+      return React.createElement("button", {
+        key: tab.key,
+        onClick: function() { setActiveTab(tab.key); },
+        style: getTabStyle(tab.key)
+      }, tab.label);
+    })
+  ),
+  React.createElement("div", { style: styles.navGradientRight }),
+  React.createElement("div", { style: styles.swipeHint },
+    React.createElement("span", { style: styles.swipeArrowLeft }, "\u2190"),
+    React.createElement("span", { style: styles.swipeText }, "Faites d\u00e9filer"),
+    React.createElement("span", { style: styles.swipeArrowRight }, "\u2192")
+  )
 ),
 
 React.createElement("main", { style: styles.main },
@@ -211,6 +273,7 @@ React.createElement("main", { style: styles.main },
       React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter au panier")
     );
   })
+)
 ),
 
 cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
@@ -231,6 +294,7 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
         React.createElement("div", { style: styles.cartItems },
           panier.map(function(item) {
             return React.createElement("div", { key: item.id, style: styles.cartItem },
+              React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
               React.createElement("div", { style: { flex: 1 } },
                 React.createElement("p", { style: styles.cartItemName }, item.nom),
                 React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
@@ -267,326 +331,461 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
     )
   )
 )
-```
 
 );
 }
 
 var styles = {
 container: {
-fontFamily: “-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif”,
-minHeight: “100vh”,
-backgroundColor: “#f5f5f7”
+fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+minHeight: "100vh",
+backgroundColor: "#f5f5f7"
+},
+homepage: {
+minHeight: "calc(100vh - 73px)",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+backgroundColor: "#ffffff"
+},
+homepageContent: {
+textAlign: "center",
+padding: "40px",
+maxWidth: "900px",
+margin: "0 auto"
+},
+homepageTitle: {
+fontSize: "56px",
+fontWeight: "600",
+color: "#1d1d1f",
+margin: "0 0 16px 0",
+letterSpacing: "-0.5px"
+},
+homepageSubtitle: {
+fontSize: "21px",
+color: "#6e6e73",
+margin: "0 0 60px 0",
+fontWeight: "400"
+},
+categoryGrid: {
+display: "grid",
+gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+gap: "20px",
+marginTop: "40px"
+},
+categoryCard: {
+backgroundColor: "#f5f5f7",
+border: "none",
+borderRadius: "18px",
+padding: "32px 20px",
+cursor: "pointer",
+transition: "all 0.3s",
+position: "relative",
+minHeight: "120px",
+display: "flex",
+flexDirection: "column",
+alignItems: "center",
+justifyContent: "center"
+},
+categoryCardNew: {
+backgroundColor: "#e8f2ff"
+},
+categoryCardPromo: {
+backgroundColor: "#ffe5e5"
+},
+categoryBadge: {
+position: "absolute",
+top: "12px",
+right: "12px",
+backgroundColor: "#0071e3",
+color: "white",
+padding: "4px 10px",
+borderRadius: "12px",
+fontSize: "11px",
+fontWeight: "600"
+},
+categoryBadgePromo: {
+position: "absolute",
+top: "12px",
+right: "12px",
+backgroundColor: "#ff3b30",
+color: "white",
+padding: "4px 10px",
+borderRadius: "12px",
+fontSize: "11px",
+fontWeight: "600"
+},
+categoryLabel: {
+fontSize: "17px",
+fontWeight: "500",
+color: "#1d1d1f"
 },
 header: {
-backgroundColor: “white”,
-padding: “16px 40px”,
-display: “flex”,
-justifyContent: “space-between”,
-alignItems: “center”,
-borderBottom: “1px solid #d2d2d7”,
-position: “sticky”,
+backgroundColor: "white",
+padding: "16px 40px",
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center",
+borderBottom: "1px solid #d2d2d7",
+position: "sticky",
 top: 0,
 zIndex: 100
 },
 logo: {
-height: “40px”,
-width: “auto”,
-objectFit: “contain”
+height: "40px",
+width: "auto",
+objectFit: "contain",
+cursor: "pointer"
 },
 cartButton: {
-backgroundColor: “transparent”,
-border: “none”,
-cursor: “pointer”,
-position: “relative”,
-padding: “8px”
+backgroundColor: "transparent",
+border: "none",
+cursor: "pointer",
+position: "relative",
+padding: "8px"
 },
 badge: {
-position: “absolute”,
-top: “0”,
-right: “0”,
-backgroundColor: “#0071e3”,
-color: “white”,
-borderRadius: “10px”,
-padding: “2px 6px”,
-fontSize: “12px”,
-fontWeight: “600”,
-minWidth: “20px”,
-textAlign: “center”
+position: "absolute",
+top: "0",
+right: "0",
+backgroundColor: "#0071e3",
+color: "white",
+borderRadius: "10px",
+padding: "2px 6px",
+fontSize: "12px",
+fontWeight: "600",
+minWidth: "20px",
+textAlign: "center"
+},
+navContainer: {
+position: "relative",
+backgroundColor: "white",
+borderBottom: "1px solid #d2d2d7"
+},
+navGradientLeft: {
+position: "absolute",
+left: 0,
+top: 0,
+bottom: 0,
+width: "40px",
+background: "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
+zIndex: 10,
+pointerEvents: "none"
+},
+navGradientRight: {
+position: "absolute",
+right: 0,
+top: 0,
+bottom: 0,
+width: "40px",
+background: "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
+zIndex: 10,
+pointerEvents: "none"
 },
 nav: {
-backgroundColor: “white”,
-padding: “16px 40px”,
-display: “flex”,
-gap: “12px”,
-overflowX: “auto”,
-borderBottom: “1px solid #d2d2d7”
+backgroundColor: "white",
+padding: "16px 40px",
+display: "flex",
+gap: "12px",
+overflowX: "auto",
+scrollBehavior: "smooth",
+scrollbarWidth: "none",
+msOverflowStyle: "none"
+},
+swipeHint: {
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+gap: "8px",
+padding: "8px 0",
+backgroundColor: "#f5f5f7",
+fontSize: "13px",
+color: "#86868b"
+},
+swipeArrowLeft: {
+fontSize: "18px",
+animation: "slideLeft 1.5s ease-in-out infinite"
+},
+swipeArrowRight: {
+fontSize: "18px",
+animation: "slideRight 1.5s ease-in-out infinite"
+},
+swipeText: {
+fontWeight: "500"
 },
 tab: {
-padding: “10px 20px”,
-border: “none”,
-borderRadius: “20px”,
-cursor: “pointer”,
-backgroundColor: “#f5f5f7”,
-color: “#1d1d1f”,
-fontSize: “14px”,
-fontWeight: “400”,
-transition: “all 0.2s”,
-whiteSpace: “nowrap”
+padding: "10px 20px",
+border: "none",
+borderRadius: "20px",
+cursor: "pointer",
+backgroundColor: "#f5f5f7",
+color: "#1d1d1f",
+fontSize: "14px",
+fontWeight: "400",
+transition: "all 0.2s",
+whiteSpace: "nowrap"
 },
 tabActive: {
-backgroundColor: “#1d1d1f”,
-color: “white”
+backgroundColor: "#1d1d1f",
+color: "white"
 },
 main: {
-padding: “40px”,
-display: “grid”,
-gridTemplateColumns: “repeat(auto-fill, minmax(280px, 1fr))”,
-gap: “24px”,
-maxWidth: “1400px”,
-margin: “0 auto”
+padding: "40px",
+display: "grid",
+gridTemplateColumns: "repeat(2, 1fr)",
+gap: "24px",
+maxWidth: "900px",
+margin: "0 auto"
 },
 card: {
-backgroundColor: “white”,
-borderRadius: “18px”,
-padding: “24px”,
-boxShadow: “0 4px 6px rgba(0,0,0,0.07)”,
-transition: “transform 0.2s, box-shadow 0.2s”
+backgroundColor: "white",
+borderRadius: "18px",
+padding: "24px",
+boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
+transition: "transform 0.2s, box-shadow 0.2s"
 },
 imageContainer: {
-height: “200px”,
-backgroundColor: “white”,
-borderRadius: “12px”,
-marginBottom: “16px”,
-display: “flex”,
-alignItems: “center”,
-justifyContent: “center”,
-overflow: “hidden”
+height: "200px",
+backgroundColor: "white",
+borderRadius: "12px",
+marginBottom: "16px",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+overflow: "hidden"
 },
 image: {
-maxHeight: “100%”,
-maxWidth: “100%”,
-objectFit: “contain”
+maxHeight: "100%",
+maxWidth: "100%",
+objectFit: "contain"
 },
 productName: {
-margin: “0 0 4px 0”,
-fontSize: “17px”,
-fontWeight: “600”,
-color: “#1d1d1f”
+margin: "0 0 4px 0",
+fontSize: "17px",
+fontWeight: "600",
+color: "#1d1d1f"
 },
 productColor: {
-margin: “0 0 4px 0”,
-fontSize: “14px”,
-color: “#6e6e73”
+margin: "0 0 4px 0",
+fontSize: "14px",
+color: "#6e6e73"
 },
 productRef: {
-margin: “0 0 16px 0”,
-fontSize: “12px”,
-color: “#86868b”
+margin: "0 0 16px 0",
+fontSize: "12px",
+color: "#86868b"
 },
 quantityControl: {
-display: “flex”,
-alignItems: “center”,
-justifyContent: “center”,
-gap: “16px”,
-marginBottom: “12px”
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+gap: "16px",
+marginBottom: "12px"
 },
 qtyButton: {
-width: “36px”,
-height: “36px”,
-border: “1px solid #d2d2d7”,
-borderRadius: “50%”,
-cursor: “pointer”,
-backgroundColor: “white”,
-fontSize: “18px”,
-color: “#1d1d1f”,
-display: “flex”,
-alignItems: “center”,
-justifyContent: “center”
+width: "36px",
+height: "36px",
+border: "1px solid #d2d2d7",
+borderRadius: "50%",
+cursor: "pointer",
+backgroundColor: "white",
+fontSize: "18px",
+color: "#1d1d1f",
+display: "flex",
+alignItems: "center",
+justifyContent: "center"
 },
 quantity: {
-fontSize: “17px”,
-fontWeight: “600”,
-minWidth: “30px”,
-textAlign: “center”
+fontSize: "17px",
+fontWeight: "600",
+minWidth: "30px",
+textAlign: "center"
 },
 commentaire: {
-width: “100%”,
-padding: “10px”,
-border: “1px solid #e5e5e7”,
-borderRadius: “8px”,
-fontSize: “13px”,
-fontFamily: “inherit”,
-resize: “none”,
-marginBottom: “12px”,
-boxSizing: “border-box”,
-color: “#1d1d1f”
+width: "100%",
+padding: "10px",
+border: "1px solid #e5e5e7",
+borderRadius: "8px",
+fontSize: "13px",
+fontFamily: "inherit",
+resize: "none",
+marginBottom: "12px",
+boxSizing: "border-box",
+color: "#1d1d1f"
 },
 addButton: {
-width: “100%”,
-padding: “12px”,
-backgroundColor: “#0071e3”,
-color: “white”,
-border: “none”,
-borderRadius: “10px”,
-cursor: “pointer”,
-fontSize: “15px”,
-fontWeight: “500”,
-transition: “background-color 0.2s”
+width: "100%",
+padding: "12px",
+backgroundColor: "#0071e3",
+color: "white",
+border: "none",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "500",
+transition: "background-color 0.2s"
 },
 modalOverlay: {
-position: “fixed”,
+position: "fixed",
 top: 0,
 left: 0,
 right: 0,
 bottom: 0,
-backgroundColor: “rgba(0,0,0,0.4)”,
-display: “flex”,
-justifyContent: “center”,
-alignItems: “center”,
+backgroundColor: "rgba(0,0,0,0.4)",
+display: "flex",
+justifyContent: "center",
+alignItems: "center",
 zIndex: 1000,
-padding: “20px”
+padding: "20px"
 },
 modal: {
-backgroundColor: “white”,
-borderRadius: “20px”,
-padding: “32px”,
-maxWidth: “500px”,
-width: “100%”,
-maxHeight: “80vh”,
-overflow: “auto”
+backgroundColor: "white",
+borderRadius: "20px",
+padding: "32px",
+maxWidth: "500px",
+width: "100%",
+maxHeight: "80vh",
+overflow: "auto"
 },
 modalHeader: {
-display: “flex”,
-justifyContent: “space-between”,
-alignItems: “center”,
-marginBottom: “24px”
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center",
+marginBottom: "24px"
 },
 modalTitle: {
 margin: 0,
-fontSize: “24px”,
-fontWeight: “600”,
-color: “#1d1d1f”
+fontSize: "24px",
+fontWeight: "600",
+color: "#1d1d1f"
 },
 closeIcon: {
-background: “none”,
-border: “none”,
-fontSize: “32px”,
-cursor: “pointer”,
-color: “#86868b”,
+background: "none",
+border: "none",
+fontSize: "32px",
+cursor: "pointer",
+color: "#86868b",
 padding: 0,
 lineHeight: 1
 },
 emptyCart: {
-textAlign: “center”,
-color: “#86868b”,
-padding: “40px 0”
+textAlign: "center",
+color: "#86868b",
+padding: "40px 0"
 },
 cartItems: {
-marginBottom: “24px”
+marginBottom: "24px"
 },
 cartItem: {
-display: “flex”,
-justifyContent: “space-between”,
-alignItems: “flex-start”,
-padding: “16px 0”,
-borderBottom: “1px solid #f5f5f7”
+display: "flex",
+justifyContent: "space-between",
+alignItems: "flex-start",
+padding: "16px 0",
+borderBottom: "1px solid #f5f5f7",
+gap: "12px"
+},
+cartItemImage: {
+width: "60px",
+height: "60px",
+objectFit: "contain",
+borderRadius: "8px",
+backgroundColor: "#f5f5f7"
 },
 cartItemName: {
-margin: “0 0 4px 0”,
-fontSize: “15px”,
-fontWeight: “500”,
-color: “#1d1d1f”
+margin: "0 0 4px 0",
+fontSize: "15px",
+fontWeight: "500",
+color: "#1d1d1f"
 },
 cartItemDetails: {
-margin: “0 0 4px 0”,
-fontSize: “14px”,
-color: “#6e6e73”
+margin: "0 0 4px 0",
+fontSize: "14px",
+color: "#6e6e73"
 },
 cartItemComment: {
-margin: “4px 0 0 0”,
-fontSize: “13px”,
-color: “#86868b”,
-fontStyle: “italic”
+margin: "4px 0 0 0",
+fontSize: "13px",
+color: "#86868b",
+fontStyle: "italic"
 },
 deleteButton: {
-background: “none”,
-border: “none”,
-fontSize: “28px”,
-cursor: “pointer”,
-color: “#86868b”,
-padding: “0 8px”
+background: "none",
+border: "none",
+fontSize: "28px",
+cursor: "pointer",
+color: "#86868b",
+padding: "0 8px"
 },
 form: {
-display: “flex”,
-flexDirection: “column”,
-gap: “12px”
+display: "flex",
+flexDirection: "column",
+gap: "12px"
 },
 input: {
-width: “100%”,
-padding: “14px”,
-border: “1px solid #d2d2d7”,
-borderRadius: “10px”,
-fontSize: “15px”,
-boxSizing: “border-box”,
-fontFamily: “inherit”
+width: "100%",
+padding: "14px",
+border: "1px solid #d2d2d7",
+borderRadius: "10px",
+fontSize: "15px",
+boxSizing: "border-box",
+fontFamily: "inherit"
 },
 submitButton: {
-width: “100%”,
-padding: “14px”,
-backgroundColor: “#0071e3”,
-color: “white”,
-border: “none”,
-borderRadius: “10px”,
-cursor: “pointer”,
-fontSize: “15px”,
-fontWeight: “600”,
-marginTop: “8px”
+width: "100%",
+padding: "14px",
+backgroundColor: "#0071e3",
+color: "white",
+border: "none",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "600",
+marginTop: "8px"
 },
 submitButtonDisabled: {
-backgroundColor: “#86868b”,
-cursor: “not-allowed”
+backgroundColor: "#86868b",
+cursor: "not-allowed"
 },
 successContainer: {
-textAlign: “center”,
-padding: “20px”
+textAlign: "center",
+padding: "20px"
 },
 successIcon: {
-width: “64px”,
-height: “64px”,
-backgroundColor: “#34c759”,
-color: “white”,
-borderRadius: “50%”,
-display: “flex”,
-alignItems: “center”,
-justifyContent: “center”,
-fontSize: “32px”,
-margin: “0 auto 20px”
+width: "64px",
+height: "64px",
+backgroundColor: "#34c759",
+color: "white",
+borderRadius: "50%",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+fontSize: "32px",
+margin: "0 auto 20px"
 },
 successTitle: {
-fontSize: “24px”,
-fontWeight: “600”,
-color: “#1d1d1f”,
-margin: “0 0 8px 0”
+fontSize: "24px",
+fontWeight: "600",
+color: "#1d1d1f",
+margin: "0 0 8px 0"
 },
 successText: {
-fontSize: “15px”,
-color: “#6e6e73”,
-margin: “0 0 4px 0”
+fontSize: "15px",
+color: "#6e6e73",
+margin: "0 0 4px 0"
 },
 successEmail: {
-fontSize: “15px”,
-color: “#6e6e73”,
-margin: “0 0 24px 0”
+fontSize: "15px",
+color: "#6e6e73",
+margin: "0 0 24px 0"
 },
 closeButton: {
-padding: “14px 32px”,
-backgroundColor: “#0071e3”,
-color: “white”,
-border: “none”,
-borderRadius: “10px”,
-cursor: “pointer”,
-fontSize: “15px”,
-fontWeight: “600”
+padding: "14px 32px",
+backgroundColor: "#0071e3",
+color: "white",
+border: "none",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "600"
 }
 };
