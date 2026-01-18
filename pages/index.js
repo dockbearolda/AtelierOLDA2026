@@ -201,7 +201,7 @@ totalArticles > 0 && React.createElement("span", { style: styles.badge }, totalA
 ),
 
 showHomepage ? React.createElement("div", { style: styles.homepage },
-React.createElement("div", { style: styles.homepageContent },
+React.createElement("div", { style: styles.homepageContent, className: "homepage-content" },
 React.createElement("h1", { style: styles.homepageTitle }, "Atelier OLDA"),
 React.createElement("p", { style: styles.homepageSubtitle }, "Cr\u00e9ations uniques et personnalis\u00e9es"),
 React.createElement("div", { style: styles.categoryGrid },
