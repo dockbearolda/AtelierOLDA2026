@@ -105,8 +105,8 @@ export default function OLDAStore() {
 
     try {
       await emailjs.send(
-        'service_063h32x',
-        'template_1qwnkwd',
+        'service_vbspize',
+        'template_kvrjlfu',
         templateParams
       );
 
