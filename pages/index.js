@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from “react”;
-import emailjs from “@emailjs/browser”;
+import React, { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 
 const MUGS_DATA = {
 nouveautes: [
