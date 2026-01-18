@@ -68,11 +68,10 @@ setPanier(prev => prev.filter(item => item.id !== id));
 
 const envoyerCommande = async () => {
 if (!clientInfo.nom || !clientInfo.email) {
-alert(“Merci de remplir tous les champs”);
+alert("Merci de remplir tous les champs");
 return;
 }
 
-```
 if (panier.length === 0) {
   alert("Votre panier est vide");
   return;
@@ -111,7 +110,6 @@ try {
   alert("Une erreur est survenue lors de l'envoi de la commande.");
   setSending(false);
 }
-```
 
 };
 
@@ -125,9 +123,8 @@ setClientInfo({ nom: ‘’, email: ‘’ });
 const totalArticles = panier.reduce((sum, item) => sum + item.quantite, 0);
 
 return (
-<div style={{ fontFamily: ‘Arial, sans-serif’, minHeight: ‘100vh’, backgroundColor: ‘#f5f5f5’ }}>
+<div style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
 
-```
   {/* Header */}
   <header style={{ backgroundColor: '#333', color: 'white', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <h1 style={{ margin: 0 }}>OLDA Store</h1>
@@ -398,7 +395,6 @@ return (
     </div>
   )}
 </div>
-```
 
 );
 }
