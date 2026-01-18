@@ -1,1 +1,1 @@
-{\n  \"dependencies\": {\n    \"@resend/node\": \"latest\"\n  }\n}
+{\n  "name": "atelier-olda-2026",\n  "version": "1.0.0",\n  "dependencies": {\n    "@resend/node": "latest"\n  }\n}
