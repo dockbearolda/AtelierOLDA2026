@@ -90,13 +90,10 @@ setSending(true);
 let commandeHTML = '';
 panier.forEach((item) => {
   commandeHTML += `
-    <div class="product-item">
-      <div class="checkbox"></div>
-      <div class="product-info">
-        <div class="product-name">${item.nom} ${item.couleur}</div>
-        <div class="product-ref">${item.reference}${item.commentaire ? ' • ' + item.commentaire : ''}</div>
-      </div>
-      <div class="product-qty">×${item.quantite}</div>
+    <div class="product-row">
+      <div class="product-name">${item.nom} ${item.couleur}</div>
+      <div class="product-qty">${item.quantite}</div>
+      <div class="product-check"><div class="checkbox"></div></div>
     </div>
   `;
 });
