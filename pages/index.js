@@ -1,12 +1,10 @@
-import Resend from "@resend/node";
+import Resend from '@resend/node';
 import React, { useState } from 'react';
 
 // Config Resend avec votre clé API
-const resend = new Resend("votre_cle_api_resend"); // Remplacez par votre clé API
+const resend = new Resend("votre_cle_api_resend");
 
 export default function OLDAStore() {
-  // ... ici tout votre code actuel non modifié
-
   const envoyerCommande = async () => {
     if (!clientInfo.nom || !clientInfo.email) {
       alert("Merci de remplir tous les champs");
@@ -29,7 +27,6 @@ export default function OLDAStore() {
     });
 
     try {
-      // Appel à l'API Resend
       await resend.emails.send({
         from: "votre@domaine.com", // Remplacez avec votre mail vérifié sur Resend
         to: "charlie.jallon@gmail.com", // Adresse de destination
@@ -38,7 +35,7 @@ export default function OLDAStore() {
       });
 
       setSending(false);
-      setOrderSent(true); // Confirmation de succès
+      setOrderSent(true);
     } catch (err) {
       console.error("Erreur lors de l'envoi du mail:", err);
       alert("Une erreur est survenue lors de l'envoi de la commande.");
