@@ -77,7 +77,7 @@ export default function OLDAStore() {
     setNouveauCommentaire(prev => ({ ...prev, [productId]: '' }));
   };
 
-  const envoyerCommande = () => {
+  const envoyerCommande = async () => {
     if (!clientInfo.nom || !clientInfo.email) {
       alert('Merci de remplir tous les champs');
       return;
@@ -85,27 +85,78 @@ export default function OLDAStore() {
     
     setSending(true);
 
-    let text = `NOUVELLE COMMANDE OLDA\n\n`;
-    text += `CLIENT:\n`;
-    text += `Nom: ${clientInfo.nom}\n`;
-    text += `Email: ${clientInfo.email}\n\n`;
-    text += `ARTICLES:\n`;
-    panier.forEach(item => {
-      text += `- ${item.nom} ${item.couleur} (${item.reference}) x${item.quantite}\n`;
+    // Génération du contenu HTML de l'email
+    let articlesHtml = panier.map(item => {
+      let html = `<tr>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.nom}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.couleur}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.reference}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee;">${item.quantite}</td>
+      </tr>`;
       if (item.commentaire && item.commentaire.length > 0) {
-        text += `  Commentaire: ${item.commentaire.join(', ')}\n`;
+        html += `<tr>
+          <td colspan="4" style="padding: 8px 12px; background: #f9f9f9; font-style: italic; color: #666;">
+            Commentaire : ${item.commentaire.join(', ')}
+          </td>
+        </tr>`;
       }
-    });
+      return html;
+    }).join('');
 
-    const subject = encodeURIComponent(`Commande OLDA - ${clientInfo.nom}`);
-    const body = encodeURIComponent(text);
-    
-    window.location.href = `mailto:charlie.jallon@gmail.com?subject=${subject}&body=${body}`;
-    
-    setTimeout(() => {
+    const emailHtml = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #1d1d1f; font-size: 24px; margin-bottom: 30px;">Nouvelle commande OLDA</h1>
+        
+        <div style="background: #f5f5f7; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+          <h2 style="font-size: 16px; color: #1d1d1f; margin-bottom: 12px;">Client</h2>
+          <p style="margin: 0; color: #1d1d1f;"><strong>Nom :</strong> ${clientInfo.nom}</p>
+          <p style="margin: 8px 0 0; color: #1d1d1f;"><strong>Email :</strong> ${clientInfo.email}</p>
+        </div>
+
+        <h2 style="font-size: 16px; color: #1d1d1f; margin-bottom: 12px;">Articles commandés</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+          <thead>
+            <tr style="background: #1d1d1f; color: white;">
+              <th style="padding: 12px; text-align: left;">Produit</th>
+              <th style="padding: 12px; text-align: left;">Couleur</th>
+              <th style="padding: 12px; text-align: left;">Réf.</th>
+              <th style="padding: 12px; text-align: left;">Qté</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${articlesHtml}
+          </tbody>
+        </table>
+
+        <p style="color: #86868b; font-size: 14px;">Cet email a été envoyé automatiquement depuis le site OLDA.</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch('/api/send-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: 'charlie.jallon@gmail.com',
+          subject: `Nouvelle commande OLDA - ${clientInfo.nom}`,
+          html: emailHtml,
+          replyTo: clientInfo.email,
+        }),
+      });
+
+      if (response.ok) {
+        setOrderSent(true);
+      } else {
+        alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de l\'envoi. Veuillez réessayer.');
+    } finally {
       setSending(false);
-      setOrderSent(true);
-    }, 500);
+    }
   };
 
   const fermerEtReset = () => {
@@ -184,6 +235,7 @@ export default function OLDAStore() {
           padding: '12px 20px',
           overflowX: 'auto',
           scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
         }}>
           {tabs.map(tab => (
             <button
@@ -200,6 +252,7 @@ export default function OLDAStore() {
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
+                transition: 'all 0.2s ease',
               }}
             >
               {tab.label}
@@ -226,7 +279,11 @@ export default function OLDAStore() {
                 <img
                   src={product.image}
                   alt={product.nom}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
                 />
               </div>
 
@@ -237,7 +294,13 @@ export default function OLDAStore() {
                 justifyContent: 'space-between',
               }}>
                 <div>
-                  <h2 style={{ fontSize: 17, fontWeight: 600, color: '#1d1d1f', marginBottom: 6 }}>
+                  <h2 style={{ 
+                    fontSize: 17, 
+                    fontWeight: 600, 
+                    color: '#1d1d1f', 
+                    marginBottom: 6,
+                    lineHeight: 1.2,
+                  }}>
                     {product.nom}
                   </h2>
                   <p style={{ fontSize: 14, color: '#86868b', marginBottom: 4 }}>
@@ -248,7 +311,12 @@ export default function OLDAStore() {
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '16px 0' }}>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 16,
+                  margin: '16px 0',
+                }}>
                   <div style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -260,24 +328,40 @@ export default function OLDAStore() {
                       style={{
                         width: 36, height: 36, border: 'none', background: 'none',
                         fontSize: 20, color: getQte(product.id) <= 3 ? '#d2d2d7' : '#1d1d1f',
-                        cursor: 'pointer',
+                        cursor: 'pointer', borderRadius: '10px 0 0 10px',
                       }}
                     >−</button>
-                    <span style={{ width: 40, textAlign: 'center', fontSize: 16, fontWeight: 600, color: '#1d1d1f' }}>
+                    <span style={{ 
+                      width: 40, 
+                      textAlign: 'center', 
+                      fontSize: 16, 
+                      fontWeight: 600,
+                      color: '#1d1d1f',
+                    }}>
                       {getQte(product.id)}
                     </span>
                     <button
                       onClick={() => ajuster(product.id, 1)}
-                      style={{ width: 36, height: 36, border: 'none', background: 'none', fontSize: 20, cursor: 'pointer', color: '#1d1d1f' }}
+                      style={{ 
+                        width: 36, height: 36, border: 'none', background: 'none', 
+                        fontSize: 20, cursor: 'pointer', borderRadius: '0 10px 10px 0',
+                        color: '#1d1d1f',
+                      }}
                     >+</button>
                   </div>
 
                   <button
                     onClick={() => ajouterAuPanier(product)}
                     style={{
-                      padding: '10px 24px', borderRadius: 10, border: 'none',
+                      padding: '10px 24px', 
+                      borderRadius: 10, 
+                      border: 'none',
                       background: addedProduct === product.id ? '#34c759' : '#0071e3',
-                      color: '#ffffff', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                      color: '#ffffff', 
+                      fontSize: 14, 
+                      fontWeight: 600, 
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
                     }}
                   >
                     {addedProduct === product.id ? '✓' : 'Ajouter'}
@@ -286,7 +370,12 @@ export default function OLDAStore() {
 
                 <div>
                   {(commentaires[product.id] || []).map((c, i) => (
-                    <p key={i} style={{ fontSize: 12, color: '#86868b', marginBottom: 6, fontStyle: 'italic' }}>
+                    <p key={i} style={{ 
+                      fontSize: 12, 
+                      color: '#86868b', 
+                      marginBottom: 6,
+                      fontStyle: 'italic',
+                    }}>
                       « {c} »
                     </p>
                   ))}
@@ -301,10 +390,18 @@ export default function OLDAStore() {
                       }
                     }}
                     style={{
-                      width: '100%', padding: '10px 14px', borderRadius: 10,
-                      border: '1px solid #e5e5e5', fontSize: 13, outline: 'none',
-                      boxSizing: 'border-box', color: '#1d1d1f',
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 10,
+                      border: '1px solid #e5e5e5',
+                      fontSize: 13,
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      color: '#1d1d1f',
+                      transition: 'border-color 0.2s ease',
                     }}
+                    onFocus={e => e.target.style.borderColor = '#0071e3'}
+                    onBlur={e => e.target.style.borderColor = '#e5e5e5'}
                   />
                 </div>
               </div>
@@ -317,39 +414,74 @@ export default function OLDAStore() {
       <div
         onClick={() => { if (!orderSent) setCartOpen(false); }}
         style={{
-          position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.4)',
-          backdropFilter: 'blur(10px)', zIndex: 2000,
-          opacity: cartOpen ? 1 : 0, visibility: cartOpen ? 'visible' : 'hidden',
-          transition: 'opacity 0.3s, visibility 0.3s',
+          position: 'fixed', 
+          inset: 0, 
+          background: 'rgba(0, 0, 0, 0.4)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          zIndex: 2000,
+          opacity: cartOpen ? 1 : 0, 
+          visibility: cartOpen ? 'visible' : 'hidden',
+          transition: 'opacity 0.3s ease, visibility 0.3s ease',
         }}
       />
 
       {/* Cart Sheet */}
       <div style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0, maxHeight: '90vh',
-        background: '#ffffff', borderRadius: '24px 24px 0 0', zIndex: 2001,
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        maxHeight: '90vh',
+        background: '#ffffff',
+        borderRadius: '24px 24px 0 0',
+        zIndex: 2001,
         transform: cartOpen ? 'translateY(0)' : 'translateY(100%)',
         transition: 'transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
-        display: 'flex', flexDirection: 'column',
+        display: 'flex',
+        flexDirection: 'column',
         boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.15)',
       }}>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 10px' }}>
-          <div style={{ width: 40, height: 5, background: '#e0e0e0', borderRadius: 3 }} />
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          padding: '14px 0 10px',
+        }}>
+          <div style={{ 
+            width: 40, 
+            height: 5, 
+            background: '#e0e0e0', 
+            borderRadius: 3,
+          }} />
         </div>
 
         {orderSent ? (
-          <div style={{ padding: '60px 30px 80px', textAlign: 'center' }}>
+          <div style={{ 
+            padding: '60px 30px 80px', 
+            textAlign: 'center',
+          }}>
             <div style={{
-              width: 70, height: 70, borderRadius: 35,
+              width: 70, 
+              height: 70, 
+              borderRadius: 35, 
               background: 'linear-gradient(135deg, #34c759 0%, #30d158 100%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
               margin: '0 auto 24px',
+              boxShadow: '0 8px 24px rgba(52, 199, 89, 0.3)',
             }}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round">
                 <path d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1d1d1f', marginBottom: 12 }}>
+            <h2 style={{ 
+              fontSize: 22, 
+              fontWeight: 700, 
+              color: '#1d1d1f', 
+              marginBottom: 12, 
+              lineHeight: 1.3,
+            }}>
               Atelier OLDA vous remercie pour votre commande
             </h2>
             <p style={{ fontSize: 15, color: '#86868b', marginBottom: 30 }}>
@@ -358,8 +490,14 @@ export default function OLDAStore() {
             <button
               onClick={fermerEtReset}
               style={{
-                padding: '14px 40px', borderRadius: 12, border: 'none',
-                background: '#1d1d1f', color: '#ffffff', fontSize: 16, fontWeight: 600, cursor: 'pointer',
+                padding: '14px 40px', 
+                borderRadius: 12, 
+                border: 'none',
+                background: '#1d1d1f', 
+                color: '#ffffff', 
+                fontSize: 16, 
+                fontWeight: 600, 
+                cursor: 'pointer',
               }}
             >
               Fermer
@@ -369,73 +507,167 @@ export default function OLDAStore() {
           <>
             <div style={{
               padding: '0 24px 16px',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f' }}>Votre commande</h2>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1d1d1f' }}>
+                Votre commande
+              </h2>
               <button
                 onClick={() => setCartOpen(false)}
                 style={{
-                  width: 32, height: 32, borderRadius: 16, border: 'none',
-                  background: '#f5f5f7', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 32, 
+                  height: 32, 
+                  borderRadius: 16, 
+                  border: 'none',
+                  background: '#f5f5f7', 
+                  cursor: 'pointer',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
                 }}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#86868b" strokeWidth="2.5">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#86868b" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
               </button>
             </div>
 
-            <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px' }}>
+            <div style={{ 
+              flex: 1, 
+              overflowY: 'auto', 
+              padding: '0 24px',
+            }}>
               {panier.length === 0 ? (
                 <div style={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center',
-                  justifyContent: 'center', padding: '60px 20px', color: '#86868b',
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center',
+                  justifyContent: 'center', 
+                  padding: '60px 20px', 
+                  color: '#86868b',
                 }}>
                   <svg width="56" height="56" viewBox="0 0 17 20" fill="none">
                     <path d="M4.5 5C4.5 2.51472 6.51472 0.5 9 0.5C11.4853 0.5 13.5 2.51472 13.5 5" stroke="#d2d2d7" strokeWidth="1.5" fill="none"/>
                     <path d="M1.5 6.5H16.5L15.5 18.5H2.5L1.5 6.5Z" stroke="#d2d2d7" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
                   </svg>
-                  <p style={{ marginTop: 20, fontSize: 16, fontWeight: 500 }}>Votre panier est vide</p>
+                  <p style={{ marginTop: 20, fontSize: 16, fontWeight: 500 }}>
+                    Votre panier est vide
+                  </p>
                 </div>
               ) : (
                 <>
                   {panier.map(item => (
-                    <div key={item.id} style={{ padding: '20px 0', borderBottom: '1px solid #f0f0f0' }}>
+                    <div key={item.id} style={{
+                      padding: '20px 0',
+                      borderBottom: '1px solid #f0f0f0',
+                    }}>
                       <div style={{ display: 'flex', gap: 16 }}>
-                        <img src={item.image} alt={item.nom} style={{ width: 70, height: 70, objectFit: 'contain', flexShrink: 0 }} />
+                        <img 
+                          src={item.image} 
+                          alt={item.nom} 
+                          style={{ 
+                            width: 70, 
+                            height: 70, 
+                            objectFit: 'contain',
+                            flexShrink: 0,
+                          }} 
+                        />
                         
                         <div style={{ flex: 1 }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-                            <h3 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f' }}>{item.nom}</h3>
+                          <div style={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'flex-start',
+                            marginBottom: 4,
+                          }}>
+                            <h3 style={{ 
+                              fontSize: 15, 
+                              fontWeight: 600, 
+                              color: '#1d1d1f',
+                            }}>
+                              {item.nom}
+                            </h3>
                             <button
                               onClick={() => supprimerDuPanier(item.id)}
-                              style={{ border: 'none', background: 'none', fontSize: 12, color: '#ff3b30', cursor: 'pointer', padding: 0 }}
+                              style={{ 
+                                border: 'none', 
+                                background: 'none', 
+                                fontSize: 12, 
+                                color: '#ff3b30', 
+                                cursor: 'pointer',
+                                padding: 0,
+                              }}
                             >
                               Supprimer
                             </button>
                           </div>
                           
-                          <p style={{ fontSize: 13, color: '#86868b', marginBottom: 2 }}>{item.couleur}</p>
-                          <p style={{ fontSize: 11, color: '#ababab', marginBottom: 12 }}>{item.reference}</p>
+                          <p style={{ fontSize: 13, color: '#86868b', marginBottom: 2 }}>
+                            {item.couleur}
+                          </p>
+                          <p style={{ fontSize: 11, color: '#ababab', marginBottom: 12 }}>
+                            {item.reference}
+                          </p>
                           
                           {item.commentaire && item.commentaire.length > 0 && (
-                            <div style={{ background: '#f9f9f9', borderRadius: 8, padding: '8px 12px', marginBottom: 12 }}>
+                            <div style={{
+                              background: '#f9f9f9',
+                              borderRadius: 8,
+                              padding: '8px 12px',
+                              marginBottom: 12,
+                            }}>
                               {item.commentaire.map((c, i) => (
-                                <p key={i} style={{ fontSize: 12, color: '#666', fontStyle: 'italic', margin: 0 }}>« {c} »</p>
+                                <p key={i} style={{ 
+                                  fontSize: 12, 
+                                  color: '#666', 
+                                  fontStyle: 'italic',
+                                  margin: 0,
+                                }}>
+                                  « {c} »
+                                </p>
                               ))}
                             </div>
                           )}
                           
-                          <div style={{ display: 'inline-flex', alignItems: 'center', background: '#f5f5f7', borderRadius: 8 }}>
+                          <div style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            background: '#f5f5f7',
+                            borderRadius: 8,
+                          }}>
                             <button
                               onClick={() => modifierQuantite(item.id, item.quantite - 1)}
-                              style={{ width: 32, height: 32, border: 'none', background: 'none', fontSize: 16, cursor: 'pointer', color: '#1d1d1f' }}
+                              style={{ 
+                                width: 32, 
+                                height: 32, 
+                                border: 'none', 
+                                background: 'none', 
+                                fontSize: 16, 
+                                cursor: 'pointer',
+                                color: '#1d1d1f',
+                              }}
                             >−</button>
-                            <span style={{ width: 32, textAlign: 'center', fontSize: 14, fontWeight: 600 }}>{item.quantite}</span>
+                            <span style={{ 
+                              width: 32, 
+                              textAlign: 'center', 
+                              fontSize: 14, 
+                              fontWeight: 600,
+                            }}>
+                              {item.quantite}
+                            </span>
                             <button
                               onClick={() => modifierQuantite(item.id, item.quantite + 1)}
-                              style={{ width: 32, height: 32, border: 'none', background: 'none', fontSize: 16, cursor: 'pointer', color: '#1d1d1f' }}
+                              style={{ 
+                                width: 32, 
+                                height: 32, 
+                                border: 'none', 
+                                background: 'none', 
+                                fontSize: 16, 
+                                cursor: 'pointer',
+                                color: '#1d1d1f',
+                              }}
                             >+</button>
                           </div>
                         </div>
@@ -444,31 +676,70 @@ export default function OLDAStore() {
                   ))}
 
                   <div style={{ padding: '24px 0' }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 600, color: '#1d1d1f', marginBottom: 16 }}>Vos coordonnées</h3>
+                    <h3 style={{ 
+                      fontSize: 15, 
+                      fontWeight: 600, 
+                      color: '#1d1d1f', 
+                      marginBottom: 16,
+                    }}>
+                      Vos coordonnées
+                    </h3>
                     
                     <div style={{ marginBottom: 16 }}>
-                      <label style={{ fontSize: 13, fontWeight: 500, color: '#86868b', display: 'block', marginBottom: 8 }}>Nom</label>
+                      <label style={{ 
+                        fontSize: 13, 
+                        fontWeight: 500, 
+                        color: '#86868b', 
+                        display: 'block', 
+                        marginBottom: 8,
+                      }}>
+                        Nom
+                      </label>
                       <input
                         type="text"
                         value={clientInfo.nom}
                         onChange={e => setClientInfo({...clientInfo, nom: e.target.value})}
                         style={{
-                          width: '100%', padding: '16px', borderRadius: 12,
-                          border: '1px solid #e5e5e5', fontSize: 16, outline: 'none', boxSizing: 'border-box',
+                          width: '100%', 
+                          padding: '16px', 
+                          borderRadius: 12,
+                          border: '1px solid #e5e5e5', 
+                          fontSize: 16, 
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                          transition: 'border-color 0.2s ease',
                         }}
+                        onFocus={e => e.target.style.borderColor = '#0071e3'}
+                        onBlur={e => e.target.style.borderColor = '#e5e5e5'}
                       />
                     </div>
 
                     <div>
-                      <label style={{ fontSize: 13, fontWeight: 500, color: '#86868b', display: 'block', marginBottom: 8 }}>Adresse mail</label>
+                      <label style={{ 
+                        fontSize: 13, 
+                        fontWeight: 500, 
+                        color: '#86868b', 
+                        display: 'block', 
+                        marginBottom: 8,
+                      }}>
+                        Adresse mail
+                      </label>
                       <input
                         type="email"
                         value={clientInfo.email}
                         onChange={e => setClientInfo({...clientInfo, email: e.target.value})}
                         style={{
-                          width: '100%', padding: '16px', borderRadius: 12,
-                          border: '1px solid #e5e5e5', fontSize: 16, outline: 'none', boxSizing: 'border-box',
+                          width: '100%', 
+                          padding: '16px', 
+                          borderRadius: 12,
+                          border: '1px solid #e5e5e5', 
+                          fontSize: 16, 
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                          transition: 'border-color 0.2s ease',
                         }}
+                        onFocus={e => e.target.style.borderColor = '#0071e3'}
+                        onBlur={e => e.target.style.borderColor = '#e5e5e5'}
                       />
                     </div>
                   </div>
@@ -477,18 +748,27 @@ export default function OLDAStore() {
             </div>
 
             {panier.length > 0 && (
-              <div style={{ padding: '20px 24px 40px', background: '#ffffff' }}>
+              <div style={{ 
+                padding: '20px 24px 40px',
+                background: '#ffffff',
+              }}>
                 <button
                   onClick={envoyerCommande}
                   disabled={sending}
                   style={{
-                    width: '100%', padding: '18px', borderRadius: 14, border: 'none',
+                    width: '100%', 
+                    padding: '18px', 
+                    borderRadius: 14, 
+                    border: 'none',
                     background: sending ? '#86868b' : '#0071e3',
-                    color: '#ffffff', fontSize: 17, fontWeight: 600,
+                    color: '#ffffff', 
+                    fontSize: 17, 
+                    fontWeight: 600, 
                     cursor: sending ? 'not-allowed' : 'pointer',
+                    transition: 'background 0.2s ease',
                   }}
                 >
-                  {sending ? 'Envoi...' : 'Commander'}
+                  {sending ? 'Envoi en cours...' : 'Commander'}
                 </button>
               </div>
             )}
