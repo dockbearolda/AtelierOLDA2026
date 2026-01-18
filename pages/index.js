@@ -42,7 +42,7 @@ export default function OLDAStore() {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    emailjs.init('063h32x');
+    emailjs.init('Y9NKwhNvCNtb_SRry');
   }, []);
 
   const getQte = (id) => quantites[id] || 3;
