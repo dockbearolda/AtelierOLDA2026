@@ -458,10 +458,13 @@ minWidth: "20px",
 textAlign: "center"
 },
 navContainer: {
-position: "relative",
+position: "sticky",
+top: "73px",
 backgroundColor: "white",
 borderBottom: "1px solid #d2d2d7",
-zIndex: 999
+zIndex: 1001,
+boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+transition: "box-shadow 0.3s ease"
 },
 navGradientLeft: {
 position: "absolute",
@@ -470,7 +473,7 @@ top: 0,
 bottom: 0,
 width: "40px",
 background: "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10,
+zIndex: 1003,
 pointerEvents: "none"
 },
 navGradientRight: {
@@ -480,7 +483,7 @@ top: 0,
 bottom: 0,
 width: "40px",
 background: "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10,
+zIndex: 1003,
 pointerEvents: "none"
 },
 nav: {
@@ -493,7 +496,7 @@ scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none",
 position: "relative",
-zIndex: 999
+zIndex: 1002
 },
 swipeHint: {
 display: "flex",
@@ -525,12 +528,17 @@ backgroundColor: "#f5f5f7",
 color: "#1d1d1f",
 fontSize: "14px",
 fontWeight: "400",
-transition: "all 0.2s",
-whiteSpace: "nowrap"
+transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+whiteSpace: "nowrap",
+transform: "scale(1)",
+boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
 },
 tabActive: {
 backgroundColor: "#1d1d1f",
-color: "white"
+color: "white",
+transform: "scale(1.05)",
+boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+fontWeight: "500"
 },
 main: {
 padding: "40px",
@@ -774,4 +782,23 @@ color: "#1d1d1f",
 margin: "0 0 8px 0"
 },
 successText: {
-fontSize: "
+fontSize: "15px",
+color: "#6e6e73",
+margin: "0 0 4px 0"
+},
+successEmail: {
+fontSize: "15px",
+color: "#6e6e73",
+margin: "0 0 24px 0"
+},
+closeButton: {
+padding: "14px 32px",
+backgroundColor: "#0071e3",
+color: "white",
+border: "none",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "600"
+}
+};

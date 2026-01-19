@@ -38,6 +38,17 @@ function MyApp({ Component, pageProps }) {
           box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
+        /* Hover effects for navigation tabs */
+        nav button:hover {
+          transform: scale(1.03);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Active tab hover - slight enhancement */
+        nav button:active {
+          transform: scale(0.98);
+        }
+
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
