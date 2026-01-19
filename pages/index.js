@@ -537,7 +537,7 @@ transition: "all 0.2s",
 whiteSpace: "nowrap"
 },
 tabActive: {
-backgroundColor: "#1d1d1f",
+backgroundColor: "#0071e3",
 color: "white"
 },
 main: {
@@ -672,7 +672,7 @@ top: 0,
 left: 0,
 right: 0,
 bottom: 0,
-backgroundColor: "rgba(0,0,0,0.4)",
+backgroundColor: "rgba(0,0,0,0.15)",
 display: "flex",
 justifyContent: "center",
 alignItems: "center",
