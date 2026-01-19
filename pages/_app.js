@@ -94,10 +94,30 @@ function MyApp({ Component, pageProps }) {
           overflow: visible !important;
         }
 
+        /* Navigation slider for mobile - hide scrollbar */
+        nav::-webkit-scrollbar {
+          width: 0;
+          height: 0;
+          display: none;
+        }
+
         /* Add button active state - micro press animation */
         button[style*="addButton"]:active:not([disabled]) {
           transform: scale(0.95) !important;
           transition: transform 0.1s ease !important;
+        }
+
+        /* Submit button hover */
+        button[style*="submitButton"]:not([disabled]):hover {
+          background-color: #0077ed !important;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3) !important;
+        }
+
+        /* Back button hover */
+        button[style*="backButton"]:hover {
+          background-color: #f5f5f7 !important;
+          border-color: #1d1d1f !important;
         }
 
         /* Smooth transitions */

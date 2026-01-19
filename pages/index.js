@@ -78,6 +78,7 @@ const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [recentlyAdded, setRecentlyAdded] = useState({});
 const [isMounted, setIsMounted] = useState(false);
+const [orderStep, setOrderStep] = useState(1);
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -208,6 +209,7 @@ setCartOpen(false);
 setOrderSent(false);
 setPanier([]);
 setClientInfo({ nom: "", email: "" });
+setOrderStep(1);
 };
 
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
@@ -301,6 +303,7 @@ React.createElement("div", { style: styles.navContainer },
             tab.label,
             React.createElement("span", { style: styles.dropdownArrow }, " ▼")
           ),
+          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownBridge }),
           openDropdown === tab.key && React.createElement("ul", { style: styles.dropdownMenu },
             tab.subcategories.map(function(subcat) {
               return React.createElement("li", {
@@ -378,53 +381,102 @@ React.createElement("main", { style: styles.main },
 cartOpen && isMounted && ReactDOM.createPortal(
   React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
     React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
-    orderSent ? React.createElement("div", { style: styles.successContainer },
-      React.createElement("div", { style: styles.successIcon }, "\u2713"),
-      React.createElement("h2", { style: styles.successTitle }, "Commande envoyée"),
-      React.createElement("p", { style: styles.successText }, "L'Atelier OLDA vous remercie pour votre confiance."),
-      React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
+    orderSent ? React.createElement(React.Fragment, null,
+      React.createElement("div", { style: styles.modalHeader },
+        React.createElement("h2", { style: styles.modalTitle }, "Commande"),
+        React.createElement("button", { onClick: fermerEtReset, style: styles.closeIcon }, "\u00d7")
+      ),
+      React.createElement("div", { style: styles.stepper },
+        React.createElement("div", { style: styles.stepItem },
+          React.createElement("div", { style: Object.assign({}, styles.stepNumber, styles.stepNumberCompleted) }, "\u2713"),
+          React.createElement("span", { style: styles.stepLabel }, "Sélection")
+        ),
+        React.createElement("div", { style: styles.stepDivider }),
+        React.createElement("div", { style: styles.stepItem },
+          React.createElement("div", { style: Object.assign({}, styles.stepNumber, styles.stepNumberCompleted) }, "\u2713"),
+          React.createElement("span", { style: styles.stepLabel }, "Coordonnées")
+        ),
+        React.createElement("div", { style: styles.stepDivider }),
+        React.createElement("div", { style: styles.stepItem },
+          React.createElement("div", { style: Object.assign({}, styles.stepNumber, styles.stepNumberActive) }, "3"),
+          React.createElement("span", { style: Object.assign({}, styles.stepLabel, styles.stepLabelActive) }, "Confirmation")
+        )
+      ),
+      React.createElement("div", { style: styles.successContainer },
+        React.createElement("div", { style: styles.successIcon }, "\u2713"),
+        React.createElement("h2", { style: styles.successTitle }, "Commande envoyée"),
+        React.createElement("p", { style: styles.successText }, "L'Atelier OLDA vous remercie pour votre confiance."),
+        React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
+      )
     ) : React.createElement(React.Fragment, null,
       React.createElement("div", { style: styles.modalHeader },
-        React.createElement("h2", { style: styles.modalTitle }, "Sélection"),
-        React.createElement("button", { onClick: function() { setCartOpen(false); }, style: styles.closeIcon }, "\u00d7")
+        React.createElement("h2", { style: styles.modalTitle }, orderStep === 1 ? "Sélection" : "Coordonnées"),
+        React.createElement("button", { onClick: function() { setCartOpen(false); setOrderStep(1); }, style: styles.closeIcon }, "\u00d7")
+      ),
+      React.createElement("div", { style: styles.stepper },
+        React.createElement("div", { style: styles.stepItem },
+          React.createElement("div", { style: orderStep === 1 ? Object.assign({}, styles.stepNumber, styles.stepNumberActive) : orderStep > 1 ? Object.assign({}, styles.stepNumber, styles.stepNumberCompleted) : styles.stepNumber }, orderStep > 1 ? "\u2713" : "1"),
+          React.createElement("span", { style: orderStep === 1 ? Object.assign({}, styles.stepLabel, styles.stepLabelActive) : styles.stepLabel }, "Sélection")
+        ),
+        React.createElement("div", { style: styles.stepDivider }),
+        React.createElement("div", { style: styles.stepItem },
+          React.createElement("div", { style: orderStep === 2 ? Object.assign({}, styles.stepNumber, styles.stepNumberActive) : orderStep > 2 ? Object.assign({}, styles.stepNumber, styles.stepNumberCompleted) : styles.stepNumber }, orderStep > 2 ? "\u2713" : "2"),
+          React.createElement("span", { style: orderStep === 2 ? Object.assign({}, styles.stepLabel, styles.stepLabelActive) : styles.stepLabel }, "Coordonnées")
+        ),
+        React.createElement("div", { style: styles.stepDivider }),
+        React.createElement("div", { style: styles.stepItem },
+          React.createElement("div", { style: styles.stepNumber }, "3"),
+          React.createElement("span", { style: styles.stepLabel }, "Confirmation")
+        )
       ),
 
       panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre sélection est vide") : React.createElement(React.Fragment, null,
-        React.createElement("div", { style: styles.cartItems },
-          panier.map(function(item) {
-            return React.createElement("div", { key: item.id, style: styles.cartItem },
-              React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
-              React.createElement("div", { style: { flex: 1 } },
-                React.createElement("p", { style: styles.cartItemName }, item.nom),
-                React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
-                item.commentaire && React.createElement("p", { style: styles.cartItemComment }, "Note: " + item.commentaire)
-              ),
-              React.createElement("button", { onClick: function() { supprimerDuPanier(item.id); }, style: styles.deleteButton }, "\u00d7")
-            );
-          })
-        ),
-
-        React.createElement("div", { style: styles.form },
-          React.createElement("input", {
-            type: "text",
-            placeholder: "Votre nom",
-            value: clientInfo.nom,
-            onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { nom: e.target.value })); },
-            style: styles.input
-          }),
-          React.createElement("input", {
-            type: "email",
-            placeholder: "Votre email",
-            value: clientInfo.email,
-            onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { email: e.target.value })); },
-            style: styles.input
-          }),
-
+        orderStep === 1 ? React.createElement(React.Fragment, null,
+          React.createElement("div", { style: styles.cartItems },
+            panier.map(function(item) {
+              return React.createElement("div", { key: item.id, style: styles.cartItem },
+                React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
+                React.createElement("div", { style: { flex: 1 } },
+                  React.createElement("p", { style: styles.cartItemName }, item.nom),
+                  React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
+                  item.commentaire && React.createElement("p", { style: styles.cartItemComment }, "Note: " + item.commentaire)
+                ),
+                React.createElement("button", { onClick: function() { supprimerDuPanier(item.id); }, style: styles.deleteButton }, "\u00d7")
+              );
+            })
+          ),
           React.createElement("button", {
-            onClick: envoyerCommande,
-            disabled: sending,
-            style: Object.assign({}, styles.submitButton, sending ? styles.submitButtonDisabled : {})
-          }, sending ? "Envoi en cours..." : "Commander")
+            onClick: function() { setOrderStep(2); },
+            style: styles.submitButton
+          }, "Continuer")
+        ) : React.createElement(React.Fragment, null,
+          React.createElement("div", { style: styles.form },
+            React.createElement("input", {
+              type: "text",
+              placeholder: "Votre nom",
+              value: clientInfo.nom,
+              onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { nom: e.target.value })); },
+              style: styles.input
+            }),
+            React.createElement("input", {
+              type: "email",
+              placeholder: "Votre email",
+              value: clientInfo.email,
+              onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { email: e.target.value })); },
+              style: styles.input
+            }),
+            React.createElement("div", { style: { display: "flex", gap: "12px" } },
+              React.createElement("button", {
+                onClick: function() { setOrderStep(1); },
+                style: styles.backButton
+              }, "Retour"),
+              React.createElement("button", {
+                onClick: envoyerCommande,
+                disabled: sending,
+                style: Object.assign({}, styles.submitButton, sending ? styles.submitButtonDisabled : {})
+              }, sending ? "Envoi en cours..." : "Commander")
+            )
+          )
         )
       )
     )
@@ -579,15 +631,17 @@ nav: {
 backgroundColor: "white",
 padding: "16px 40px",
 display: "flex",
+flexWrap: "nowrap",
 gap: "12px",
 overflowX: "auto",
 overflowY: "visible",
 scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none",
+WebkitOverflowScrolling: "touch",
 position: "relative",
 zIndex: 9997,
-overflow: "visible"
+paddingRight: "60px"
 },
 tab: {
 padding: "10px 20px",
@@ -615,6 +669,16 @@ position: "relative",
 display: "inline-block",
 overflow: "visible",
 pointerEvents: "auto"
+},
+dropdownBridge: {
+position: "absolute",
+top: "100%",
+left: 0,
+right: 0,
+height: "12px",
+backgroundColor: "transparent",
+pointerEvents: "auto",
+zIndex: 99998
 },
 dropdownArrow: {
 fontSize: "10px",
@@ -801,7 +865,60 @@ modalHeader: {
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
-marginBottom: "24px"
+marginBottom: "16px"
+},
+stepper: {
+display: "flex",
+justifyContent: "center",
+alignItems: "center",
+marginBottom: "32px",
+paddingBottom: "24px",
+borderBottom: "1px solid #f5f5f7"
+},
+stepItem: {
+display: "flex",
+alignItems: "center",
+gap: "8px"
+},
+stepNumber: {
+width: "28px",
+height: "28px",
+borderRadius: "50%",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+fontSize: "12px",
+fontWeight: "500",
+backgroundColor: "#f5f5f7",
+color: "#86868b",
+transition: "all 0.3s ease",
+letterSpacing: "0.02em"
+},
+stepNumberActive: {
+backgroundColor: "#1d1d1f",
+color: "white",
+transform: "scale(1.1)"
+},
+stepNumberCompleted: {
+backgroundColor: "#34c759",
+color: "white"
+},
+stepLabel: {
+fontSize: "13px",
+color: "#86868b",
+fontWeight: "400",
+letterSpacing: "0.05em",
+textTransform: "uppercase"
+},
+stepLabelActive: {
+color: "#1d1d1f",
+fontWeight: "500"
+},
+stepDivider: {
+width: "40px",
+height: "1px",
+backgroundColor: "#f5f5f7",
+margin: "0 12px"
 },
 modalTitle: {
 margin: 0,
@@ -890,11 +1007,25 @@ borderRadius: "10px",
 cursor: "pointer",
 fontSize: "15px",
 fontWeight: "600",
-marginTop: "8px"
+marginTop: "8px",
+transition: "all 0.2s ease"
 },
 submitButtonDisabled: {
 backgroundColor: "#86868b",
 cursor: "not-allowed"
+},
+backButton: {
+width: "100%",
+padding: "14px",
+backgroundColor: "transparent",
+color: "#1d1d1f",
+border: "1px solid #d2d2d7",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "500",
+marginTop: "8px",
+transition: "all 0.2s ease"
 },
 successContainer: {
 textAlign: "center",
