@@ -52,6 +52,7 @@ nouveautes: [
 { id: 53, reference: "TM 03", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Jaune", couleur: "Jaune", taille: "300ml" },
 { id: 54, reference: "TM 04", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Bleu", couleur: "Bleu", taille: "300ml" }
 ],
+"tasse-bois": [],
 tshirt: [
 { id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe", couleur: "Bleu Saphir", taille: "" }
 ],
@@ -69,7 +70,8 @@ const tabs = [
   subcategories: [
     { key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
     { key: "tasse-ceramique", label: "Tasse Céramique" },
-    { key: "tasse-metal", label: "Tasse Métal & Bois" }
+    { key: "tasse-metal", label: "Tasse Métal" },
+    { key: "tasse-bois", label: "Tasse Bois" }
   ]
 },
 { key: "tshirt", label: "T-Shirt" },
@@ -249,7 +251,7 @@ var isActive = activeTab === tabKey;
 
 // Pour l'onglet Tasses, vérifier si une sous-catégorie est active
 if (tabKey === "tasses") {
-  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal"];
+  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal", "tasse-bois"];
   isActive = tasseSubcats.indexOf(activeTab) !== -1;
 }
 
