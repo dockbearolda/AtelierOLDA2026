@@ -28,17 +28,8 @@ offres: [
 
 const tabs = [
 { key: "nouveautes", label: "Nouveautés" },
-{
-  key: "tasses",
-  label: "Tasses",
-  hasDropdown: true,
-  subcategories: [
-    { key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
-    { key: "tasse-ceramique", label: "Tasse Céramique" },
-    { key: "tasse-metal", label: "Tasse Métal" },
-    { key: "autres-tasses", label: "Autres Tasses" }
-  ]
-},
+{ key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
+{ key: "tasse-ceramique", label: "Tasse Céramique" },
 { key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
@@ -46,7 +37,6 @@ const tabs = [
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
 const [activeTab, setActiveTab] = useState("tasse-ceramique");
-const [openDropdown, setOpenDropdown] = useState(null);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -192,15 +182,7 @@ var totalArticles = panier.reduce(function(sum, item) { return sum + item.quanti
 
 var getTabStyle = function(tabKey) {
 var baseStyle = Object.assign({}, styles.tab);
-var isActive = activeTab === tabKey;
-
-// Pour l'onglet Tasses, vérifier si une sous-catégorie est active
-if (tabKey === "tasses") {
-  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal", "autres-tasses"];
-  isActive = tasseSubcats.indexOf(activeTab) !== -1;
-}
-
-if (isActive) {
+if (activeTab === tabKey) {
   if (tabKey === "nouveautes") {
     return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
   } else if (tabKey === "offres") {
@@ -260,53 +242,14 @@ React.createElement("div", { style: styles.navContainer },
   React.createElement("div", { style: styles.navGradientLeft }),
   React.createElement("nav", { style: styles.nav },
     tabs.map(function(tab) {
-      if (tab.hasDropdown) {
-        return React.createElement("div", {
-          key: tab.key,
-          style: styles.dropdownContainer,
-          onMouseEnter: function() { setOpenDropdown(tab.key); },
-          onMouseLeave: function() { setOpenDropdown(null); }
+      return React.createElement("button", {
+        key: tab.key,
+        onClick: function() {
+          setActiveTab(tab.key);
+          setShowHomepage(false);
         },
-          React.createElement("button", {
-            onClick: function() {
-              if (openDropdown === tab.key) {
-                setOpenDropdown(null);
-              } else {
-                setOpenDropdown(tab.key);
-              }
-            },
-            style: getTabStyle(tab.key)
-          },
-            tab.label,
-            React.createElement("span", { style: styles.dropdownArrow }, " ▼")
-          ),
-          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownMenu },
-            tab.subcategories.map(function(subcat) {
-              return React.createElement("button", {
-                key: subcat.key,
-                onClick: function() {
-                  setActiveTab(subcat.key);
-                  setShowHomepage(false);
-                  setOpenDropdown(null);
-                },
-                style: activeTab === subcat.key ?
-                  Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
-                  styles.dropdownItem
-              }, subcat.label);
-            })
-          )
-        );
-      } else {
-        return React.createElement("button", {
-          key: tab.key,
-          onClick: function() {
-            setActiveTab(tab.key);
-            setShowHomepage(false);
-            setOpenDropdown(null);
-          },
-          style: getTabStyle(tab.key)
-        }, tab.label);
-      }
+        style: getTabStyle(tab.key)
+      }, tab.label);
     })
   ),
   React.createElement("div", { style: styles.navGradientRight })
@@ -585,27 +528,6 @@ msOverflowStyle: "none",
 position: "relative",
 zIndex: 9997
 },
-swipeHint: {
-display: "flex",
-alignItems: "center",
-justifyContent: "center",
-gap: "8px",
-padding: "8px 0",
-backgroundColor: "#f5f5f7",
-fontSize: "13px",
-color: "#86868b"
-},
-swipeArrowLeft: {
-fontSize: "18px",
-animation: "slideLeft 1.5s ease-in-out infinite"
-},
-swipeArrowRight: {
-fontSize: "18px",
-animation: "slideRight 1.5s ease-in-out infinite"
-},
-swipeText: {
-fontWeight: "500"
-},
 tab: {
 padding: "10px 20px",
 border: "none",
@@ -625,49 +547,6 @@ backgroundColor: "#1d1d1f",
 color: "white",
 transform: "scale(1.05)",
 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-fontWeight: "500"
-},
-dropdownContainer: {
-position: "relative",
-display: "inline-block",
-overflow: "visible"
-},
-dropdownArrow: {
-fontSize: "10px",
-marginLeft: "4px",
-opacity: 0.7,
-transition: "transform 0.3s ease"
-},
-dropdownMenu: {
-position: "absolute",
-top: "calc(100% + 8px)",
-left: 0,
-backgroundColor: "white",
-borderRadius: "12px",
-boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
-padding: "8px 0",
-minWidth: "200px",
-zIndex: 999998,
-animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-border: "2px solid red"
-},
-dropdownItem: {
-width: "100%",
-padding: "12px 20px",
-border: "none",
-backgroundColor: "transparent",
-color: "#1d1d1f",
-fontSize: "14px",
-fontWeight: "400",
-cursor: "pointer",
-transition: "all 0.2s ease",
-textAlign: "left",
-whiteSpace: "nowrap",
-display: "block"
-},
-dropdownItemActive: {
-backgroundColor: "#f5f5f7",
-color: "#0071e3",
 fontWeight: "500"
 },
 main: {
