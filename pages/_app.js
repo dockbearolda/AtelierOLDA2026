@@ -9,38 +9,43 @@ function MyApp({ Component, pageProps }) {
           display: none;
         }
 
-        /* Animations for swipe indicators */
-        @keyframes slideLeft {
+        /* Animation for scroll indicator */
+        @keyframes scrollPulse {
           0%, 100% {
-            transform: translateX(0);
-            opacity: 1;
+            opacity: 0.3;
+            transform: translateX(-50%) translateY(0);
           }
           50% {
-            transform: translateX(-5px);
-            opacity: 0.5;
+            opacity: 0.8;
+            transform: translateX(-50%) translateY(4px);
           }
         }
 
-        @keyframes slideRight {
-          0%, 100% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          50% {
-            transform: translateX(5px);
-            opacity: 0.5;
-          }
-        }
-
-        /* Hover effects for category cards */
+        /* Hover effects */
         button:hover {
           transform: translateY(-2px);
           box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
+        .product-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.1) !important;
+        }
+
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
+          transition: all 0.3s ease-in-out;
+        }
+
+        input, textarea, button {
+          transition: all 0.3s ease-in-out;
+        }
+
+        input:focus, textarea:focus {
+          outline: none;
+          border-color: #0071e3;
+          box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
         }
 
         /* Responsive layout for products */

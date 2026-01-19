@@ -34,6 +34,7 @@ const tabs = [
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
 const [activeTab, setActiveTab] = useState("olda");
+const [currentStep, setCurrentStep] = useState(1);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -45,6 +46,7 @@ const [sending, setSending] = useState(false);
 var navigateToCategory = function(category) {
 setActiveTab(category);
 setShowHomepage(false);
+setCurrentStep(1);
 };
 
 useEffect(function() {
@@ -226,7 +228,25 @@ React.createElement("span", { style: styles.categoryLabel }, tab.label)
 )
 ) : React.createElement(React.Fragment, null,
 
+React.createElement("div", { style: styles.stepper },
+  React.createElement("div", { style: currentStep >= 1 ? styles.stepActive : styles.step },
+    React.createElement("span", { style: styles.stepNumber }, "01"),
+    React.createElement("span", { style: styles.stepLabel }, "Choix de la collection")
+  ),
+  React.createElement("div", { style: styles.stepLine }),
+  React.createElement("div", { style: currentStep >= 2 ? styles.stepActive : styles.step },
+    React.createElement("span", { style: styles.stepNumber }, "02"),
+    React.createElement("span", { style: styles.stepLabel }, "Personnalisation")
+  ),
+  React.createElement("div", { style: styles.stepLine }),
+  React.createElement("div", { style: currentStep >= 3 ? styles.stepActive : styles.step },
+    React.createElement("span", { style: styles.stepNumber }, "03"),
+    React.createElement("span", { style: styles.stepLabel }, "Validation")
+  )
+),
+
 React.createElement("div", { style: styles.navContainer },
+  React.createElement("div", { style: styles.scrollIndicator }),
   React.createElement("div", { style: styles.navGradientLeft }),
   React.createElement("nav", { style: styles.nav },
     tabs.map(function(tab) {
@@ -339,9 +359,61 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
 
 var styles = {
 container: {
-fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#f5f5f7"
+backgroundColor: "#fafafa"
+},
+stepper: {
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+padding: "32px 20px 24px",
+backgroundColor: "white",
+borderBottom: "1px solid #e5e5e7"
+},
+step: {
+display: "flex",
+alignItems: "center",
+gap: "8px",
+opacity: "0.3",
+transition: "all 0.3s ease-in-out"
+},
+stepActive: {
+display: "flex",
+alignItems: "center",
+gap: "8px",
+opacity: "1",
+transition: "all 0.3s ease-in-out"
+},
+stepNumber: {
+fontSize: "13px",
+fontWeight: "300",
+letterSpacing: "1px",
+color: "#1d1d1f"
+},
+stepLabel: {
+fontSize: "11px",
+fontWeight: "400",
+color: "#6e6e73",
+textTransform: "uppercase",
+letterSpacing: "0.5px"
+},
+stepLine: {
+width: "40px",
+height: "1px",
+backgroundColor: "#d2d2d7",
+margin: "0 16px"
+},
+scrollIndicator: {
+position: "absolute",
+left: "50%",
+transform: "translateX(-50%)",
+bottom: "8px",
+width: "1px",
+height: "24px",
+background: "linear-gradient(to bottom, rgba(29,29,31,0) 0%, rgba(29,29,31,0.4) 50%, rgba(29,29,31,0) 100%)",
+animation: "scrollPulse 2s ease-in-out infinite",
+zIndex: 1
 },
 homepage: {
 minHeight: "100vh",
@@ -517,32 +589,35 @@ backgroundColor: "#1d1d1f",
 color: "white"
 },
 main: {
-padding: "40px",
+padding: "48px 20px",
 display: "grid",
 gridTemplateColumns: "repeat(2, 1fr)",
-gap: "24px",
-maxWidth: "900px",
+gap: "32px",
+maxWidth: "1000px",
 margin: "0 auto"
 },
 card: {
-backgroundColor: "white",
-borderRadius: "18px",
-padding: "20px",
-boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-transition: "transform 0.2s, box-shadow 0.2s",
+backgroundColor: "#ffffff",
+borderRadius: "20px",
+padding: "32px 24px",
+boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)",
+transition: "all 0.3s ease-in-out",
 display: "flex",
-flexDirection: "column"
+flexDirection: "column",
+aspectRatio: "3 / 4",
+border: "1px solid rgba(0,0,0,0.04)"
 },
 imageContainer: {
 width: "100%",
-aspectRatio: "1",
-backgroundColor: "#f5f5f7",
-borderRadius: "12px",
-marginBottom: "12px",
+flex: "1",
+backgroundColor: "#ffffff",
+borderRadius: "16px",
+marginBottom: "20px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-overflow: "hidden"
+overflow: "hidden",
+padding: "24px"
 },
 image: {
 maxHeight: "100%",
@@ -550,26 +625,30 @@ maxWidth: "100%",
 objectFit: "contain"
 },
 productInfo: {
-marginBottom: "12px",
-textAlign: "center"
+marginBottom: "16px",
+textAlign: "left",
+paddingLeft: "4px"
 },
 productName: {
-margin: "0 0 4px 0",
-fontSize: "15px",
-fontWeight: "600",
+margin: "0 0 6px 0",
+fontSize: "16px",
+fontWeight: "500",
 color: "#1d1d1f",
-lineHeight: "1.3"
+lineHeight: "1.4",
+letterSpacing: "-0.2px"
 },
 productColor: {
-margin: "0 0 2px 0",
+margin: "0 0 4px 0",
 fontSize: "13px",
-color: "#6e6e73"
+color: "#6e6e73",
+fontWeight: "400"
 },
 productRef: {
 margin: "0",
 fontSize: "11px",
 color: "#86868b",
-fontWeight: "500"
+fontWeight: "400",
+letterSpacing: "0.3px"
 },
 quantityControl: {
 display: "flex",
