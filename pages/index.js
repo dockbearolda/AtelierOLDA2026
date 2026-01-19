@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 
+// Générateur automatique de produits
+var generateProducts = function(prefix, count, startId, baseNom) {
+var colors = [
+["Rose", "Blanc"], ["Rouge", "Blanc"], ["Orange", "Blanc"], ["Vert", "Blanc"], ["Noir", "Blanc"],
+["Bleu", "Blanc"], ["Jaune", "Blanc"], ["Violet", "Blanc"], ["Turquoise", "Blanc"], ["Corail", "Blanc"],
+["Noir", "Rose"], ["Noir", "Rouge"], ["Noir", "Orange"], ["Noir", "Vert"], ["Noir", "Bleu"],
+["Noir", "Jaune"], ["Gris", "Blanc"]
+];
+var products = [];
+for (var i = 0; i < count; i++) {
+var num = (i + 1).toString().padStart(2, "0");
+var colorPair = colors[i % colors.length];
+products.push({
+id: startId + i,
+reference: prefix + " " + num,
+image: "/images/mugs/" + prefix + "_" + num + ".jpg",
+nom: baseNom,
+couleur: colorPair[0] + " - " + colorPair[1]
+});
+}
+return products;
+};
+
 const MUGS_DATA = {
 nouveautes: [
 { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
-fuck: [
-{ id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
-],
-olda: [
-{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
-{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
-{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
-{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
-{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" }
-],
+fuck: generateProducts("TCF", 17, 1000, "Tasse Ceramique Fuck"),
+olda: generateProducts("TC", 13, 2000, "Tasse Ceramique OLDA"),
 metal: [
 { id: 31, reference: "TM 01", image: "/images/mugs/noirrose.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Rose" },
 { id: 32, reference: "TM 02", image: "/images/mugs/noirrouge.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Rouge" },
@@ -593,7 +608,8 @@ overflow: "hidden"
 image: {
 maxHeight: "100%",
 maxWidth: "100%",
-objectFit: "contain"
+objectFit: "contain",
+mixBlendMode: "multiply"
 },
 productName: {
 margin: "0 0 4px 0",
