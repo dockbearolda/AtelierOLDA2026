@@ -16,7 +16,7 @@ fuck: [
 { id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
 ],
 tshirt: [
-{ id: 21, reference: "H-001", image: "/images/mugs/tshirt.jpg", nom: "T-shirt Homme Oversize", couleur: "Noir" }
+{ id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
 ],
 offres: [
 { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
