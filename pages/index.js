@@ -5,18 +5,25 @@ const MUGS_DATA = {
 nouveautes: [
 { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
-olda: [
-{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc" },
-{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc" },
-{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique", couleur: "Orange & Blanc" },
-{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique", couleur: "Vert & Blanc" },
-{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique", couleur: "Noir & Blanc" }
-],
 fuck: [
 { id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
 ],
+olda: [
+{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
+{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
+{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" }
+],
+metal: [
+{ id: 31, reference: "TM 01", image: "/images/mugs/noirrose.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Rose" },
+{ id: 32, reference: "TM 02", image: "/images/mugs/noirrouge.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Rouge" },
+{ id: 33, reference: "TM 03", image: "/images/mugs/noirorange.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Orange" },
+{ id: 34, reference: "TM 04", image: "/images/mugs/noirjaune.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Jaune" },
+{ id: 35, reference: "TM 05", image: "/images/mugs/noirvert.JPG", nom: "Tasse Metal OLDA", couleur: "Noir & Vert" }
+],
 tshirt: [
-{ id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
+{ id: 21, reference: "H - 001", image: "/images/mugs/tshirtns300bleu.jpeg", nom: "T-shirt unisexe Olda", couleur: "Blue Sapphire", description: "155 g/m² 100% coton biologique" }
 ],
 offres: [
 { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
@@ -25,24 +32,30 @@ offres: [
 
 const tabs = [
 { key: "nouveautes", label: "Nouveautes" },
-{ key: "olda", label: "Tasse Ceramique OLDA" },
-{ key: "fuck", label: "Tasse Ceramique Fuck" },
+{ key: "fuck", label: "Tasses Ceramique Fuck" },
+{ key: "olda", label: "Tasses Ceramique OLDA" },
+{ key: "metal", label: "Tasses Metal" },
 { key: "tshirt", label: "T-Shirt" },
-{ key: "offres", label: "Offres Promotionnelles" }
+{ key: "offres", label: "Offres" }
 ];
 
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
-const [activeTab, setActiveTab] = useState("olda");
+const [activeTab, setActiveTab] = useState("nouveautes");
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
+const [tailles, setTailles] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
 const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
+const [addedItems, setAddedItems] = useState({});
+const [isChanging, setIsChanging] = useState(false);
 
 var navigateToCategory = function(category) {
+setIsChanging(true);
+setTimeout(function() { setIsChanging(false); }, 300);
 setActiveTab(category);
 setShowHomepage(false);
 };
@@ -53,6 +66,11 @@ emailjs.init("Y9NKwhNvCNtb_SRry");
 
 var getQte = function(id) { return quantites[id] || 3; };
 var getCommentaire = function(id) { return commentaires[id] || ""; };
+var getTaille = function(id) { return tailles[id] || "M"; };
+
+var selectTaille = function(id, taille) {
+setTailles(Object.assign({}, tailles, { [id]: taille }));
+};
 
 var ajuster = function(id, delta) {
 var v = getQte(id) + delta;
@@ -66,13 +84,34 @@ setCommentaires(Object.assign({}, commentaires, { [id]: value }));
 var ajouterAuPanier = function(p) {
 var qte = getQte(p.id);
 var commentaire = getCommentaire(p.id);
+var taille = getTaille(p.id);
+var itemData = Object.assign({}, p, { quantite: qte, commentaire: commentaire });
+if (p.description) {
+itemData.taille = taille;
+}
 setPanier(function(prev) {
 var existant = prev.find(function(i) { return i.id === p.id; });
 if (existant) {
-return prev.map(function(i) { return i.id === p.id ? Object.assign({}, i, { quantite: i.quantite + qte, commentaire: commentaire }) : i; });
+return prev.map(function(i) {
+if (i.id === p.id) {
+var updated = Object.assign({}, i, { quantite: i.quantite + qte, commentaire: commentaire });
+if (p.description) updated.taille = taille;
+return updated;
 }
-return prev.concat([Object.assign({}, p, { quantite: qte, commentaire: commentaire })]);
+return i;
 });
+}
+return prev.concat([itemData]);
+});
+
+setAddedItems(Object.assign({}, addedItems, { [p.id]: true }));
+setTimeout(function() {
+setAddedItems(Object.assign({}, addedItems, { [p.id]: false }));
+}, 1500);
+
+if (navigator.vibrate) {
+navigator.vibrate(50);
+}
 };
 
 var supprimerDuPanier = function(id) {
@@ -184,6 +223,7 @@ return baseStyle;
 };
 
 return React.createElement("div", { style: styles.container },
+isChanging && React.createElement("div", { style: styles.progressBar }),
 React.createElement("header", { style: styles.header },
 React.createElement("img", {
 src: "/images/mugs/logo.jpeg",
@@ -192,7 +232,7 @@ style: styles.logo,
 onClick: function() { setShowHomepage(true); }
 }),
 React.createElement("button", { onClick: function() { setCartOpen(true); }, style: styles.cartButton },
-React.createElement("svg", { width: "22", height: "26", viewBox: "0 0 22 26", fill: "none", stroke: "#86868b", strokeWidth: "1.5" },
+React.createElement("svg", { width: "22", height: "26", viewBox: "0 0 22 26", fill: "none", stroke: "#1d1d1f", strokeWidth: "1.5" },
 React.createElement("path", { d: "M4 7h14a2 2 0 012 2v12a3 3 0 01-3 3H5a3 3 0 01-3-3V9a2 2 0 012-2z" }),
 React.createElement("path", { d: "M7 7V5a4 4 0 118 0v2" })
 ),
@@ -222,27 +262,22 @@ React.createElement("span", { style: styles.categoryLabel }, tab.label)
 )
 ) : React.createElement(React.Fragment, null,
 
-React.createElement("div", { style: styles.navContainer },
-  React.createElement("div", { style: styles.navGradientLeft }),
-  React.createElement("nav", { style: styles.nav },
+React.createElement("div", { style: styles.badgeNavContainer },
+  React.createElement("div", { style: styles.badgeNav },
     tabs.map(function(tab) {
+      var isActive = activeTab === tab.key;
       return React.createElement("button", {
         key: tab.key,
-        onClick: function() { setActiveTab(tab.key); },
-        style: getTabStyle(tab.key)
+        onClick: function() { navigateToCategory(tab.key); },
+        style: isActive ? Object.assign({}, styles.badge_nav, styles.badge_nav_active) : styles.badge_nav
       }, tab.label);
     })
-  ),
-  React.createElement("div", { style: styles.navGradientRight }),
-  React.createElement("div", { style: styles.swipeHint },
-    React.createElement("span", { style: styles.swipeArrowLeft }, "\u2190"),
-    React.createElement("span", { style: styles.swipeText }, "Faites d\u00e9filer"),
-    React.createElement("span", { style: styles.swipeArrowRight }, "\u2192")
   )
 ),
 
 React.createElement("main", { style: styles.main },
   MUGS_DATA[activeTab] && MUGS_DATA[activeTab].map(function(product) {
+    var isAdded = addedItems[product.id];
     return React.createElement("div", { key: product.id, style: styles.card },
       React.createElement("div", { style: styles.imageContainer },
         React.createElement("img", {
@@ -254,7 +289,19 @@ React.createElement("main", { style: styles.main },
       ),
       React.createElement("h3", { style: styles.productName }, product.nom),
       product.couleur && React.createElement("p", { style: styles.productColor }, product.couleur),
+      product.description && React.createElement("p", { style: styles.productDescription }, product.description),
       React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
+
+      product.description && React.createElement("div", { style: styles.sizeSelector },
+        ["S", "M", "L", "XL"].map(function(size) {
+          var selected = getTaille(product.id) === size;
+          return React.createElement("button", {
+            key: size,
+            onClick: function() { selectTaille(product.id, size); },
+            style: selected ? Object.assign({}, styles.sizeButton, styles.sizeButtonActive) : styles.sizeButton
+          }, size);
+        })
+      ),
 
       React.createElement("div", { style: styles.quantityControl },
         React.createElement("button", { onClick: function() { ajuster(product.id, -1); }, style: styles.qtyButton }, "-"),
@@ -270,14 +317,21 @@ React.createElement("main", { style: styles.main },
         rows: "2"
       }),
 
-      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter au panier")
+      React.createElement("button", {
+        onClick: function() { ajouterAuPanier(product); },
+        style: isAdded ? Object.assign({}, styles.addButton, styles.addButtonPressed) : styles.addButton
+      }, isAdded ? "Ajoute \u2713" : "Ajouter a la selection")
     );
   })
+),
+
+React.createElement("footer", { style: styles.footer },
+  React.createElement("p", { style: styles.footerText }, "\u00a9 2026 Atelier OLDA. Tous droits r\u00e9serv\u00e9s.")
 )
 ),
 
-cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
-  React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
+cartOpen && React.createElement("div", { style: styles.sideCartOverlay, onClick: function() { setCartOpen(false); } },
+  React.createElement("div", { style: styles.sideCart, onClick: function(e) { e.stopPropagation(); } },
     orderSent ? React.createElement("div", { style: styles.successContainer },
       React.createElement("div", { style: styles.successIcon }, "\u2713"),
       React.createElement("h2", { style: styles.successTitle }, "Commande envoyee"),
@@ -286,18 +340,22 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
       React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
     ) : React.createElement(React.Fragment, null,
       React.createElement("div", { style: styles.modalHeader },
-        React.createElement("h2", { style: styles.modalTitle }, "Panier"),
+        React.createElement("h2", { style: styles.modalTitle }, "Selection"),
         React.createElement("button", { onClick: function() { setCartOpen(false); }, style: styles.closeIcon }, "\u00d7")
       ),
 
-      panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre panier est vide") : React.createElement(React.Fragment, null,
+      panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre selection est vide") : React.createElement(React.Fragment, null,
         React.createElement("div", { style: styles.cartItems },
           panier.map(function(item) {
             return React.createElement("div", { key: item.id, style: styles.cartItem },
               React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
               React.createElement("div", { style: { flex: 1 } },
                 React.createElement("p", { style: styles.cartItemName }, item.nom),
-                React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
+                React.createElement("p", { style: styles.cartItemDetails },
+                  (item.couleur ? item.couleur : "") +
+                  (item.taille ? " | Taille: " + item.taille : "") +
+                  " x " + item.quantite
+                ),
                 item.commentaire && React.createElement("p", { style: styles.cartItemComment }, "Note: " + item.commentaire)
               ),
               React.createElement("button", { onClick: function() { supprimerDuPanier(item.id); }, style: styles.deleteButton }, "\u00d7")
@@ -339,7 +397,17 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#f5f5f7"
+backgroundColor: "#ffffff"
+},
+progressBar: {
+position: "fixed",
+top: 0,
+left: 0,
+right: 0,
+height: "2px",
+backgroundColor: "#0071e3",
+zIndex: 9999,
+animation: "progressSlide 0.3s ease-in-out"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
@@ -421,12 +489,14 @@ fontWeight: "500",
 color: "#1d1d1f"
 },
 header: {
-backgroundColor: "white",
+backgroundColor: "rgba(255, 255, 255, 0.8)",
+backdropFilter: "blur(20px)",
+WebkitBackdropFilter: "blur(20px)",
 padding: "16px 40px",
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
-borderBottom: "1px solid #d2d2d7",
+borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
 position: "sticky",
 top: 0,
 zIndex: 100
@@ -457,92 +527,58 @@ fontWeight: "600",
 minWidth: "20px",
 textAlign: "center"
 },
-navContainer: {
-position: "relative",
-backgroundColor: "white",
-borderBottom: "1px solid #d2d2d7"
+badgeNavContainer: {
+backgroundColor: "rgba(255, 255, 255, 0.95)",
+backdropFilter: "blur(10px)",
+WebkitBackdropFilter: "blur(10px)",
+borderBottom: "1px solid rgba(0, 0, 0, 0.06)",
+padding: "12px 20px"
 },
-navGradientLeft: {
-position: "absolute",
-left: 0,
-top: 0,
-bottom: 0,
-width: "40px",
-background: "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10,
-pointerEvents: "none"
-},
-navGradientRight: {
-position: "absolute",
-right: 0,
-top: 0,
-bottom: 0,
-width: "40px",
-background: "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10,
-pointerEvents: "none"
-},
-nav: {
-backgroundColor: "white",
-padding: "16px 40px",
+badgeNav: {
 display: "flex",
-gap: "12px",
+gap: "10px",
 overflowX: "auto",
 scrollBehavior: "smooth",
 scrollbarWidth: "none",
-msOverflowStyle: "none"
+msOverflowStyle: "none",
+WebkitOverflowScrolling: "touch",
+paddingBottom: "4px"
 },
-swipeHint: {
-display: "flex",
-alignItems: "center",
-justifyContent: "center",
-gap: "8px",
-padding: "8px 0",
-backgroundColor: "#f5f5f7",
-fontSize: "13px",
-color: "#86868b"
-},
-swipeArrowLeft: {
-fontSize: "18px",
-animation: "slideLeft 1.5s ease-in-out infinite"
-},
-swipeArrowRight: {
-fontSize: "18px",
-animation: "slideRight 1.5s ease-in-out infinite"
-},
-swipeText: {
-fontWeight: "500"
-},
-tab: {
-padding: "10px 20px",
+badge_nav: {
+padding: "8px 18px",
 border: "none",
 borderRadius: "20px",
 cursor: "pointer",
 backgroundColor: "#f5f5f7",
 color: "#1d1d1f",
-fontSize: "14px",
-fontWeight: "400",
-transition: "all 0.2s",
-whiteSpace: "nowrap"
+fontSize: "13px",
+fontWeight: "500",
+transition: "all 0.2s ease",
+whiteSpace: "nowrap",
+letterSpacing: "0.2px"
 },
-tabActive: {
+badge_nav_active: {
 backgroundColor: "#1d1d1f",
-color: "white"
+color: "white",
+fontWeight: "600"
 },
 main: {
-padding: "40px",
+padding: "20px",
 display: "grid",
-gridTemplateColumns: "repeat(2, 1fr)",
-gap: "24px",
-maxWidth: "900px",
-margin: "0 auto"
+gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+gap: "20px",
+maxWidth: "1200px",
+margin: "0 auto",
+paddingBottom: "80px"
 },
 card: {
 backgroundColor: "white",
-borderRadius: "18px",
-padding: "24px",
-boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
-transition: "transform 0.2s, box-shadow 0.2s"
+borderRadius: "20px",
+padding: "20px",
+boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+transition: "box-shadow 0.2s",
+display: "flex",
+flexDirection: "column"
 },
 imageContainer: {
 height: "200px",
@@ -568,12 +604,43 @@ color: "#1d1d1f"
 productColor: {
 margin: "0 0 4px 0",
 fontSize: "14px",
-color: "#6e6e73"
+color: "#6e6e73",
+fontWeight: "400"
+},
+productDescription: {
+margin: "0 0 4px 0",
+fontSize: "13px",
+color: "#86868b",
+fontWeight: "300"
 },
 productRef: {
 margin: "0 0 16px 0",
 fontSize: "12px",
-color: "#86868b"
+color: "#86868b",
+fontWeight: "300"
+},
+sizeSelector: {
+display: "flex",
+gap: "8px",
+justifyContent: "center",
+marginBottom: "12px"
+},
+sizeButton: {
+width: "44px",
+height: "44px",
+border: "1px solid #d2d2d7",
+borderRadius: "10px",
+cursor: "pointer",
+backgroundColor: "white",
+fontSize: "14px",
+fontWeight: "500",
+color: "#1d1d1f",
+transition: "all 0.2s ease"
+},
+sizeButtonActive: {
+backgroundColor: "#1d1d1f",
+color: "white",
+borderColor: "#1d1d1f"
 },
 quantityControl: {
 display: "flex",
@@ -623,29 +690,49 @@ borderRadius: "10px",
 cursor: "pointer",
 fontSize: "15px",
 fontWeight: "500",
-transition: "background-color 0.2s"
+transition: "all 0.2s ease",
+textAlign: "center"
 },
-modalOverlay: {
+addButtonPressed: {
+backgroundColor: "#34c759",
+transform: "scale(0.95)"
+},
+footer: {
+backgroundColor: "white",
+padding: "40px 20px",
+textAlign: "center",
+borderTop: "1px solid rgba(0, 0, 0, 0.06)"
+},
+footerText: {
+margin: 0,
+fontSize: "13px",
+color: "#86868b",
+fontWeight: "300"
+},
+sideCartOverlay: {
 position: "fixed",
 top: 0,
 left: 0,
 right: 0,
 bottom: 0,
 backgroundColor: "rgba(0,0,0,0.4)",
-display: "flex",
-justifyContent: "center",
-alignItems: "center",
 zIndex: 1000,
-padding: "20px"
+animation: "fadeIn 0.3s ease"
 },
-modal: {
-backgroundColor: "white",
-borderRadius: "20px",
-padding: "32px",
-maxWidth: "500px",
+sideCart: {
+position: "fixed",
+top: 0,
+right: 0,
+bottom: 0,
 width: "100%",
-maxHeight: "80vh",
-overflow: "auto"
+maxWidth: "450px",
+backgroundColor: "white",
+boxShadow: "-4px 0 20px rgba(0,0,0,0.15)",
+overflowY: "auto",
+padding: "32px",
+animation: "slideInRight 0.3s ease",
+display: "flex",
+flexDirection: "column"
 },
 modalHeader: {
 display: "flex",

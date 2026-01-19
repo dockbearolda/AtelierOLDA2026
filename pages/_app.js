@@ -1,46 +1,79 @@
 import React from 'react';
+import Head from 'next/head';
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </Head>
       <style jsx global>{`
-        /* Hide scrollbar for Chrome, Safari and Opera */
+        /* Reset and base styles */
+        * {
+          -webkit-tap-highlight-color: transparent;
+          box-sizing: border-box;
+        }
+
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Hide scrollbar for horizontal navigation */
+        .badgeNav::-webkit-scrollbar,
         nav::-webkit-scrollbar {
           display: none;
         }
 
-        /* Animations for swipe indicators */
-        @keyframes slideLeft {
-          0%, 100% {
-            transform: translateX(0);
+        /* Animations */
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
             opacity: 1;
           }
-          50% {
-            transform: translateX(-5px);
-            opacity: 0.5;
-          }
         }
 
-        @keyframes slideRight {
-          0%, 100% {
+        @keyframes slideInRight {
+          from {
+            transform: translateX(100%);
+          }
+          to {
             transform: translateX(0);
-            opacity: 1;
-          }
-          50% {
-            transform: translateX(5px);
-            opacity: 0.5;
           }
         }
 
-        /* Hover effects for category cards */
-        button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        @keyframes progressSlide {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(0);
+          }
         }
 
-        /* Smooth transitions */
-        * {
-          -webkit-tap-highlight-color: transparent;
+        /* Smooth hover effects */
+        button {
+          transition: all 0.2s ease;
+        }
+
+        button:active {
+          transform: scale(0.98);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          body {
+            font-size: 16px !important;
+          }
+
+          input, textarea, select {
+            font-size: 16px !important;
+          }
         }
       `}</style>
       <Component {...pageProps} />
