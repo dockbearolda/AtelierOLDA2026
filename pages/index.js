@@ -32,7 +32,10 @@ const PRODUCTS_DATA = {
     dessousVerre: []
   },
   porteclefs: [],
-  magnets: []
+  magnets: [],
+  offres: [
+    { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
+  ]
 };
 
 const CATEGORIES = [
@@ -65,7 +68,8 @@ const CATEGORIES = [
     ]
   },
   { key: "porteclefs", label: "Porte-clefs" },
-  { key: "magnets", label: "Magnets" }
+  { key: "magnets", label: "Magnets" },
+  { key: "offres", label: "Offres Spéciales", isPromo: true }
 ];
 
 export default function OLDAStore() {
@@ -153,8 +157,6 @@ export default function OLDAStore() {
       }
       return prev.concat([item]);
     });
-
-    setCartOpen(true);
   };
 
   var supprimerDuPanier = function(id) {
@@ -262,6 +264,10 @@ export default function OLDAStore() {
     return Array.isArray(category) ? category : [];
   };
 
+  var isCupCategory = function() {
+    return activeCategory === "tassesCeramiques";
+  };
+
   var currentProducts = getCurrentProducts();
 
   return React.createElement("div", { style: styles.container },
@@ -302,9 +308,12 @@ export default function OLDAStore() {
                   navigateToCategory(cat.key);
                 }
               },
-              style: cat.isNew ? Object.assign({}, styles.categoryCard, styles.categoryCardNew) : styles.categoryCard
+              style: cat.isNew ? Object.assign({}, styles.categoryCard, styles.categoryCardNew) :
+                     cat.isPromo ? Object.assign({}, styles.categoryCard, styles.categoryCardPromo) :
+                     styles.categoryCard
             },
               cat.isNew && React.createElement("span", { style: styles.categoryBadge }, "Nouveau"),
+              cat.isPromo && React.createElement("span", { style: styles.categoryBadgePromo }, "Promo"),
               React.createElement("span", { style: styles.categoryLabel }, cat.label)
             );
           })
@@ -331,7 +340,7 @@ export default function OLDAStore() {
                     navigateToCategory(cat.key);
                   }
                 },
-                style: isActive ? Object.assign({}, styles.navButton, styles.navButtonActive) : styles.navButton
+                style: isActive ? Object.assign({}, styles.navButton, styles.navButtonActive, cat.isPromo ? styles.navButtonPromo : {}) : Object.assign({}, styles.navButton, cat.isPromo ? styles.navButtonPromoInactive : {})
               },
                 cat.label,
                 hasSubcategories && React.createElement("span", { style: styles.dropdownArrow }, isOpen ? "▴" : "▾")
@@ -361,7 +370,7 @@ export default function OLDAStore() {
               React.createElement("img", {
                 src: product.image,
                 alt: product.nom,
-                style: Object.assign({}, styles.image, !isLoaded ? { opacity: 0 } : { opacity: 1 }),
+                style: Object.assign({}, styles.image, !isLoaded ? { opacity: 0 } : { opacity: 1 }, isCupCategory() ? { mixBlendMode: "multiply" } : {}),
                 onLoad: function() { handleImageLoad(product.id); },
                 onError: function(e) { handleImageLoad(product.id); e.target.style.display = "none"; }
               })
@@ -375,7 +384,7 @@ export default function OLDAStore() {
             ),
 
             product.hasSizes && React.createElement("div", { style: styles.sizeSelector },
-              ["S", "M", "L", "XL"].map(function(size) {
+              ["XS", "S", "M", "L", "XL"].map(function(size) {
                 var isSelected = getTaille(product.id) === size;
                 return React.createElement("button", {
                   key: size,
@@ -420,8 +429,7 @@ export default function OLDAStore() {
       },
         orderSent ? React.createElement("div", { style: styles.successContainer },
           React.createElement("div", { style: styles.successIcon }, "\u2713"),
-          React.createElement("h2", { style: styles.successTitle }, "Commande envoyee"),
-          React.createElement("p", { style: styles.successText }, "Merci " + clientInfo.nom),
+          React.createElement("h2", { style: styles.successTitle }, "L'Atelier OLDA vous remercie pour votre confiance."),
           React.createElement("p", { style: styles.successEmail }, "Nous vous contacterons a " + clientInfo.email),
           React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
         ) : React.createElement(React.Fragment, null,
@@ -538,11 +546,25 @@ var styles = {
   categoryCardNew: {
     backgroundColor: "#e8f2ff"
   },
+  categoryCardPromo: {
+    backgroundColor: "#ffe5e5"
+  },
   categoryBadge: {
     position: "absolute",
     top: "10px",
     right: "10px",
     backgroundColor: "#0071e3",
+    color: "white",
+    padding: "4px 10px",
+    borderRadius: "12px",
+    fontSize: "11px",
+    fontWeight: "600"
+  },
+  categoryBadgePromo: {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    backgroundColor: "#ff3b30",
     color: "white",
     padding: "4px 10px",
     borderRadius: "12px",
@@ -633,6 +655,14 @@ var styles = {
   navButtonActive: {
     backgroundColor: "#0071e3",
     color: "white"
+  },
+  navButtonPromo: {
+    backgroundColor: "#ff3b30",
+    color: "white"
+  },
+  navButtonPromoInactive: {
+    backgroundColor: "#ffe5e5",
+    color: "#ff3b30"
   },
   dropdownArrow: {
     fontSize: "10px",
