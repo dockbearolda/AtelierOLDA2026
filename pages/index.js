@@ -46,12 +46,12 @@ offres: [
 };
 
 const tabs = [
-{ key: "nouveautes", label: "Nouveautes" },
-{ key: "fuck", label: "Tasses Ceramique Fuck" },
-{ key: "olda", label: "Tasses Ceramique OLDA" },
-{ key: "metal", label: "Tasses Metal" },
-{ key: "tshirt", label: "T-Shirt" },
-{ key: "offres", label: "Offres" }
+{ key: "nouveautes", label: "Nouveautés", subtitle: "Dernières créations" },
+{ key: "fuck", label: "Céramique Fuck", subtitle: "Collection signature" },
+{ key: "olda", label: "Céramique OLDA", subtitle: "Collection classique" },
+{ key: "metal", label: "Métal & Bois", subtitle: "Édition premium" },
+{ key: "tshirt", label: "Textile", subtitle: "Vêtements" },
+{ key: "offres", label: "Sélection", subtitle: "Offres exclusives" }
 ];
 
 export default function OLDAStore() {
@@ -67,6 +67,7 @@ const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [addedItems, setAddedItems] = useState({});
 const [isChanging, setIsChanging] = useState(false);
+const [hoveredCard, setHoveredCard] = useState(null);
 
 var navigateToCategory = function(category) {
 setIsChanging(true);
@@ -290,52 +291,78 @@ React.createElement("div", { style: styles.badgeNavContainer },
   )
 ),
 
+React.createElement("div", { style: styles.collectionHeader },
+  React.createElement("h2", { style: styles.collectionTitle },
+    tabs.find(function(t) { return t.key === activeTab; }).label
+  ),
+  React.createElement("p", { style: styles.collectionSubtitle },
+    tabs.find(function(t) { return t.key === activeTab; }).subtitle
+  )
+),
+
 React.createElement("main", { style: styles.main },
   MUGS_DATA[activeTab] && MUGS_DATA[activeTab].map(function(product) {
     var isAdded = addedItems[product.id];
-    return React.createElement("div", { key: product.id, style: styles.card },
+    var isHovered = hoveredCard === product.id;
+    var cardStyle = isHovered ? Object.assign({}, styles.card, styles.cardHover) : styles.card;
+
+    return React.createElement("div", {
+      key: product.id,
+      style: cardStyle,
+      onMouseEnter: function() { setHoveredCard(product.id); },
+      onMouseLeave: function() { setHoveredCard(null); }
+    },
       React.createElement("div", { style: styles.imageContainer },
         React.createElement("img", {
           src: product.image,
           alt: product.nom,
           style: styles.image,
           onError: function(e) { e.target.style.display = "none"; }
+        }),
+        isHovered && React.createElement("div", { style: styles.hoverOverlay },
+          React.createElement("button", {
+            onClick: function() { ajouterAuPanier(product); },
+            style: isAdded ? Object.assign({}, styles.quickAddButton, styles.quickAddButtonAdded) : styles.quickAddButton
+          }, isAdded ? "Ajouté ✓" : "Ajouter à la Collection")
+        )
+      ),
+
+      React.createElement("div", { style: styles.productInfo },
+        React.createElement("h3", { style: styles.productName }, product.nom),
+        product.couleur && React.createElement("p", { style: styles.productColor }, product.couleur),
+        React.createElement("p", { style: styles.productRef }, product.reference)
+      ),
+
+      isHovered && React.createElement("div", { style: styles.expandedControls },
+        product.description && React.createElement("div", { style: styles.sizeSelector },
+          React.createElement("span", { style: styles.sizeLabel }, "Taille"),
+          ["S", "M", "L", "XL"].map(function(size) {
+            var selected = getTaille(product.id) === size;
+            return React.createElement("button", {
+              key: size,
+              onClick: function() { selectTaille(product.id, size); },
+              style: selected ? Object.assign({}, styles.sizeButton, styles.sizeButtonActive) : styles.sizeButton
+            }, size);
+          })
+        ),
+
+        React.createElement("div", { style: styles.quantityControl },
+          React.createElement("span", { style: styles.quantityLabel }, "Quantité"),
+          React.createElement("div", { style: styles.quantityButtons },
+            React.createElement("button", { onClick: function() { ajuster(product.id, -1); }, style: styles.qtyButton }, "-"),
+            React.createElement("span", { style: styles.quantity }, getQte(product.id)),
+            React.createElement("button", { onClick: function() { ajuster(product.id, 1); }, style: styles.qtyButton }, "+")
+          )
+        ),
+
+        React.createElement("textarea", {
+          placeholder: "Note personnalisée (optionnel)",
+          value: getCommentaire(product.id),
+          onChange: function(e) { updateCommentaire(product.id, e.target.value); },
+          style: styles.commentaire,
+          rows: "2"
         })
-      ),
-      React.createElement("h3", { style: styles.productName }, product.nom),
-      product.couleur && React.createElement("p", { style: styles.productColor }, product.couleur),
-      product.description && React.createElement("p", { style: styles.productDescription }, product.description),
-      React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
-
-      product.description && React.createElement("div", { style: styles.sizeSelector },
-        ["S", "M", "L", "XL"].map(function(size) {
-          var selected = getTaille(product.id) === size;
-          return React.createElement("button", {
-            key: size,
-            onClick: function() { selectTaille(product.id, size); },
-            style: selected ? Object.assign({}, styles.sizeButton, styles.sizeButtonActive) : styles.sizeButton
-          }, size);
-        })
-      ),
-
-      React.createElement("div", { style: styles.quantityControl },
-        React.createElement("button", { onClick: function() { ajuster(product.id, -1); }, style: styles.qtyButton }, "-"),
-        React.createElement("span", { style: styles.quantity }, getQte(product.id)),
-        React.createElement("button", { onClick: function() { ajuster(product.id, 1); }, style: styles.qtyButton }, "+")
-      ),
-
-      React.createElement("textarea", {
-        placeholder: "Note (optionnel)",
-        value: getCommentaire(product.id),
-        onChange: function(e) { updateCommentaire(product.id, e.target.value); },
-        style: styles.commentaire,
-        rows: "2"
-      }),
-
-      React.createElement("button", {
-        onClick: function() { ajouterAuPanier(product); },
-        style: isAdded ? Object.assign({}, styles.addButton, styles.addButtonPressed) : styles.addButton
-      }, isAdded ? "Ajoute \u2713" : "Ajouter a la selection")
+      )
     );
   })
 ),
@@ -577,51 +604,110 @@ backgroundColor: "#1d1d1f",
 color: "white",
 fontWeight: "600"
 },
+collectionHeader: {
+textAlign: "center",
+padding: "60px 40px 40px",
+backgroundColor: "#ffffff"
+},
+collectionTitle: {
+fontSize: "42px",
+fontWeight: "300",
+color: "#1d1d1f",
+margin: "0 0 12px 0",
+letterSpacing: "-0.5px"
+},
+collectionSubtitle: {
+fontSize: "17px",
+fontWeight: "300",
+color: "#86868b",
+margin: 0,
+letterSpacing: "0.3px"
+},
 main: {
-padding: "20px",
+padding: "20px 40px 80px",
 display: "grid",
-gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-gap: "20px",
-maxWidth: "1200px",
-margin: "0 auto",
-paddingBottom: "80px"
+gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+gap: "40px",
+maxWidth: "1400px",
+margin: "0 auto"
 },
 card: {
 backgroundColor: "white",
-borderRadius: "20px",
-padding: "20px",
-boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-transition: "box-shadow 0.2s",
+borderRadius: "24px",
+padding: "0",
+boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
 display: "flex",
-flexDirection: "column"
+flexDirection: "column",
+overflow: "hidden",
+cursor: "pointer"
+},
+cardHover: {
+transform: "translateY(-8px)",
+boxShadow: "0 12px 40px rgba(0,0,0,0.12)"
 },
 imageContainer: {
-height: "200px",
-backgroundColor: "white",
-borderRadius: "12px",
-marginBottom: "16px",
+height: "360px",
+backgroundColor: "#fafafa",
+position: "relative",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
 overflow: "hidden"
 },
 image: {
-maxHeight: "100%",
-maxWidth: "100%",
+maxHeight: "85%",
+maxWidth: "85%",
 objectFit: "contain",
-mixBlendMode: "multiply"
+mixBlendMode: "multiply",
+transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+},
+hoverOverlay: {
+position: "absolute",
+top: 0,
+left: 0,
+right: 0,
+bottom: 0,
+background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 60%)",
+display: "flex",
+alignItems: "flex-end",
+justifyContent: "center",
+padding: "32px",
+animation: "fadeIn 0.3s ease"
+},
+quickAddButton: {
+padding: "14px 32px",
+backgroundColor: "white",
+color: "#1d1d1f",
+border: "none",
+borderRadius: "12px",
+fontSize: "15px",
+fontWeight: "600",
+cursor: "pointer",
+transition: "all 0.2s ease",
+boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+},
+quickAddButtonAdded: {
+backgroundColor: "#34c759",
+color: "white"
+},
+productInfo: {
+padding: "24px",
+textAlign: "center",
+backgroundColor: "white"
 },
 productName: {
-margin: "0 0 4px 0",
-fontSize: "17px",
-fontWeight: "600",
-color: "#1d1d1f"
+margin: "0 0 8px 0",
+fontSize: "19px",
+fontWeight: "500",
+color: "#1d1d1f",
+letterSpacing: "-0.2px"
 },
 productColor: {
-margin: "0 0 4px 0",
-fontSize: "14px",
+margin: "0 0 6px 0",
+fontSize: "15px",
 color: "#6e6e73",
-fontWeight: "400"
+fontWeight: "300"
 },
 productDescription: {
 margin: "0 0 4px 0",
@@ -630,16 +716,40 @@ color: "#86868b",
 fontWeight: "300"
 },
 productRef: {
-margin: "0 0 16px 0",
-fontSize: "12px",
+margin: 0,
+fontSize: "13px",
 color: "#86868b",
-fontWeight: "300"
+fontWeight: "300",
+letterSpacing: "0.5px"
+},
+expandedControls: {
+padding: "0 24px 24px",
+backgroundColor: "white",
+animation: "fadeIn 0.3s ease",
+borderTop: "1px solid #f5f5f7"
+},
+sizeLabel: {
+fontSize: "13px",
+fontWeight: "500",
+color: "#1d1d1f",
+marginBottom: "8px",
+display: "block",
+textAlign: "center"
+},
+quantityLabel: {
+fontSize: "13px",
+fontWeight: "500",
+color: "#1d1d1f",
+marginBottom: "8px",
+display: "block",
+textAlign: "center"
 },
 sizeSelector: {
 display: "flex",
-gap: "8px",
+gap: "10px",
 justifyContent: "center",
-marginBottom: "12px"
+marginBottom: "20px",
+paddingTop: "20px"
 },
 sizeButton: {
 width: "44px",
@@ -659,11 +769,13 @@ color: "white",
 borderColor: "#1d1d1f"
 },
 quantityControl: {
+marginBottom: "16px"
+},
+quantityButtons: {
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-gap: "16px",
-marginBottom: "12px"
+gap: "16px"
 },
 qtyButton: {
 width: "36px",
@@ -686,32 +798,15 @@ textAlign: "center"
 },
 commentaire: {
 width: "100%",
-padding: "10px",
+padding: "12px",
 border: "1px solid #e5e5e7",
-borderRadius: "8px",
+borderRadius: "10px",
 fontSize: "13px",
 fontFamily: "inherit",
 resize: "none",
-marginBottom: "12px",
 boxSizing: "border-box",
-color: "#1d1d1f"
-},
-addButton: {
-width: "100%",
-padding: "12px",
-backgroundColor: "#0071e3",
-color: "white",
-border: "none",
-borderRadius: "10px",
-cursor: "pointer",
-fontSize: "15px",
-fontWeight: "500",
-transition: "all 0.2s ease",
-textAlign: "center"
-},
-addButtonPressed: {
-backgroundColor: "#34c759",
-transform: "scale(0.95)"
+color: "#1d1d1f",
+transition: "border-color 0.2s ease"
 },
 footer: {
 backgroundColor: "white",
