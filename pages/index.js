@@ -429,7 +429,7 @@ alignItems: "center",
 borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
-zIndex: 100
+zIndex: 1000
 },
 logo: {
 height: "40px",
@@ -460,7 +460,8 @@ textAlign: "center"
 navContainer: {
 position: "relative",
 backgroundColor: "white",
-borderBottom: "1px solid #d2d2d7"
+borderBottom: "1px solid #d2d2d7",
+zIndex: 999
 },
 navGradientLeft: {
 position: "absolute",
@@ -490,7 +491,9 @@ gap: "12px",
 overflowX: "auto",
 scrollBehavior: "smooth",
 scrollbarWidth: "none",
-msOverflowStyle: "none"
+msOverflowStyle: "none",
+position: "relative",
+zIndex: 999
 },
 swipeHint: {
 display: "flex",
@@ -542,7 +545,9 @@ backgroundColor: "white",
 borderRadius: "18px",
 padding: "24px",
 boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
-transition: "transform 0.2s, box-shadow 0.2s"
+transition: "transform 0.2s, box-shadow 0.2s",
+position: "relative",
+zIndex: 1
 },
 imageContainer: {
 height: "200px",
@@ -769,23 +774,4 @@ color: "#1d1d1f",
 margin: "0 0 8px 0"
 },
 successText: {
-fontSize: "15px",
-color: "#6e6e73",
-margin: "0 0 4px 0"
-},
-successEmail: {
-fontSize: "15px",
-color: "#6e6e73",
-margin: "0 0 24px 0"
-},
-closeButton: {
-padding: "14px 32px",
-backgroundColor: "#0071e3",
-color: "white",
-border: "none",
-borderRadius: "10px",
-cursor: "pointer",
-fontSize: "15px",
-fontWeight: "600"
-}
-};
+fontSize: "
