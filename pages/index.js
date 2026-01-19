@@ -53,6 +53,7 @@ const [cartOpen, setCartOpen] = useState(false);
 const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
+const [recentlyAdded, setRecentlyAdded] = useState({});
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -85,6 +86,16 @@ return prev.map(function(i) { return i.id === p.id ? Object.assign({}, i, { quan
 }
 return prev.concat([Object.assign({}, p, { quantite: qte, commentaire: commentaire })]);
 });
+
+// Animation "Ajouté ✓"
+setRecentlyAdded(Object.assign({}, recentlyAdded, { [p.id]: true }));
+setTimeout(function() {
+setRecentlyAdded(function(prev) {
+var newState = Object.assign({}, prev);
+delete newState[p.id];
+return newState;
+});
+}, 2000);
 };
 
 var supprimerDuPanier = function(id) {
@@ -98,7 +109,7 @@ return;
 }
 
 if (panier.length === 0) {
-alert("Votre panier est vide");
+alert("Votre sélection est vide");
 return;
 }
 
@@ -327,7 +338,12 @@ React.createElement("main", { style: styles.main },
         rows: "2"
       }),
 
-      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter")
+      React.createElement("button", {
+        onClick: function() { ajouterAuPanier(product); },
+        style: recentlyAdded[product.id] ?
+          Object.assign({}, styles.addButton, styles.addButtonAdded) :
+          styles.addButton
+      }, recentlyAdded[product.id] ? "Ajouté ✓" : "Ajouter")
     );
   })
 )
@@ -342,11 +358,11 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
       React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
     ) : React.createElement(React.Fragment, null,
       React.createElement("div", { style: styles.modalHeader },
-        React.createElement("h2", { style: styles.modalTitle }, "Panier"),
+        React.createElement("h2", { style: styles.modalTitle }, "Sélection"),
         React.createElement("button", { onClick: function() { setCartOpen(false); }, style: styles.closeIcon }, "\u00d7")
       ),
 
-      panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre panier est vide") : React.createElement(React.Fragment, null,
+      panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre sélection est vide") : React.createElement(React.Fragment, null,
         React.createElement("div", { style: styles.cartItems },
           panier.map(function(item) {
             return React.createElement("div", { key: item.id, style: styles.cartItem },
@@ -524,7 +540,8 @@ backgroundColor: "white",
 borderBottom: "1px solid #d2d2d7",
 zIndex: 9998,
 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-transition: "box-shadow 0.3s ease"
+transition: "box-shadow 0.3s ease",
+overflow: "visible"
 },
 navGradientLeft: {
 position: "absolute",
@@ -552,6 +569,7 @@ padding: "16px 40px",
 display: "flex",
 gap: "12px",
 overflowX: "auto",
+overflowY: "visible",
 scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none",
@@ -731,15 +749,24 @@ color: "#1d1d1f"
 },
 addButton: {
 width: "100%",
-padding: "12px",
+padding: "11px 16px",
 backgroundColor: "#0071e3",
 color: "white",
 border: "none",
-borderRadius: "10px",
+borderRadius: "12px",
 cursor: "pointer",
-fontSize: "15px",
-fontWeight: "500",
-transition: "background-color 0.2s"
+fontSize: "14px",
+fontWeight: "400",
+letterSpacing: "-0.01em",
+transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+transform: "scale(1)"
+},
+addButtonAdded: {
+backgroundColor: "#86868b",
+color: "white",
+transform: "scale(0.98)",
+boxShadow: "0 1px 2px rgba(0, 0, 0, 0.08)"
 },
 modalOverlay: {
 position: "fixed",

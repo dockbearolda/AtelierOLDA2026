@@ -66,6 +66,12 @@ function MyApp({ Component, pageProps }) {
           background-color: #f5f5f7 !important;
         }
 
+        /* Add button active state - micro press animation */
+        button[style*="addButton"]:active:not([disabled]) {
+          transform: scale(0.95) !important;
+          transition: transform 0.1s ease !important;
+        }
+
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
