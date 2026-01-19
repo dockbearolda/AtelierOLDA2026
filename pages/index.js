@@ -5,6 +5,10 @@ const MUGS_DATA = {
 nouveautes: [
 { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
+tshirt: [
+{ id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpeg", nom: "T-shirt unisexe Olda", couleur: "Blue Sapphire", description: "155 g/m² 100% coton biologique", hasSizes: true },
+{ id: 22, reference: "H-002", image: "/images/mugs/tshirt.jpg", nom: "T-shirt Homme Oversize", couleur: "Noir", hasSizes: true }
+],
 olda: [
 { id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc" },
 { id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc" },
@@ -15,19 +19,16 @@ olda: [
 fuck: [
 { id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
 ],
-tshirt: [
-{ id: 21, reference: "H-001", image: "/images/mugs/tshirt.jpg", nom: "T-shirt Homme Oversize", couleur: "Noir" }
-],
 offres: [
 { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
 ]
 };
 
 const tabs = [
-{ key: "nouveautes", label: "Nouveautes" },
+{ key: "nouveautes", label: "Nouveautés" },
+{ key: "tshirt", label: "T-Shirts" },
 { key: "olda", label: "Tasse Ceramique OLDA" },
 { key: "fuck", label: "Tasse Ceramique Fuck" },
-{ key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
@@ -35,6 +36,7 @@ export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
 const [activeTab, setActiveTab] = useState("olda");
 const [quantites, setQuantites] = useState({});
+const [tailles, setTailles] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
@@ -42,6 +44,7 @@ const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [imagesLoaded, setImagesLoaded] = useState({});
+const [addedToCart, setAddedToCart] = useState({});
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -54,6 +57,12 @@ var newState = Object.assign({}, prev);
 newState[id] = true;
 return newState;
 });
+};
+
+var getTaille = function(id) { return tailles[id] || "M"; };
+
+var setTaille = function(id, taille) {
+setTailles(Object.assign({}, tailles, { [id]: taille }));
 };
 
 useEffect(function() {
@@ -75,12 +84,28 @@ setCommentaires(Object.assign({}, commentaires, { [id]: value }));
 var ajouterAuPanier = function(p) {
 var qte = getQte(p.id);
 var commentaire = getCommentaire(p.id);
-setPanier(function(prev) {
-var existant = prev.find(function(i) { return i.id === p.id; });
-if (existant) {
-return prev.map(function(i) { return i.id === p.id ? Object.assign({}, i, { quantite: i.quantite + qte, commentaire: commentaire }) : i; });
+var taille = p.hasSizes ? getTaille(p.id) : null;
+
+if (navigator.vibrate) {
+navigator.vibrate(50);
 }
-return prev.concat([Object.assign({}, p, { quantite: qte, commentaire: commentaire })]);
+
+setAddedToCart(Object.assign({}, addedToCart, { [p.id]: true }));
+setTimeout(function() {
+setAddedToCart(Object.assign({}, addedToCart, { [p.id]: false }));
+}, 2000);
+
+setPanier(function(prev) {
+var item = Object.assign({}, p, { quantite: qte, commentaire: commentaire });
+if (taille) item.taille = taille;
+
+var existant = prev.find(function(i) { return i.id === p.id && i.taille === taille; });
+if (existant) {
+return prev.map(function(i) {
+return (i.id === p.id && i.taille === taille) ? Object.assign({}, i, { quantite: i.quantite + qte, commentaire: commentaire }) : i;
+});
+}
+return prev.concat([item]);
 });
 };
 
@@ -268,7 +293,19 @@ React.createElement("main", { style: styles.main },
       React.createElement("div", { style: styles.productInfo },
         React.createElement("h3", { style: styles.productName }, product.nom),
         product.couleur && React.createElement("p", { style: styles.productColor, className: "product-color" }, product.couleur),
+        product.description && React.createElement("p", { style: styles.productDescription }, product.description),
         React.createElement("p", { style: styles.productRef }, product.reference)
+      ),
+
+      product.hasSizes && React.createElement("div", { style: styles.sizeSelector },
+        ["S", "M", "L", "XL"].map(function(size) {
+          var isSelected = getTaille(product.id) === size;
+          return React.createElement("button", {
+            key: size,
+            onClick: function() { setTaille(product.id, size); },
+            style: isSelected ? Object.assign({}, styles.sizeButton, styles.sizeButtonActive) : styles.sizeButton
+          }, size);
+        })
       ),
 
       React.createElement("div", { style: styles.quantityControl },
@@ -285,7 +322,10 @@ React.createElement("main", { style: styles.main },
         rows: "1"
       }),
 
-      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter")
+      React.createElement("button", {
+        onClick: function() { ajouterAuPanier(product); },
+        style: addedToCart[product.id] ? Object.assign({}, styles.addButton, styles.addButtonAdded) : styles.addButton
+      }, addedToCart[product.id] ? "Ajouté ✓" : "Ajouter")
     );
   })
 )
@@ -607,12 +647,44 @@ fontSize: "13px",
 color: "#6e6e73",
 fontWeight: "400"
 },
+productDescription: {
+margin: "0 0 4px 0",
+fontSize: "11px",
+color: "#86868b",
+fontWeight: "400",
+fontStyle: "italic"
+},
 productRef: {
 margin: "0",
 fontSize: "11px",
 color: "#86868b",
 fontWeight: "400",
 letterSpacing: "0.3px"
+},
+sizeSelector: {
+display: "flex",
+gap: "8px",
+justifyContent: "center",
+marginBottom: "12px",
+paddingTop: "8px"
+},
+sizeButton: {
+minWidth: "40px",
+height: "32px",
+padding: "0 12px",
+border: "1px solid #d2d2d7",
+borderRadius: "8px",
+backgroundColor: "white",
+color: "#1d1d1f",
+fontSize: "13px",
+fontWeight: "500",
+cursor: "pointer",
+transition: "all 0.3s ease-in-out"
+},
+sizeButtonActive: {
+backgroundColor: "#0071e3",
+borderColor: "#0071e3",
+color: "white"
 },
 quantityControl: {
 display: "flex",
@@ -664,7 +736,12 @@ borderRadius: "10px",
 cursor: "pointer",
 fontSize: "13px",
 fontWeight: "600",
-transition: "background-color 0.2s"
+transition: "all 0.3s ease-in-out",
+transform: "scale(1)"
+},
+addButtonAdded: {
+backgroundColor: "#34c759",
+transform: "scale(0.95)"
 },
 modalOverlay: {
 position: "fixed",
