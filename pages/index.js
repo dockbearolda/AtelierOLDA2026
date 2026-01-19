@@ -1,22 +1,48 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import emailjs from "@emailjs/browser";
 
 const MUGS_DATA = {
 nouveautes: [
 { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
-olda: [
-{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc" },
-{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc" },
-{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique", couleur: "Orange & Blanc" },
-{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique", couleur: "Vert & Blanc" },
-{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique", couleur: "Noir & Blanc" }
+"tasse-ceramique-fuck": [
+{ id: 11, reference: "TCF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 12, reference: "TCF 02", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 13, reference: "TCF 03", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 14, reference: "TCF 04", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 15, reference: "TCF 05", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 16, reference: "TCF 06", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 17, reference: "TCF 07", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 18, reference: "TCF 08", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 19, reference: "TCF 09", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 20, reference: "TCF 10", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 21, reference: "TCF 11", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 22, reference: "TCF 12", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 23, reference: "TCF 13", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 24, reference: "TCF 14", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 25, reference: "TCF 15", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 26, reference: "TCF 16", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 27, reference: "TCF 17", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
 ],
-fuck: [
-{ id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
+"tasse-ceramique": [
+{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
+{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
+{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" },
+{ id: 6, reference: "TC 06", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 7, reference: "TC 07", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 8, reference: "TC 08", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
+{ id: 9, reference: "TC 09", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
+{ id: 10, reference: "TC 10", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" },
+{ id: 31, reference: "TC 11", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 32, reference: "TC 12", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 33, reference: "TC 13", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" }
 ],
+"tasse-metal": [],
 tshirt: [
-{ id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
+{ id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
 ],
 offres: [
 { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
@@ -24,16 +50,25 @@ offres: [
 };
 
 const tabs = [
-{ key: "nouveautes", label: "Nouveautes" },
-{ key: "olda", label: "Tasse Ceramique OLDA" },
-{ key: "fuck", label: "Tasse Ceramique Fuck" },
+{ key: "nouveautes", label: "Nouveautés" },
+{
+  key: "tasses",
+  label: "Tasses",
+  hasDropdown: true,
+  subcategories: [
+    { key: "tasse-ceramique-fuck", label: "Tasses Céramique Fuck" },
+    { key: "tasse-ceramique", label: "Tasses Céramique OLDA" },
+    { key: "tasse-metal", label: "Tasses Métal" }
+  ]
+},
 { key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
-const [activeTab, setActiveTab] = useState("olda");
+const [activeTab, setActiveTab] = useState("tasse-ceramique");
+const [openDropdown, setOpenDropdown] = useState(null);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -41,6 +76,8 @@ const [cartOpen, setCartOpen] = useState(false);
 const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
+const [recentlyAdded, setRecentlyAdded] = useState({});
+const [isMounted, setIsMounted] = useState(false);
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -49,6 +86,7 @@ setShowHomepage(false);
 
 useEffect(function() {
 emailjs.init("Y9NKwhNvCNtb_SRry");
+setIsMounted(true);
 }, []);
 
 var getQte = function(id) { return quantites[id] || 3; };
@@ -73,6 +111,16 @@ return prev.map(function(i) { return i.id === p.id ? Object.assign({}, i, { quan
 }
 return prev.concat([Object.assign({}, p, { quantite: qte, commentaire: commentaire })]);
 });
+
+// Animation "Ajouté ✓"
+setRecentlyAdded(Object.assign({}, recentlyAdded, { [p.id]: true }));
+setTimeout(function() {
+setRecentlyAdded(function(prev) {
+var newState = Object.assign({}, prev);
+delete newState[p.id];
+return newState;
+});
+}, 2000);
 };
 
 var supprimerDuPanier = function(id) {
@@ -86,7 +134,7 @@ return;
 }
 
 if (panier.length === 0) {
-alert("Votre panier est vide");
+alert("Votre sélection est vide");
 return;
 }
 
@@ -166,20 +214,28 @@ var totalArticles = panier.reduce(function(sum, item) { return sum + item.quanti
 
 var getTabStyle = function(tabKey) {
 var baseStyle = Object.assign({}, styles.tab);
-if (activeTab === tabKey) {
-if (tabKey === "nouveautes") {
-return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
-} else if (tabKey === "offres") {
-return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
+var isActive = activeTab === tabKey;
+
+// Pour l'onglet Tasses, vérifier si une sous-catégorie est active
+if (tabKey === "tasses") {
+  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal"];
+  isActive = tasseSubcats.indexOf(activeTab) !== -1;
 }
-return Object.assign({}, baseStyle, styles.tabActive);
+
+if (isActive) {
+  if (tabKey === "nouveautes") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
+  } else if (tabKey === "offres") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
+  }
+  return Object.assign({}, baseStyle, styles.tabActive);
 } else {
-if (tabKey === "nouveautes") {
-return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
-} else if (tabKey === "offres") {
-return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
-}
-return baseStyle;
+  if (tabKey === "nouveautes") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
+  } else if (tabKey === "offres") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
+  }
+  return baseStyle;
 }
 };
 
@@ -226,19 +282,55 @@ React.createElement("div", { style: styles.navContainer },
   React.createElement("div", { style: styles.navGradientLeft }),
   React.createElement("nav", { style: styles.nav },
     tabs.map(function(tab) {
-      return React.createElement("button", {
-        key: tab.key,
-        onClick: function() { setActiveTab(tab.key); },
-        style: getTabStyle(tab.key)
-      }, tab.label);
+      if (tab.hasDropdown) {
+        return React.createElement("div", {
+          key: tab.key,
+          style: styles.dropdownContainer,
+          onMouseEnter: function() { setOpenDropdown(tab.key); },
+          onMouseLeave: function() { setOpenDropdown(null); }
+        },
+          React.createElement("button", {
+            onClick: function() {
+              if (openDropdown === tab.key) {
+                setOpenDropdown(null);
+              } else {
+                setOpenDropdown(tab.key);
+              }
+            },
+            style: getTabStyle(tab.key)
+          },
+            tab.label,
+            React.createElement("span", { style: styles.dropdownArrow }, " ▼")
+          ),
+          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownMenu },
+            tab.subcategories.map(function(subcat) {
+              return React.createElement("button", {
+                key: subcat.key,
+                onClick: function() {
+                  setActiveTab(subcat.key);
+                  setShowHomepage(false);
+                  setOpenDropdown(null);
+                },
+                style: activeTab === subcat.key ?
+                  Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
+                  styles.dropdownItem
+              }, subcat.label);
+            })
+          )
+        );
+      } else {
+        return React.createElement("button", {
+          key: tab.key,
+          onClick: function() {
+            setActiveTab(tab.key);
+            setShowHomepage(false);
+          },
+          style: getTabStyle(tab.key)
+        }, tab.label);
+      }
     })
   ),
-  React.createElement("div", { style: styles.navGradientRight }),
-  React.createElement("div", { style: styles.swipeHint },
-    React.createElement("span", { style: styles.swipeArrowLeft }, "\u2190"),
-    React.createElement("span", { style: styles.swipeText }, "Faites d\u00e9filer"),
-    React.createElement("span", { style: styles.swipeArrowRight }, "\u2192")
-  )
+  React.createElement("div", { style: styles.navGradientRight })
 ),
 
 React.createElement("main", { style: styles.main },
@@ -270,27 +362,32 @@ React.createElement("main", { style: styles.main },
         rows: "2"
       }),
 
-      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter au panier")
+      React.createElement("button", {
+        onClick: function() { ajouterAuPanier(product); },
+        style: recentlyAdded[product.id] ?
+          Object.assign({}, styles.addButton, styles.addButtonAdded) :
+          styles.addButton
+      }, recentlyAdded[product.id] ? "Ajouté ✓" : "Ajouter")
     );
   })
 )
 ),
 
-cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
-  React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
+cartOpen && isMounted && ReactDOM.createPortal(
+  React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
+    React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
     orderSent ? React.createElement("div", { style: styles.successContainer },
       React.createElement("div", { style: styles.successIcon }, "\u2713"),
-      React.createElement("h2", { style: styles.successTitle }, "Commande envoyee"),
-      React.createElement("p", { style: styles.successText }, "Merci " + clientInfo.nom),
-      React.createElement("p", { style: styles.successEmail }, "Nous vous contacterons a " + clientInfo.email),
+      React.createElement("h2", { style: styles.successTitle }, "Commande envoyée"),
+      React.createElement("p", { style: styles.successText }, "L'Atelier OLDA vous remercie pour votre confiance."),
       React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
     ) : React.createElement(React.Fragment, null,
       React.createElement("div", { style: styles.modalHeader },
-        React.createElement("h2", { style: styles.modalTitle }, "Panier"),
+        React.createElement("h2", { style: styles.modalTitle }, "Sélection"),
         React.createElement("button", { onClick: function() { setCartOpen(false); }, style: styles.closeIcon }, "\u00d7")
       ),
 
-      panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre panier est vide") : React.createElement(React.Fragment, null,
+      panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre sélection est vide") : React.createElement(React.Fragment, null,
         React.createElement("div", { style: styles.cartItems },
           panier.map(function(item) {
             return React.createElement("div", { key: item.id, style: styles.cartItem },
@@ -330,6 +427,12 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
       )
     )
   )
+  ),
+  document.body
+),
+
+React.createElement("footer", { style: styles.footer },
+  React.createElement("p", { style: styles.footerText }, "\u00a9 2026 Atelier OLDA. Tous droits r\u00e9serv\u00e9s.")
 )
 
 );
@@ -339,7 +442,9 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#f5f5f7"
+backgroundColor: "#f5f5f7",
+overflow: "visible",
+position: "relative"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
@@ -429,7 +534,8 @@ alignItems: "center",
 borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
-zIndex: 1000
+zIndex: 9999,
+overflow: "visible"
 },
 logo: {
 height: "40px",
@@ -458,10 +564,14 @@ minWidth: "20px",
 textAlign: "center"
 },
 navContainer: {
-position: "relative",
+position: "sticky",
+top: "73px",
 backgroundColor: "white",
 borderBottom: "1px solid #d2d2d7",
-zIndex: 999
+zIndex: 9998,
+boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+transition: "box-shadow 0.3s ease",
+overflow: "visible"
 },
 navGradientLeft: {
 position: "absolute",
@@ -470,7 +580,7 @@ top: 0,
 bottom: 0,
 width: "40px",
 background: "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10,
+zIndex: 10000,
 pointerEvents: "none"
 },
 navGradientRight: {
@@ -480,7 +590,7 @@ top: 0,
 bottom: 0,
 width: "40px",
 background: "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10,
+zIndex: 10000,
 pointerEvents: "none"
 },
 nav: {
@@ -489,32 +599,12 @@ padding: "16px 40px",
 display: "flex",
 gap: "12px",
 overflowX: "auto",
+overflowY: "visible",
 scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none",
 position: "relative",
-zIndex: 999
-},
-swipeHint: {
-display: "flex",
-alignItems: "center",
-justifyContent: "center",
-gap: "8px",
-padding: "8px 0",
-backgroundColor: "#f5f5f7",
-fontSize: "13px",
-color: "#86868b"
-},
-swipeArrowLeft: {
-fontSize: "18px",
-animation: "slideLeft 1.5s ease-in-out infinite"
-},
-swipeArrowRight: {
-fontSize: "18px",
-animation: "slideRight 1.5s ease-in-out infinite"
-},
-swipeText: {
-fontWeight: "500"
+zIndex: 9997
 },
 tab: {
 padding: "10px 20px",
@@ -525,12 +615,63 @@ backgroundColor: "#f5f5f7",
 color: "#1d1d1f",
 fontSize: "14px",
 fontWeight: "400",
-transition: "all 0.2s",
-whiteSpace: "nowrap"
+transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+whiteSpace: "nowrap",
+transform: "scale(1)",
+boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
 },
 tabActive: {
 backgroundColor: "#1d1d1f",
-color: "white"
+color: "white",
+transform: "scale(1.05)",
+boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+fontWeight: "500"
+},
+dropdownContainer: {
+position: "relative",
+display: "inline-block",
+overflow: "visible",
+pointerEvents: "auto"
+},
+dropdownArrow: {
+fontSize: "10px",
+marginLeft: "4px",
+opacity: 0.7,
+transition: "transform 0.3s ease"
+},
+dropdownMenu: {
+position: "absolute",
+top: "calc(100% + 8px)",
+left: 0,
+backgroundColor: "white",
+borderRadius: "12px",
+boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+padding: "8px 0",
+minWidth: "220px",
+zIndex: 100000,
+animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+border: "1px solid #e5e5e7",
+pointerEvents: "auto"
+},
+dropdownItem: {
+width: "100%",
+padding: "12px 20px",
+border: "none",
+backgroundColor: "transparent",
+color: "#1d1d1f",
+fontSize: "14px",
+fontWeight: "400",
+cursor: "pointer",
+transition: "all 0.2s ease",
+textAlign: "left",
+whiteSpace: "nowrap",
+display: "block",
+pointerEvents: "auto"
+},
+dropdownItemActive: {
+backgroundColor: "#f5f5f7",
+color: "#0071e3",
+fontWeight: "500"
 },
 main: {
 padding: "40px",
@@ -562,7 +703,8 @@ overflow: "hidden"
 image: {
 maxHeight: "100%",
 maxWidth: "100%",
-objectFit: "contain"
+objectFit: "contain",
+mixBlendMode: "multiply"
 },
 productName: {
 margin: "0 0 4px 0",
@@ -620,15 +762,24 @@ color: "#1d1d1f"
 },
 addButton: {
 width: "100%",
-padding: "12px",
+padding: "11px 16px",
 backgroundColor: "#0071e3",
 color: "white",
 border: "none",
-borderRadius: "10px",
+borderRadius: "12px",
 cursor: "pointer",
-fontSize: "15px",
-fontWeight: "500",
-transition: "background-color 0.2s"
+fontSize: "14px",
+fontWeight: "400",
+letterSpacing: "-0.01em",
+transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+transform: "scale(1)"
+},
+addButtonAdded: {
+backgroundColor: "#86868b",
+color: "white",
+transform: "scale(0.98)",
+boxShadow: "0 1px 2px rgba(0, 0, 0, 0.08)"
 },
 modalOverlay: {
 position: "fixed",
@@ -640,8 +791,9 @@ backgroundColor: "rgba(0,0,0,0.4)",
 display: "flex",
 justifyContent: "center",
 alignItems: "center",
-zIndex: 1000,
-padding: "20px"
+zIndex: 999999,
+padding: "20px",
+animation: "fadeIn 0.3s ease-in-out"
 },
 modal: {
 backgroundColor: "white",
@@ -650,7 +802,8 @@ padding: "32px",
 maxWidth: "500px",
 width: "100%",
 maxHeight: "80vh",
-overflow: "auto"
+overflow: "auto",
+animation: "slideDown 0.3s ease-in-out"
 },
 modalHeader: {
 display: "flex",
@@ -774,4 +927,36 @@ color: "#1d1d1f",
 margin: "0 0 8px 0"
 },
 successText: {
-fontSize: "
+fontSize: "15px",
+color: "#6e6e73",
+margin: "0 0 4px 0"
+},
+successEmail: {
+fontSize: "15px",
+color: "#6e6e73",
+margin: "0 0 24px 0"
+},
+closeButton: {
+padding: "14px 32px",
+backgroundColor: "#0071e3",
+color: "white",
+border: "none",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "600"
+},
+footer: {
+backgroundColor: "#f5f5f7",
+padding: "32px 40px",
+textAlign: "center",
+borderTop: "1px solid #d2d2d7",
+marginTop: "60px"
+},
+footerText: {
+margin: 0,
+fontSize: "13px",
+color: "#86868b",
+fontWeight: "400"
+}
+};
