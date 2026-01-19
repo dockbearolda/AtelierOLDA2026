@@ -590,7 +590,7 @@ var styles = {
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 1000
+    zIndex: 999999
   },
   logo: {
     height: "36px",
@@ -627,19 +627,23 @@ var styles = {
     top: "66px",
     left: 0,
     right: 0,
-    zIndex: 999
+    zIndex: 999998,
+    overflowY: "visible"
   },
   nav: {
     padding: "12px 20px",
     display: "flex",
     gap: "8px",
     overflowX: "auto",
+    overflowY: "visible",
     scrollBehavior: "smooth",
     scrollbarWidth: "none",
     msOverflowStyle: "none"
   },
   navItem: {
-    position: "relative"
+    position: "relative",
+    overflow: "visible",
+    zIndex: 1
   },
   navButton: {
     padding: "8px 16px",
@@ -679,10 +683,10 @@ var styles = {
     marginTop: "4px",
     backgroundColor: "white",
     borderRadius: "12px",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
     minWidth: "180px",
-    overflow: "hidden",
-    zIndex: 10000
+    overflow: "visible",
+    zIndex: 9999999
   },
   dropdownItem: {
     display: "block",
@@ -708,7 +712,9 @@ var styles = {
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "16px",
     maxWidth: "900px",
-    margin: "140px auto 0 auto"
+    margin: "140px auto 0 auto",
+    position: "relative",
+    zIndex: 1
   },
   card: {
     backgroundColor: "#ffffff",
@@ -717,7 +723,9 @@ var styles = {
     boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
     display: "flex",
     flexDirection: "column",
-    border: "1px solid rgba(0,0,0,0.04)"
+    border: "1px solid rgba(0,0,0,0.04)",
+    position: "relative",
+    zIndex: 1
   },
   imageContainer: {
     width: "100%",

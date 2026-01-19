@@ -1,53 +1,75 @@
 /* CRITICAL Z-INDEX FIX - ABSOLUTE PRIORITY */
+/* CETTE FEUILLE DE STYLE DOIT ÉCRASER TOUT LE RESTE */
 
-/* FORCE HEADER AND NAV TO BE FIXED AND ON TOP */
-header {
+/* FORCE HEADER TO BE ON TOP */
+header,
+[role="banner"],
+body > div > header {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  z-index: 10000 !important;
+  z-index: 999999 !important;
   width: 100% !important;
 }
 
 /* NAVIGATION BAR FIXED BELOW HEADER */
 nav,
 [style*="navContainer"],
-.nav-container {
+.nav-container,
+[role="navigation"],
+body > div > div:first-of-type {
   position: fixed !important;
   top: 66px !important;
   left: 0 !important;
   right: 0 !important;
-  z-index: 9999 !important;
+  z-index: 999998 !important;
   width: 100% !important;
 }
 
-/* DROPDOWNS MUST BE ABOVE EVERYTHING */
-[style*="dropdown"],
-.dropdown,
-div[style*="position: absolute"][style*="top: 100%"] {
-  position: absolute !important;
-  z-index: 99999 !important;
-}
-
-/* NAV ITEMS CONTAINER */
-.nav-item {
+/* NAV ITEMS MUST HAVE RELATIVE POSITION */
+.nav-item,
+[class*="nav-item"],
+nav > div,
+nav > div > div {
   position: relative !important;
   z-index: 1 !important;
+}
+
+/* DROPDOWNS MUST BE ABSOLUTELY POSITIONED AND ON TOP OF EVERYTHING */
+.dropdown,
+[class*="dropdown"],
+[style*="dropdown"],
+div[style*="position: absolute"][style*="top: 100%"],
+.nav-item > div:last-child,
+nav div[style*="borderRadius: 12px"] {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  z-index: 9999999 !important;
+  background-color: white !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important;
+  border-radius: 12px !important;
+  overflow: visible !important;
 }
 
 /* ENSURE MAIN CONTENT IS BELOW FIXED NAVIGATION */
-main {
+main,
+[role="main"],
+body > div > main {
   margin-top: 140px !important;
   position: relative !important;
   z-index: 1 !important;
+  padding-top: 20px !important;
 }
 
 /* PRODUCT CARDS MUST STAY BELOW */
 .product-card,
-[class*="card"] {
+[class*="card"],
+main > div {
   position: relative !important;
   z-index: 1 !important;
+  transform: translateZ(0) !important;
 }
 
 /* MOBILE ADJUSTMENTS */
@@ -65,5 +87,36 @@ body {
 
 nav {
   overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* MIX-BLEND-MODE FOR CUPS - REMOVE WHITE BACKGROUND */
+img[src*="roseblanc"],
+img[src*="rougeblanc"],
+img[src*="orangeblanc"],
+img[src*="vertblanc"],
+img[src*="noirblanc"],
+img[src*="Fuckblancnoir"],
+img[alt*="Tasse"] {
+  mix-blend-mode: multiply !important;
+}
+
+/* FORCE DROPDOWN VISIBILITY */
+.dropdown:not([style*="display: none"]),
+.nav-item:hover > div[style*="position: absolute"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* PREVENT DROPDOWN FROM BEING CLIPPED */
+.nav-item,
+[style*="navItem"] {
+  overflow: visible !important;
+}
+
+nav,
+.nav-container {
   overflow-y: visible !important;
 }

@@ -225,28 +225,53 @@ function MyApp({ Component, pageProps }) {
           }
         }
 
-        /* Critical Z-Index Hierarchy */
+        /* Critical Z-Index Hierarchy - ULTRA HIGH VALUES */
         header {
           position: fixed !important;
           top: 0 !important;
           left: 0 !important;
           right: 0 !important;
-          z-index: 1000 !important;
+          z-index: 999999 !important;
         }
 
         nav, .nav-container {
           position: fixed !important;
-          z-index: 999 !important;
+          z-index: 999998 !important;
+          overflow-y: visible !important;
         }
 
-        /* Dropdowns MUST be on top */
-        [style*="dropdown"] {
-          z-index: 10000 !important;
+        /* NAV ITEMS must allow overflow */
+        .nav-item,
+        nav > div > div {
+          position: relative !important;
+          overflow: visible !important;
+        }
+
+        /* Dropdowns MUST be on top with MASSIVE z-index */
+        .dropdown,
+        [style*="dropdown"],
+        [class*="dropdown"] {
+          position: absolute !important;
+          z-index: 9999999 !important;
+          overflow: visible !important;
         }
 
         /* Ensure navigation doesn't move vertically */
         header, nav {
           position: fixed !important;
+        }
+
+        /* Main content MUST be below */
+        main {
+          position: relative !important;
+          z-index: 1 !important;
+        }
+
+        /* Product cards MUST stay below */
+        .product-card,
+        main > div {
+          position: relative !important;
+          z-index: 1 !important;
         }
       `}</style>
       <Component {...pageProps} />
