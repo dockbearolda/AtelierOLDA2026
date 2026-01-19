@@ -40,11 +40,7 @@ nouveautes: [
 { id: 10, reference: "TC 10", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Rouge", couleur: "Blanc - Rouge", taille: "350ml" },
 { id: 31, reference: "TC 11", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Vert", couleur: "Blanc - Vert", taille: "350ml" },
 { id: 32, reference: "TC 12", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Noir", couleur: "Blanc - Noir", taille: "350ml" },
-{ id: 33, reference: "TC 13", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Rose", couleur: "Noir - Rose", taille: "350ml" },
-{ id: 34, reference: "TC 14", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Jaune", couleur: "Noir - Jaune", taille: "350ml" },
-{ id: 35, reference: "TC 15", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Rouge", couleur: "Noir - Rouge", taille: "350ml" },
-{ id: 36, reference: "TC 16", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Vert", couleur: "Noir - Vert", taille: "350ml" },
-{ id: 37, reference: "TC 17", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Orange", couleur: "Noir - Orange", taille: "350ml" }
+{ id: 33, reference: "TC 13", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Orange - Blanc", couleur: "Orange - Blanc", taille: "350ml" }
 ],
 "tasse-metal": [
 { id: 51, reference: "TM 01", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Rouge", couleur: "Rouge", taille: "300ml" },
@@ -53,6 +49,20 @@ nouveautes: [
 { id: 54, reference: "TM 04", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Bleu", couleur: "Bleu", taille: "300ml" }
 ],
 "tasse-bois": [],
+"porte-cles": [
+{ id: 301, reference: "PCP 01", image: "/images/mugs/porte-cles.jpg", nom: "Porte-Clés Plexiglass", couleur: "", taille: "" },
+{ id: 302, reference: "PCPB 01", image: "/images/mugs/porte-cles.jpg", nom: "Porte-Clés Bois", couleur: "", taille: "" },
+{ id: 303, reference: "PCA 01", image: "/images/mugs/porte-cles.jpg", nom: "Porte-Clés Acrylique", couleur: "", taille: "" },
+{ id: 304, reference: "PCFL 01", image: "/images/mugs/porte-cles.jpg", nom: "Porte-Clés Flotteur Liège", couleur: "", taille: "" }
+],
+magnets: [
+{ id: 311, reference: "MP 01", image: "/images/mugs/magnet.jpg", nom: "Magnet Plexiglass", couleur: "", taille: "" },
+{ id: 312, reference: "MB 01", image: "/images/mugs/magnet.jpg", nom: "Magnet Bois", couleur: "", taille: "" },
+{ id: 313, reference: "MA 01", image: "/images/mugs/magnet.jpg", nom: "Magnet Acrylique", couleur: "", taille: "" }
+],
+stickers: [
+{ id: 321, reference: "STI 01", image: "/images/mugs/sticker.jpg", nom: "Sticker", couleur: "", taille: "75 x 75" }
+],
 tshirt: [
 { id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe", couleur: "Bleu Saphir", taille: "" }
 ],
@@ -72,6 +82,16 @@ const tabs = [
     { key: "tasse-ceramique", label: "Tasse Céramique" },
     { key: "tasse-metal", label: "Tasse Métal" },
     { key: "tasse-bois", label: "Tasse Bois" }
+  ]
+},
+{
+  key: "goodies",
+  label: "Goodies",
+  hasDropdown: true,
+  subcategories: [
+    { key: "porte-cles", label: "Porte-Clés" },
+    { key: "magnets", label: "Magnets" },
+    { key: "stickers", label: "Stickers" }
   ]
 },
 { key: "tshirt", label: "T-Shirt" },
@@ -253,6 +273,12 @@ var isActive = activeTab === tabKey;
 if (tabKey === "tasses") {
   var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal", "tasse-bois"];
   isActive = tasseSubcats.indexOf(activeTab) !== -1;
+}
+
+// Pour l'onglet Goodies, vérifier si une sous-catégorie est active
+if (tabKey === "goodies") {
+  var goodiesSubcats = ["porte-cles", "magnets", "stickers"];
+  isActive = goodiesSubcats.indexOf(activeTab) !== -1;
 }
 
 if (isActive) {
