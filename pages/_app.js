@@ -82,9 +82,16 @@ function MyApp({ Component, pageProps }) {
           }
         }
 
-        /* Dropdown item hover */
-        button[style*="dropdownItem"]:hover {
-          background-color: #f5f5f7 !important;
+        /* Dropdown item hover - Upscale design */
+        ul[style*="dropdownMenu"] li button:hover {
+          background-color: #fafafa !important;
+          color: #0071e3 !important;
+          transform: translateX(2px);
+        }
+
+        /* Ensure nav has visible overflow */
+        nav {
+          overflow: visible !important;
         }
 
         /* Add button active state - micro press animation */
