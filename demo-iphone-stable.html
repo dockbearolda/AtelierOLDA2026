@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Atelier OLDA - Boutique Premium iPhone</title>
+  <style>
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', Segoe UI, Roboto, sans-serif;
+      background-color: #fafafa;
+    }
+
+    body {
+      overscroll-behavior: none;
+    }
+
+    /* Progress Bar Animation */
+    @keyframes progress {
+      0% {
+        transform: scaleX(0);
+        transform-origin: left;
+      }
+      100% {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #0071e3;
+      z-index: 9999;
+      animation: progress 0.6s ease-in-out;
+    }
+
+    /* Header - Sticky */
+    header {
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header img {
+      height: 36px;
+      width: auto;
+      cursor: pointer;
+    }
+
+    .cart-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      padding: 8px;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #0071e3;
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* Navigation - Sticky & Scrollable */
+    nav {
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      position: sticky;
+      top: 66px;
+      z-index: 99;
+      padding: 12px 20px;
+      overflow-x: auto;
+      overflow-y: visible;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-container {
+      display: inline-flex;
+      gap: 8px;
+    }
+
+    .nav-item {
+      position: relative;
+      display: inline-block;
+    }
+
+    .nav-button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      background-color: transparent;
+      color: #1d1d1f;
+      font-size: 13px;
+      font-weight: 400;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-button.active {
+      background-color: #0071e3;
+      color: white;
+    }
+
+    .nav-button.promo {
+      background-color: #ffe5e5;
+      color: #ff3b30;
+    }
+
+    .nav-button.promo.active {
+      background-color: #ff3b30;
+      color: white;
+    }
+
+    .dropdown-arrow {
+      font-size: 10px;
+      margin-left: 2px;
+    }
+
+    /* Dropdown - Overlay */
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      min-width: 180px;
+      overflow: hidden;
+      z-index: 200;
+      display: none;
+    }
+
+    .dropdown.open {
+      display: block;
+    }
+
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      background-color: transparent;
+      color: #1d1d1f;
+      font-size: 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f5f5f7;
+    }
+
+    .dropdown-item.active {
+      background-color: #f5f5f7;
+      color: #0071e3;
+      font-weight: 500;
+    }
+
+    /* Main Grid - Stable iPhone Layout */
+    main {
+      padding: 24px 12px 80px 12px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Product Card - NO HOVER EFFECTS */
+    .product-card {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 16px 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(0,0,0,0.04);
+      /* NO transitions, NO transforms */
+      transition: none !important;
+      transform: none !important;
+    }
+
+    .product-card:hover,
+    .product-card:active {
+      transform: none !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+      z-index: auto !important;
+    }
+
+    .image-container {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-color: #fafafa;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    .product-image {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    /* mix-blend-mode for cups */
+    .product-image.cup {
+      mix-blend-mode: multiply;
+    }
+
+    .product-info {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .product-name {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1d1d1f;
+      line-height: 1.3;
+    }
+
+    .product-color {
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      color: #6e6e73;
+      font-weight: 400;
+    }
+
+    .product-description {
+      margin: 0 0 4px 0;
+      font-size: 10px;
+      color: #86868b;
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    .product-ref {
+      margin: 0;
+      font-size: 10px;
+      color: #86868b;
+      font-weight: 400;
+    }
+
+    /* Size Selector */
+    .size-selector {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .size-button {
+      min-width: 36px;
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      background-color: white;
+      color: #1d1d1f;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .size-button.active {
+      background-color: #0071e3;
+      border-color: #0071e3;
+      color: white;
+    }
+
+    /* Quantity Control */
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .qty-button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #d2d2d7;
+      border-radius: 50%;
+      cursor: pointer;
+      background-color: white;
+      font-size: 14px;
+      color: #1d1d1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quantity {
+      font-size: 14px;
+      font-weight: 600;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    /* Comment */
+    .comment-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #e5e5e7;
+      border-radius: 8px;
+      font-size: 11px;
+      font-family: inherit;
+      resize: none;
+      margin-bottom: 8px;
+      background-color: #fafafa;
+    }
+
+    /* Add Button */
+    .add-button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease-in-out;
+      transform: scale(1);
+    }
+
+    .add-button.added {
+      background-color: #34c759;
+      transform: scale(0.95);
+    }
+
+    /* Side Cart - Slide from Right */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    .side-cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.3);
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+      display: none;
+    }
+
+    .side-cart-overlay.open {
+      display: block;
+    }
+
+    .side-cart {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 100%;
+      background-color: white;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      animation: slideInRight 0.3s ease-out;
+      overflow-y: auto;
+    }
+
+    .side-cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 24px 16px 24px;
+      border-bottom: 1px solid #f5f5f7;
+    }
+
+    .side-cart-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+
+    .close-icon {
+      background: none;
+      border: none;
+      font-size: 32px;
+      cursor: pointer;
+      color: #86868b;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .cart-items {
+      flex: 1;
+      padding: 16px 24px;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid #f5f5f7;
+      gap: 12px;
+    }
+
+    .cart-item-image {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 8px;
+      background-color: #f5f5f7;
+      flex-shrink: 0;
+    }
+
+    .cart-item-name {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1d1d1f;
+    }
+
+    .cart-item-details {
+      margin: 0 0 4px 0;
+      font-size: 12px;
+      color: #6e6e73;
+    }
+
+    .delete-button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #86868b;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .cart-form {
+      padding: 16px 24px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-top: 1px solid #f5f5f7;
+    }
+
+    .cart-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d2d2d7;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 14px;
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* Success Message */
+    .success-container {
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background-color: #34c759;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+
+    .success-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin: 0 0 8px 0;
+      line-height: 1.4;
+    }
+
+    .success-email {
+      font-size: 15px;
+      color: #6e6e73;
+      margin: 0 0 24px 0;
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px 20px;
+      text-align: center;
+      color: #86868b;
+      font-size: 12px;
+      font-weight: 400;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #86868b;
+      font-size: 15px;
+    }
+
+    /* Tablet & Desktop */
+    @media (min-width: 768px) {
+      main {
+        padding: 32px 20px 80px 20px;
+        gap: 16px;
+        max-width: 750px;
+        margin: 0 auto;
+      }
+
+      .side-cart {
+        max-width: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress Bar -->
+  <div id="progressBar" class="progress-bar" style="display: none;"></div>
+
+  <!-- Header -->
+  <header>
+    <img src="/images/mugs/logo.jpeg" alt="OLDA" onclick="showHomepage()">
+    <button class="cart-button" onclick="openCart()">
+      <svg width="22" height="26" viewBox="0 0 22 26" fill="none" stroke="#1d1d1f" stroke-width="1.5">
+        <path d="M4 7h14a2 2 0 012 2v12a3 3 0 01-3 3H5a3 3 0 01-3-3V9a2 2 0 012-2z" />
+        <path d="M7 7V5a4 4 0 118 0v2" />
+      </svg>
+      <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+    </button>
+  </header>
+
+  <!-- Navigation -->
+  <nav id="navigation">
+    <div class="nav-container">
+      <div class="nav-item">
+        <button class="nav-button active" onclick="navigateToCategory('nouveautes')">Nouveautés</button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-button" onclick="toggleDropdown('textile')">
+          Textile <span class="dropdown-arrow">▾</span>
+        </button>
+        <div id="dropdown-textile" class="dropdown">
+          <button class="dropdown-item" onclick="navigateToSubcategory('textile', 'tshirt')">T-Shirts</button>
+          <button class="dropdown-item" onclick="navigateToSubcategory('textile', 'pochette')">Pochette</button>
+          <button class="dropdown-item" onclick="navigateToSubcategory('textile', 'casquette')">Casquette</button>
+          <button class="dropdown-item" onclick="navigateToSubcategory('textile', 'serviette')">Serviette rafraîchissante</button>
+        </div>
+      </div>
+      <div class="nav-item">
+        <button class="nav-button" onclick="toggleDropdown('tasses')">
+          Tasses Céramiques <span class="dropdown-arrow">▾</span>
+        </button>
+        <div id="dropdown-tasses" class="dropdown">
+          <button class="dropdown-item" onclick="navigateToSubcategory('tasses', 'olda')">Tasses Olda</button>
+          <button class="dropdown-item" onclick="navigateToSubcategory('tasses', 'fuck')">Tasses Fuck</button>
+          <button class="dropdown-item" onclick="navigateToSubcategory('tasses', 'bois')">Tasse en bois</button>
+        </div>
+      </div>
+      <div class="nav-item">
+        <button class="nav-button" onclick="toggleDropdown('artTable')">
+          Art de la table <span class="dropdown-arrow">▾</span>
+        </button>
+        <div id="dropdown-artTable" class="dropdown">
+          <button class="dropdown-item" onclick="navigateToSubcategory('artTable', 'dessousPlat')">Dessous de plat en liège</button>
+          <button class="dropdown-item" onclick="navigateToSubcategory('artTable', 'dessousVerre')">Dessous de verre en liège</button>
+        </div>
+      </div>
+      <div class="nav-item">
+        <button class="nav-button" onclick="navigateToCategory('porteclefs')">Porte-clefs</button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-button" onclick="navigateToCategory('magnets')">Magnets</button>
+      </div>
+      <div class="nav-item">
+        <button class="nav-button promo" onclick="navigateToCategory('offres')">Offres Spéciales</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="productGrid">
+    <!-- Products will be rendered here -->
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    © 2026 Atelier OLDA. Tous droits réservés.
+  </footer>
+
+  <!-- Side Cart -->
+  <div id="sideCartOverlay" class="side-cart-overlay" onclick="closeCart()">
+    <div class="side-cart" onclick="event.stopPropagation()">
+      <div id="cartContent">
+        <!-- Cart content will be rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let currentCategory = 'nouveautes';
+    let currentSubcategory = null;
+    let cart = [];
+    let quantities = {};
+    let sizes = {};
+    let openDropdown = null;
+
+    // Sample Products Data
+    const PRODUCTS = {
+      nouveautes: [
+        { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "", category: "nouveautes" }
+      ],
+      textile: {
+        tshirt: [
+          { id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpeg", nom: "T-shirt unisexe Olda", couleur: "Blue Sapphire", description: "155 g/m² 100% coton biologique", hasSizes: true, category: "textile" },
+          { id: 22, reference: "H-002", image: "/images/mugs/tshirt.jpg", nom: "T-shirt Homme Oversize", couleur: "Noir", hasSizes: true, category: "textile" }
+        ]
+      },
+      tasses: {
+        olda: [
+          { id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc", category: "tasses" },
+          { id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc", category: "tasses" },
+          { id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique", couleur: "Orange & Blanc", category: "tasses" },
+          { id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique", couleur: "Vert & Blanc", category: "tasses" },
+          { id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique", couleur: "Noir & Blanc", category: "tasses" }
+        ],
+        fuck: [
+          { id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir", category: "tasses" }
+        ]
+      },
+      offres: [
+        { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "", category: "offres" }
+      ]
+    };
+
+    // Navigation Functions
+    function showProgressBar() {
+      const bar = document.getElementById('progressBar');
+      bar.style.display = 'block';
+      setTimeout(() => {
+        bar.style.display = 'none';
+      }, 600);
+    }
+
+    function navigateToCategory(category) {
+      showProgressBar();
+      currentCategory = category;
+      currentSubcategory = null;
+      closeAllDropdowns();
+      updateNavigation();
+      renderProducts();
+    }
+
+    function navigateToSubcategory(category, subcategory) {
+      showProgressBar();
+      currentCategory = category;
+      currentSubcategory = subcategory;
+      closeAllDropdowns();
+      updateNavigation();
+      renderProducts();
+    }
+
+    function toggleDropdown(dropdownId) {
+      const dropdown = document.getElementById(`dropdown-${dropdownId}`);
+      if (openDropdown && openDropdown !== dropdownId) {
+        document.getElementById(`dropdown-${openDropdown}`).classList.remove('open');
+      }
+      dropdown.classList.toggle('open');
+      openDropdown = dropdown.classList.contains('open') ? dropdownId : null;
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+      openDropdown = null;
+    }
+
+    function updateNavigation() {
+      document.querySelectorAll('.nav-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Find and activate current button
+      const buttons = document.querySelectorAll('.nav-button');
+      buttons.forEach(btn => {
+        const text = btn.textContent.trim().toLowerCase();
+        if (text.includes(currentCategory) ||
+            (currentCategory === 'nouveautes' && text === 'nouveautés') ||
+            (currentCategory === 'offres' && text.includes('offres'))) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    // Product Rendering
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      let products = [];
+
+      if (currentCategory === 'nouveautes' || currentCategory === 'offres') {
+        products = PRODUCTS[currentCategory] || [];
+      } else if (currentSubcategory) {
+        const category = PRODUCTS[currentCategory];
+        products = category && category[currentSubcategory] ? category[currentSubcategory] : [];
+      }
+
+      if (products.length === 0) {
+        grid.innerHTML = '<div class="empty-state">Aucun produit disponible dans cette catégorie</div>';
+        return;
+      }
+
+      grid.innerHTML = products.map(product => `
+        <div class="product-card">
+          <div class="image-container">
+            <img src="${product.image}" alt="${product.nom}" class="product-image ${product.category === 'tasses' ? 'cup' : ''}">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">${product.nom}</h3>
+            ${product.couleur ? `<p class="product-color">${product.couleur}</p>` : ''}
+            ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
+            <p class="product-ref">${product.reference}</p>
+          </div>
+          ${product.hasSizes ? `
+            <div class="size-selector">
+              ${['XS', 'S', 'M', 'L', 'XL'].map(size => `
+                <button class="size-button ${getSize(product.id) === size ? 'active' : ''}"
+                        onclick="setSize(${product.id}, '${size}')">
+                  ${size}
+                </button>
+              `).join('')}
+            </div>
+          ` : ''}
+          <div class="quantity-control">
+            <button class="qty-button" onclick="adjustQuantity(${product.id}, -1)">-</button>
+            <span class="quantity">${getQuantity(product.id)}</span>
+            <button class="qty-button" onclick="adjustQuantity(${product.id}, 1)">+</button>
+          </div>
+          <textarea class="comment-input" rows="1" placeholder="Note" id="comment-${product.id}"></textarea>
+          <button class="add-button" id="addBtn-${product.id}" onclick="addToCart(${product.id})">
+            Ajouter
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Quantity & Size Management
+    function getQuantity(id) {
+      return quantities[id] || 3;
+    }
+
+    function adjustQuantity(id, delta) {
+      const current = getQuantity(id);
+      const newValue = current + delta;
+      if (newValue >= 3 && newValue <= 99) {
+        quantities[id] = newValue;
+        renderProducts();
+      }
+    }
+
+    function getSize(id) {
+      return sizes[id] || 'M';
+    }
+
+    function setSize(id, size) {
+      sizes[id] = size;
+      renderProducts();
+    }
+
+    // Cart Functions
+    function addToCart(productId) {
+      // Find product
+      let product = null;
+      if (currentCategory === 'nouveautes' || currentCategory === 'offres') {
+        product = PRODUCTS[currentCategory].find(p => p.id === productId);
+      } else if (currentSubcategory) {
+        const category = PRODUCTS[currentCategory];
+        product = category[currentSubcategory].find(p => p.id === productId);
+      }
+
+      if (!product) return;
+
+      // Haptic feedback
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+
+      // Add to cart
+      const item = {
+        ...product,
+        quantite: getQuantity(productId),
+        taille: product.hasSizes ? getSize(productId) : null,
+        commentaire: document.getElementById(`comment-${productId}`)?.value || ''
+      };
+
+      cart.push(item);
+      updateCartBadge();
+
+      // Visual feedback (button changes)
+      const btn = document.getElementById(`addBtn-${productId}`);
+      btn.classList.add('added');
+      btn.textContent = 'Ajouté ✓';
+
+      setTimeout(() => {
+        btn.classList.remove('added');
+        btn.textContent = 'Ajouter';
+      }, 2000);
+
+      // DO NOT open cart automatically
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartBadge');
+      const total = cart.reduce((sum, item) => sum + item.quantite, 0);
+      if (total > 0) {
+        badge.textContent = total;
+        badge.style.display = 'block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function openCart() {
+      document.getElementById('sideCartOverlay').classList.add('open');
+      renderCart();
+    }
+
+    function closeCart() {
+      document.getElementById('sideCartOverlay').classList.remove('open');
+    }
+
+    function renderCart() {
+      const content = document.getElementById('cartContent');
+
+      if (cart.length === 0) {
+        content.innerHTML = `
+          <div class="side-cart-header">
+            <h2 class="side-cart-title">Sélection</h2>
+            <button class="close-icon" onclick="closeCart()">×</button>
+          </div>
+          <div class="empty-state">Votre sélection est vide</div>
+        `;
+        return;
+      }
+
+      content.innerHTML = `
+        <div class="side-cart-header">
+          <h2 class="side-cart-title">Sélection</h2>
+          <button class="close-icon" onclick="closeCart()">×</button>
+        </div>
+        <div class="cart-items">
+          ${cart.map((item, index) => `
+            <div class="cart-item">
+              <img src="${item.image}" alt="${item.nom}" class="cart-item-image">
+              <div style="flex: 1;">
+                <p class="cart-item-name">${item.nom}</p>
+                <p class="cart-item-details">
+                  ${item.couleur || ''}${item.taille ? ' | Taille: ' + item.taille : ''} | Qté: ${item.quantite}
+                </p>
+              </div>
+              <button class="delete-button" onclick="removeFromCart(${index})">×</button>
+            </div>
+          `).join('')}
+        </div>
+        <div class="cart-form">
+          <input type="text" class="cart-input" placeholder="Votre nom" id="clientName">
+          <input type="email" class="cart-input" placeholder="Votre email" id="clientEmail">
+          <button class="submit-button" onclick="submitOrder()">Commander</button>
+        </div>
+      `;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function submitOrder() {
+      const name = document.getElementById('clientName').value;
+      const email = document.getElementById('clientEmail').value;
+
+      if (!name || !email) {
+        alert('Merci de remplir tous les champs');
+        return;
+      }
+
+      // Show success message
+      const content = document.getElementById('cartContent');
+      content.innerHTML = `
+        <div class="success-container">
+          <div class="success-icon">✓</div>
+          <h2 class="success-title">L'Atelier OLDA vous remercie pour votre confiance.</h2>
+          <p class="success-email">Nous vous contacterons à ${email}</p>
+          <button class="submit-button" onclick="resetCart()">Fermer</button>
+        </div>
+      `;
+    }
+
+    function resetCart() {
+      cart = [];
+      updateCartBadge();
+      closeCart();
+    }
+
+    // Initialize
+    renderProducts();
+    updateNavigation();
+  </script>
+
+</body>
+</html>
