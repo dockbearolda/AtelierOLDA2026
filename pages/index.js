@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import emailjs from "@emailjs/browser";
 
 const MUGS_DATA = {
@@ -54,6 +55,7 @@ const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [recentlyAdded, setRecentlyAdded] = useState({});
+const [isMounted, setIsMounted] = useState(false);
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -62,6 +64,7 @@ setShowHomepage(false);
 
 useEffect(function() {
 emailjs.init("Y9NKwhNvCNtb_SRry");
+setIsMounted(true);
 }, []);
 
 var getQte = function(id) { return quantites[id] || 3; };
@@ -349,8 +352,9 @@ React.createElement("main", { style: styles.main },
 )
 ),
 
-cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
-  React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
+cartOpen && isMounted && ReactDOM.createPortal(
+  React.createElement("div", { style: styles.modalOverlay, onClick: function() { setCartOpen(false); } },
+    React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
     orderSent ? React.createElement("div", { style: styles.successContainer },
       React.createElement("div", { style: styles.successIcon }, "\u2713"),
       React.createElement("h2", { style: styles.successTitle }, "Commande envoyée"),
@@ -402,6 +406,8 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
       )
     )
   )
+  ),
+  document.body
 ),
 
 React.createElement("footer", { style: styles.footer },
@@ -641,9 +647,9 @@ borderRadius: "12px",
 boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
 padding: "8px 0",
 minWidth: "200px",
-zIndex: 99999,
+zIndex: 999998,
 animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-border: "1px solid #e5e5e7"
+border: "2px solid red"
 },
 dropdownItem: {
 width: "100%",
@@ -782,7 +788,7 @@ backgroundColor: "rgba(0,0,0,0.4)",
 display: "flex",
 justifyContent: "center",
 alignItems: "center",
-zIndex: 100000,
+zIndex: 999999,
 padding: "20px",
 animation: "fadeIn 0.3s ease-in-out"
 },
