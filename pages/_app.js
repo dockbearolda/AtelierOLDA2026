@@ -137,11 +137,12 @@ function MyApp({ Component, pageProps }) {
 
           body {
             min-width: 320px;
+            padding-top: 0 !important;
           }
 
           /* Ensure no horizontal scroll */
           main {
-            padding: 24px 12px 80px 12px !important;
+            padding: 130px 12px 80px 12px !important;
             grid-template-columns: repeat(2, 1fr) !important;
             gap: 12px !important;
             max-width: 100% !important;
@@ -221,6 +222,30 @@ function MyApp({ Component, pageProps }) {
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
           }
+        }
+
+        /* Critical Z-Index Hierarchy */
+        header {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          z-index: 1000 !important;
+        }
+
+        nav, .nav-container {
+          position: fixed !important;
+          z-index: 999 !important;
+        }
+
+        /* Dropdowns MUST be on top */
+        [style*="dropdown"] {
+          z-index: 10000 !important;
+        }
+
+        /* Ensure navigation doesn't move vertically */
+        header, nav {
+          position: fixed !important;
         }
       `}</style>
       <Component {...pageProps} />

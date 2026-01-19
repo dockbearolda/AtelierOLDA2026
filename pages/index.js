@@ -586,9 +586,11 @@ var styles = {
     justifyContent: "space-between",
     alignItems: "center",
     borderBottom: "1px solid rgba(0,0,0,0.08)",
-    position: "sticky",
+    position: "fixed",
     top: 0,
-    zIndex: 100
+    left: 0,
+    right: 0,
+    zIndex: 1000
   },
   logo: {
     height: "36px",
@@ -621,9 +623,11 @@ var styles = {
     backdropFilter: "blur(20px)",
     WebkitBackdropFilter: "blur(20px)",
     borderBottom: "1px solid rgba(0,0,0,0.08)",
-    position: "sticky",
+    position: "fixed",
     top: "66px",
-    zIndex: 99
+    left: 0,
+    right: 0,
+    zIndex: 999
   },
   nav: {
     padding: "12px 20px",
@@ -678,7 +682,7 @@ var styles = {
     boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
     minWidth: "180px",
     overflow: "hidden",
-    zIndex: 200
+    zIndex: 10000
   },
   dropdownItem: {
     display: "block",
@@ -698,7 +702,7 @@ var styles = {
     fontWeight: "500"
   },
   main: {
-    padding: "32px 16px 80px 16px",
+    padding: "140px 16px 80px 16px",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "16px",
