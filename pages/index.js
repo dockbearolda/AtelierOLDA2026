@@ -7,19 +7,42 @@ nouveautes: [
 { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
 "tasse-ceramique-fuck": [
-{ id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
+{ id: 11, reference: "TCF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 12, reference: "TCF 02", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 13, reference: "TCF 03", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 14, reference: "TCF 04", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 15, reference: "TCF 05", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 16, reference: "TCF 06", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 17, reference: "TCF 07", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 18, reference: "TCF 08", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 19, reference: "TCF 09", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 20, reference: "TCF 10", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 21, reference: "TCF 11", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 22, reference: "TCF 12", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 23, reference: "TCF 13", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 24, reference: "TCF 14", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 25, reference: "TCF 15", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 26, reference: "TCF 16", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
+{ id: 27, reference: "TCF 17", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
 ],
 "tasse-ceramique": [
-{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc" },
-{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc" },
-{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique", couleur: "Orange & Blanc" },
-{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique", couleur: "Vert & Blanc" },
-{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique", couleur: "Noir & Blanc" }
+{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
+{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
+{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" },
+{ id: 6, reference: "TC 06", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 7, reference: "TC 07", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 8, reference: "TC 08", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
+{ id: 9, reference: "TC 09", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
+{ id: 10, reference: "TC 10", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" },
+{ id: 31, reference: "TC 11", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
+{ id: 32, reference: "TC 12", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
+{ id: 33, reference: "TC 13", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" }
 ],
 "tasse-metal": [],
-"autres-tasses": [],
 tshirt: [
-{ id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
+{ id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
 ],
 offres: [
 { id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
@@ -28,8 +51,16 @@ offres: [
 
 const tabs = [
 { key: "nouveautes", label: "Nouveautés" },
-{ key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
-{ key: "tasse-ceramique", label: "Tasse Céramique" },
+{
+  key: "tasses",
+  label: "Tasses",
+  hasDropdown: true,
+  subcategories: [
+    { key: "tasse-ceramique-fuck", label: "Tasses Céramique Fuck" },
+    { key: "tasse-ceramique", label: "Tasses Céramique OLDA" },
+    { key: "tasse-metal", label: "Tasses Métal" }
+  ]
+},
 { key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
@@ -37,6 +68,7 @@ const tabs = [
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
 const [activeTab, setActiveTab] = useState("tasse-ceramique");
+const [openDropdown, setOpenDropdown] = useState(null);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -182,7 +214,15 @@ var totalArticles = panier.reduce(function(sum, item) { return sum + item.quanti
 
 var getTabStyle = function(tabKey) {
 var baseStyle = Object.assign({}, styles.tab);
-if (activeTab === tabKey) {
+var isActive = activeTab === tabKey;
+
+// Pour l'onglet Tasses, vérifier si une sous-catégorie est active
+if (tabKey === "tasses") {
+  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal"];
+  isActive = tasseSubcats.indexOf(activeTab) !== -1;
+}
+
+if (isActive) {
   if (tabKey === "nouveautes") {
     return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
   } else if (tabKey === "offres") {
@@ -242,14 +282,52 @@ React.createElement("div", { style: styles.navContainer },
   React.createElement("div", { style: styles.navGradientLeft }),
   React.createElement("nav", { style: styles.nav },
     tabs.map(function(tab) {
-      return React.createElement("button", {
-        key: tab.key,
-        onClick: function() {
-          setActiveTab(tab.key);
-          setShowHomepage(false);
+      if (tab.hasDropdown) {
+        return React.createElement("div", {
+          key: tab.key,
+          style: styles.dropdownContainer,
+          onMouseEnter: function() { setOpenDropdown(tab.key); },
+          onMouseLeave: function() { setOpenDropdown(null); }
         },
-        style: getTabStyle(tab.key)
-      }, tab.label);
+          React.createElement("button", {
+            onClick: function() {
+              if (openDropdown === tab.key) {
+                setOpenDropdown(null);
+              } else {
+                setOpenDropdown(tab.key);
+              }
+            },
+            style: getTabStyle(tab.key)
+          },
+            tab.label,
+            React.createElement("span", { style: styles.dropdownArrow }, " ▼")
+          ),
+          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownMenu },
+            tab.subcategories.map(function(subcat) {
+              return React.createElement("button", {
+                key: subcat.key,
+                onClick: function() {
+                  setActiveTab(subcat.key);
+                  setShowHomepage(false);
+                  setOpenDropdown(null);
+                },
+                style: activeTab === subcat.key ?
+                  Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
+                  styles.dropdownItem
+              }, subcat.label);
+            })
+          )
+        );
+      } else {
+        return React.createElement("button", {
+          key: tab.key,
+          onClick: function() {
+            setActiveTab(tab.key);
+            setShowHomepage(false);
+          },
+          style: getTabStyle(tab.key)
+        }, tab.label);
+      }
     })
   ),
   React.createElement("div", { style: styles.navGradientRight })
@@ -547,6 +625,52 @@ backgroundColor: "#1d1d1f",
 color: "white",
 transform: "scale(1.05)",
 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+fontWeight: "500"
+},
+dropdownContainer: {
+position: "relative",
+display: "inline-block",
+overflow: "visible",
+pointerEvents: "auto"
+},
+dropdownArrow: {
+fontSize: "10px",
+marginLeft: "4px",
+opacity: 0.7,
+transition: "transform 0.3s ease"
+},
+dropdownMenu: {
+position: "absolute",
+top: "calc(100% + 8px)",
+left: 0,
+backgroundColor: "white",
+borderRadius: "12px",
+boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+padding: "8px 0",
+minWidth: "220px",
+zIndex: 100000,
+animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+border: "1px solid #e5e5e7",
+pointerEvents: "auto"
+},
+dropdownItem: {
+width: "100%",
+padding: "12px 20px",
+border: "none",
+backgroundColor: "transparent",
+color: "#1d1d1f",
+fontSize: "14px",
+fontWeight: "400",
+cursor: "pointer",
+transition: "all 0.2s ease",
+textAlign: "left",
+whiteSpace: "nowrap",
+display: "block",
+pointerEvents: "auto"
+},
+dropdownItemActive: {
+backgroundColor: "#f5f5f7",
+color: "#0071e3",
 fontWeight: "500"
 },
 main: {
