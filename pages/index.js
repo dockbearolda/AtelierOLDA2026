@@ -146,14 +146,17 @@ var orderNumber = "OLDA-" + now.getFullYear() + ("0" + (now.getMonth() + 1)).sli
 
 var productsHTML = "";
 panier.forEach(function(item, index) {
-var productLine = "<tr style='border-bottom: 1px solid #f5f5f7;'>";
-productLine += "<td style='padding: 20px 0; font-size: 15px; color: #1d1d1f;'>";
-productLine += "<div style='font-weight: 500;'>" + item.nom + (item.couleur ? " - " + item.couleur : "") + "</div>";
+var productLine = "<tr style='border-bottom: 1px solid #f0f0f0;'>";
+productLine += "<td style='padding: 24px 0; font-size: 16px; color: #1d1d1f;'>";
+productLine += "<div style='font-weight: 500; margin-bottom: 4px; letter-spacing: 0.01em;'>" + item.nom + "</div>";
+if (item.couleur) {
+productLine += "<div style='font-size: 14px; color: #6e6e73; margin-top: 4px;'>" + item.couleur + "</div>";
+}
 if (item.commentaire) {
-productLine += "<div style='margin-top: 8px; font-size: 13px; color: #86868b; font-style: italic;'>Note: " + item.commentaire + "</div>";
+productLine += "<div style='margin-top: 10px; padding: 12px; background-color: #fafafa; border-radius: 8px; font-size: 13px; color: #6e6e73; font-style: italic; line-height: 1.6;'>Note: " + item.commentaire + "</div>";
 }
 productLine += "</td>";
-productLine += "<td style='padding: 20px 0; text-align: right; font-size: 18px; font-weight: 600; color: #ff3b30;'>" + item.quantite + "</td>";
+productLine += "<td style='padding: 24px 0; text-align: right; font-size: 22px; font-weight: 600; color: #1d1d1f; letter-spacing: -0.02em;'>×" + item.quantite + "</td>";
 productLine += "</tr>";
 productsHTML += productLine;
 });
@@ -168,15 +171,15 @@ minute: "2-digit"
 });
 
 var emailHTML = "<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>";
-emailHTML += "<body style='margin: 0; padding: 40px 20px; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;'>";
-emailHTML += "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff;'>";
-emailHTML += "<div style='text-align: left; margin-bottom: 40px;'><img src='https://raw.githubusercontent.com/yourusername/AtelierOLDA2026/main/public/images/mugs/logo.jpeg' alt='OLDA' style='height: 60px; width: auto;' /></div>";
-emailHTML += "<div style='margin-bottom: 30px;'><h1 style='margin: 0; font-size: 28px; font-weight: 600; color: #1d1d1f;'>" + clientInfo.nom + "</h1></div>";
-emailHTML += "<div style='margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #1d1d1f;'><div style='font-size: 16px; color: #86868b; margin-bottom: 4px;'>Commande</div><div style='font-size: 20px; font-weight: 600; color: #1d1d1f;'>" + orderNumber + "</div><div style='font-size: 13px; color: #86868b; margin-top: 8px;'>" + dateStr + "</div></div>";
-emailHTML += "<table style='width: 100%; border-collapse: collapse; margin-bottom: 40px;'>";
+emailHTML += "<body style='margin: 0; padding: 60px 20px; background-color: #fafafa; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;'>";
+emailHTML += "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); padding: 50px 40px;'>";
+emailHTML += "<div style='text-align: center; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid #f0f0f0;'><img src='https://raw.githubusercontent.com/yourusername/AtelierOLDA2026/main/public/images/mugs/logo.jpeg' alt='OLDA' style='height: 70px; width: auto;' /></div>";
+emailHTML += "<div style='text-align: center; margin-bottom: 50px;'><h1 style='margin: 0 0 12px 0; font-size: 32px; font-weight: 600; color: #1d1d1f; letter-spacing: -0.5px;'>Merci " + clientInfo.nom + "</h1><p style='margin: 0; font-size: 16px; color: #6e6e73; line-height: 1.6;'>Votre commande a été reçue avec succès</p></div>";
+emailHTML += "<div style='margin-bottom: 50px; padding: 30px; background-color: #fafafa; border-radius: 10px; text-align: center;'><div style='font-size: 13px; color: #86868b; margin-bottom: 8px; letter-spacing: 0.1em; text-transform: uppercase;'>Numéro de Commande</div><div style='font-size: 24px; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; letter-spacing: -0.02em;'>" + orderNumber + "</div><div style='font-size: 14px; color: #6e6e73;'>" + dateStr + "</div></div>";
+emailHTML += "<div style='margin-bottom: 40px;'><h2 style='font-size: 18px; font-weight: 600; color: #1d1d1f; margin: 0 0 24px 0; letter-spacing: 0.02em;'>Détails de votre sélection</h2><table style='width: 100%; border-collapse: collapse;'>";
 emailHTML += productsHTML;
-emailHTML += "</table>";
-emailHTML += "<div style='text-align: center; padding-top: 40px; border-top: 1px solid #f5f5f7; color: #86868b; font-size: 12px;'>Atelier OLDA &copy; " + now.getFullYear() + "</div>";
+emailHTML += "</table></div>";
+emailHTML += "<div style='text-align: center; padding-top: 50px; margin-top: 50px; border-top: 1px solid #f0f0f0;'><p style='margin: 0 0 8px 0; font-size: 14px; color: #1d1d1f; font-weight: 500;'>Atelier OLDA</p><p style='margin: 0; font-size: 12px; color: #86868b; line-height: 1.6;'>Créations uniques et personnalisées<br>&copy; " + now.getFullYear() + " Tous droits réservés</p></div>";
 emailHTML += "</div></body></html>";
 
 var templateParams = {
@@ -497,8 +500,11 @@ container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
 backgroundColor: "#f5f5f7",
-overflow: "visible",
-position: "relative"
+overflowX: "hidden",
+overflowY: "visible",
+position: "relative",
+width: "100%",
+maxWidth: "100vw"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
@@ -581,7 +587,7 @@ color: "#1d1d1f"
 },
 header: {
 backgroundColor: "white",
-padding: "16px 40px",
+padding: "16px 5vw",
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
@@ -589,7 +595,10 @@ borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
 zIndex: 9999,
-overflow: "visible"
+overflow: "visible",
+width: "100%",
+maxWidth: "100vw",
+boxSizing: "border-box"
 },
 logo: {
 height: "40px",
@@ -625,11 +634,14 @@ borderBottom: "1px solid #d2d2d7",
 zIndex: 9998,
 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 transition: "box-shadow 0.3s ease",
-overflow: "visible"
+overflow: "visible",
+width: "100%",
+maxWidth: "100vw",
+boxSizing: "border-box"
 },
 nav: {
 backgroundColor: "white",
-padding: "16px 40px",
+padding: "16px 5vw",
 display: "flex",
 flexWrap: "nowrap",
 gap: "12px",
@@ -641,7 +653,9 @@ msOverflowStyle: "none",
 WebkitOverflowScrolling: "touch",
 position: "relative",
 zIndex: 9997,
-paddingRight: "60px"
+paddingRight: "20vw",
+width: "100%",
+boxSizing: "border-box"
 },
 tab: {
 padding: "10px 20px",
@@ -730,12 +744,14 @@ color: "#0071e3",
 fontWeight: "500"
 },
 main: {
-padding: "40px",
+padding: "40px 5vw",
 display: "grid",
 gridTemplateColumns: "repeat(2, 1fr)",
 gap: "24px",
 maxWidth: "900px",
-margin: "0 auto"
+margin: "0 auto",
+width: "100%",
+boxSizing: "border-box"
 },
 card: {
 backgroundColor: "white",
@@ -782,27 +798,34 @@ quantityControl: {
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-gap: "16px",
-marginBottom: "12px"
+gap: "20px",
+marginBottom: "16px",
+padding: "12px 0"
 },
 qtyButton: {
-width: "36px",
-height: "36px",
-border: "1px solid #d2d2d7",
+width: "38px",
+height: "38px",
+border: "1px solid #e5e5e7",
 borderRadius: "50%",
 cursor: "pointer",
-backgroundColor: "white",
-fontSize: "18px",
+backgroundColor: "#ffffff",
+fontSize: "20px",
 color: "#1d1d1f",
 display: "flex",
 alignItems: "center",
-justifyContent: "center"
+justifyContent: "center",
+transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)",
+fontWeight: "300",
+lineHeight: "1"
 },
 quantity: {
-fontSize: "17px",
-fontWeight: "600",
-minWidth: "30px",
-textAlign: "center"
+fontSize: "18px",
+fontWeight: "500",
+minWidth: "40px",
+textAlign: "center",
+color: "#1d1d1f",
+letterSpacing: "0.02em"
 },
 commentaire: {
 width: "100%",

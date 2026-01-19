@@ -4,6 +4,17 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <style jsx global>{`
+        /* Prevent horizontal scroll on entire page */
+        html, body {
+          overflow-x: hidden;
+          max-width: 100vw;
+        }
+
+        body {
+          margin: 0;
+          padding: 0;
+        }
+
         /* Hide scrollbar for Chrome, Safari and Opera */
         nav::-webkit-scrollbar {
           display: none;
@@ -120,9 +131,50 @@ function MyApp({ Component, pageProps }) {
           border-color: #1d1d1f !important;
         }
 
+        /* Quantity stepper buttons hover */
+        button[style*="qtyButton"]:hover {
+          background-color: #1d1d1f !important;
+          color: white !important;
+          border-color: #1d1d1f !important;
+          transform: scale(1.05);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        button[style*="qtyButton"]:active {
+          transform: scale(0.95) !important;
+        }
+
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Mobile responsive fixes */
+        @media (max-width: 768px) {
+          nav {
+            padding-left: 4vw !important;
+            padding-right: 15vw !important;
+          }
+
+          main {
+            grid-template-columns: 1fr !important;
+            padding: 20px 4vw !important;
+          }
+
+          header {
+            padding: 12px 4vw !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          nav {
+            gap: 8px !important;
+          }
+
+          button[style*="tab"] {
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+          }
         }
       `}</style>
       <Component {...pageProps} />
