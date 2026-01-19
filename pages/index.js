@@ -4,48 +4,59 @@ import emailjs from "@emailjs/browser";
 
 const MUGS_DATA = {
 nouveautes: [
-{ id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
+{ id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "", taille: "" },
+{ id: 102, reference: "BNSA6", image: "/images/mugs/blocnote.jpg", nom: "Bloc Note Similicuir", couleur: "", taille: "A6 (105 x 148)" },
+{ id: 103, reference: "BNS5", image: "/images/mugs/blocnote.jpg", nom: "Bloc Note Similicuir", couleur: "", taille: "A5 (148 x 210)" }
 ],
 "tasse-ceramique-fuck": [
-{ id: 11, reference: "TCF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 12, reference: "TCF 02", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 13, reference: "TCF 03", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 14, reference: "TCF 04", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 15, reference: "TCF 05", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 16, reference: "TCF 06", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 17, reference: "TCF 07", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 18, reference: "TCF 08", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 19, reference: "TCF 09", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 20, reference: "TCF 10", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 21, reference: "TCF 11", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 22, reference: "TCF 12", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 23, reference: "TCF 13", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 24, reference: "TCF 14", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 25, reference: "TCF 15", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 26, reference: "TCF 16", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" },
-{ id: 27, reference: "TCF 17", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
+{ id: 11, reference: "TCF 01", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Rouge - Blanc", couleur: "Rouge - Blanc", taille: "350ml" },
+{ id: 12, reference: "TCF 02", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Orange - Blanc", couleur: "Orange - Blanc", taille: "350ml" },
+{ id: 13, reference: "TCF 03", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Rose - Blanc", couleur: "Rose - Blanc", taille: "350ml" },
+{ id: 14, reference: "TCF 04", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Bleu - Blanc", couleur: "Bleu - Blanc", taille: "350ml" },
+{ id: 15, reference: "TCF 05", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Vert - Blanc", couleur: "Vert - Blanc", taille: "350ml" },
+{ id: 16, reference: "TCF 06", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Noir - Blanc", couleur: "Noir - Blanc", taille: "350ml" },
+{ id: 17, reference: "TCF 07", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Blanc - Bleu", couleur: "Blanc - Bleu", taille: "350ml" },
+{ id: 18, reference: "TCF 08", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Blanc - Jaune", couleur: "Blanc - Jaune", taille: "350ml" },
+{ id: 19, reference: "TCF 09", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Blanc - Orange", couleur: "Blanc - Orange", taille: "350ml" },
+{ id: 20, reference: "TCF 10", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Blanc - Rouge", couleur: "Blanc - Rouge", taille: "350ml" },
+{ id: 21, reference: "TCF 11", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Blanc - Vert", couleur: "Blanc - Vert", taille: "350ml" },
+{ id: 22, reference: "TCF 12", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Blanc - Noir", couleur: "Blanc - Noir", taille: "350ml" },
+{ id: 23, reference: "TCF 13", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Noir - Rose", couleur: "Noir - Rose", taille: "350ml" },
+{ id: 24, reference: "TCF 14", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Noir - Jaune", couleur: "Noir - Jaune", taille: "350ml" },
+{ id: 25, reference: "TCF 15", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Noir - Rouge", couleur: "Noir - Rouge", taille: "350ml" },
+{ id: 26, reference: "TCF 16", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Noir - Vert", couleur: "Noir - Vert", taille: "350ml" },
+{ id: 27, reference: "TCF 17", image: "/images/mugs/tasse-fuck.jpg", nom: "Tasse Fuck Noir - Orange", couleur: "Noir - Orange", taille: "350ml" }
 ],
 "tasse-ceramique": [
-{ id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
-{ id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
-{ id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
-{ id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
-{ id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" },
-{ id: 6, reference: "TC 06", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
-{ id: 7, reference: "TC 07", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
-{ id: 8, reference: "TC 08", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" },
-{ id: 9, reference: "TC 09", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Vert & Blanc" },
-{ id: 10, reference: "TC 10", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Noir & Blanc" },
-{ id: 31, reference: "TC 11", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rose & Blanc" },
-{ id: 32, reference: "TC 12", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Rouge & Blanc" },
-{ id: 33, reference: "TC 13", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique OLDA", couleur: "Orange & Blanc" }
+{ id: 1, reference: "TC 01", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Rouge - Blanc", couleur: "Rouge - Blanc", taille: "350ml" },
+{ id: 2, reference: "TC 02", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Orange - Blanc", couleur: "Orange - Blanc", taille: "350ml" },
+{ id: 3, reference: "TC 03", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Rose - Blanc", couleur: "Rose - Blanc", taille: "350ml" },
+{ id: 4, reference: "TC 04", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Bleu - Blanc", couleur: "Bleu - Blanc", taille: "350ml" },
+{ id: 5, reference: "TC 05", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Vert - Blanc", couleur: "Vert - Blanc", taille: "350ml" },
+{ id: 6, reference: "TC 06", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Blanc", couleur: "Noir - Blanc", taille: "350ml" },
+{ id: 7, reference: "TC 07", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Bleu", couleur: "Blanc - Bleu", taille: "350ml" },
+{ id: 8, reference: "TC 08", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Jaune", couleur: "Blanc - Jaune", taille: "350ml" },
+{ id: 9, reference: "TC 09", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Orange", couleur: "Blanc - Orange", taille: "350ml" },
+{ id: 10, reference: "TC 10", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Rouge", couleur: "Blanc - Rouge", taille: "350ml" },
+{ id: 31, reference: "TC 11", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Vert", couleur: "Blanc - Vert", taille: "350ml" },
+{ id: 32, reference: "TC 12", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Blanc - Noir", couleur: "Blanc - Noir", taille: "350ml" },
+{ id: 33, reference: "TC 13", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Rose", couleur: "Noir - Rose", taille: "350ml" },
+{ id: 34, reference: "TC 14", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Jaune", couleur: "Noir - Jaune", taille: "350ml" },
+{ id: 35, reference: "TC 15", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Rouge", couleur: "Noir - Rouge", taille: "350ml" },
+{ id: 36, reference: "TC 16", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Vert", couleur: "Noir - Vert", taille: "350ml" },
+{ id: 37, reference: "TC 17", image: "/images/mugs/tasse-ceramique.jpg", nom: "Tasse Céramique Noir - Orange", couleur: "Noir - Orange", taille: "350ml" }
 ],
-"tasse-metal": [],
+"tasse-metal": [
+{ id: 51, reference: "TM 01", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Rouge", couleur: "Rouge", taille: "300ml" },
+{ id: 52, reference: "TM 02", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Blanc", couleur: "Blanc", taille: "300ml" },
+{ id: 53, reference: "TM 03", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Jaune", couleur: "Jaune", taille: "300ml" },
+{ id: 54, reference: "TM 04", image: "/images/mugs/tasse-metal.jpg", nom: "Tasse Métal Bleu", couleur: "Bleu", taille: "300ml" }
+],
 tshirt: [
-{ id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
+{ id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe", couleur: "Bleu Saphir", taille: "" }
 ],
 offres: [
-{ id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
+{ id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "", taille: "" }
 ]
 };
 
@@ -152,6 +163,9 @@ productLine += "<td style='padding: 24px 0; font-size: 16px; color: #1d1d1f;'>";
 productLine += "<div style='font-weight: 500; margin-bottom: 4px; letter-spacing: 0.01em;'>" + item.nom + "</div>";
 if (item.couleur) {
 productLine += "<div style='font-size: 14px; color: #6e6e73; margin-top: 4px;'>" + item.couleur + "</div>";
+}
+if (item.taille) {
+productLine += "<div style='font-size: 14px; color: #6e6e73; margin-top: 4px;'>" + item.taille + "</div>";
 }
 if (item.commentaire) {
 productLine += "<div style='margin-top: 10px; padding: 12px; background-color: #fafafa; border-radius: 8px; font-size: 13px; color: #6e6e73; font-style: italic; line-height: 1.6;'>Note: " + item.commentaire + "</div>";
@@ -381,6 +395,7 @@ React.createElement("main", { style: styles.main },
       ),
       React.createElement("h3", { style: styles.productName }, product.nom),
       product.couleur && React.createElement("p", { style: styles.productColor }, product.couleur),
+      product.taille && React.createElement("p", { style: styles.productColor }, product.taille),
       React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
 
       React.createElement("div", { style: styles.quantityControl },
@@ -468,7 +483,11 @@ cartOpen && isMounted && ReactDOM.createPortal(
                 React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
                 React.createElement("div", { style: { flex: 1 } },
                   React.createElement("p", { style: styles.cartItemName }, item.nom),
-                  React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
+                  React.createElement("p", { style: styles.cartItemDetails },
+                    (item.couleur ? item.couleur : "") +
+                    (item.taille ? (item.couleur ? " - " : "") + item.taille : "") +
+                    " x " + item.quantite
+                  ),
                   item.commentaire && React.createElement("p", { style: styles.cartItemComment }, "Note: " + item.commentaire)
                 ),
                 React.createElement("button", { onClick: function() { supprimerDuPanier(item.id); }, style: styles.deleteButton }, "\u00d7")
