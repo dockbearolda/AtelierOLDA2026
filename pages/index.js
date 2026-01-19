@@ -79,6 +79,7 @@ const [sending, setSending] = useState(false);
 const [recentlyAdded, setRecentlyAdded] = useState({});
 const [isMounted, setIsMounted] = useState(false);
 const [orderStep, setOrderStep] = useState(1);
+const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -215,6 +216,17 @@ setClientInfo({ nom: "", email: "" });
 setOrderStep(1);
 };
 
+var handleDropdownOpen = function(tabKey, event) {
+if (event && event.currentTarget) {
+var rect = event.currentTarget.getBoundingClientRect();
+setDropdownPosition({
+top: rect.bottom + 8,
+left: rect.left
+});
+}
+setOpenDropdown(tabKey);
+};
+
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
 
 var getTabStyle = function(tabKey) {
@@ -290,41 +302,22 @@ React.createElement("div", { style: styles.navContainer },
         return React.createElement("div", {
           key: tab.key,
           style: styles.dropdownContainer,
-          onMouseEnter: function() { setOpenDropdown(tab.key); },
           onMouseLeave: function() { setOpenDropdown(null); }
         },
           React.createElement("button", {
-            onClick: function() {
+            onMouseEnter: function(e) { handleDropdownOpen(tab.key, e); },
+            onClick: function(e) {
               if (openDropdown === tab.key) {
                 setOpenDropdown(null);
               } else {
-                setOpenDropdown(tab.key);
+                handleDropdownOpen(tab.key, e);
               }
             },
-            style: getTabStyle(tab.key)
+            style: getTabStyle(tab.key),
+            id: "dropdown-button-" + tab.key
           },
             tab.label,
             React.createElement("span", { style: styles.dropdownArrow }, " ▼")
-          ),
-          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownBridge }),
-          openDropdown === tab.key && React.createElement("ul", { style: styles.dropdownMenu },
-            tab.subcategories.map(function(subcat) {
-              return React.createElement("li", {
-                key: subcat.key,
-                style: styles.dropdownItemWrapper
-              },
-                React.createElement("button", {
-                  onClick: function() {
-                    setActiveTab(subcat.key);
-                    setShowHomepage(false);
-                    setOpenDropdown(null);
-                  },
-                  style: activeTab === subcat.key ?
-                    Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
-                    styles.dropdownItem
-                }, subcat.label)
-              );
-            })
           )
         );
       } else {
@@ -339,6 +332,40 @@ React.createElement("div", { style: styles.navContainer },
       }
     })
   )
+),
+
+openDropdown && isMounted && ReactDOM.createPortal(
+  React.createElement("div", {
+    style: Object.assign({}, styles.dropdownMenuPortal, {
+      top: dropdownPosition.top + "px",
+      left: dropdownPosition.left + "px"
+    }),
+    onMouseEnter: function() { setOpenDropdown(openDropdown); },
+    onMouseLeave: function() { setOpenDropdown(null); }
+  },
+    tabs.find(function(t) { return t.key === openDropdown; }) &&
+    tabs.find(function(t) { return t.key === openDropdown; }).subcategories &&
+    React.createElement("ul", { style: styles.dropdownMenuList },
+      tabs.find(function(t) { return t.key === openDropdown; }).subcategories.map(function(subcat) {
+        return React.createElement("li", {
+          key: subcat.key,
+          style: styles.dropdownItemWrapper
+        },
+          React.createElement("button", {
+            onClick: function() {
+              setActiveTab(subcat.key);
+              setShowHomepage(false);
+              setOpenDropdown(null);
+            },
+            style: activeTab === subcat.key ?
+              Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
+              styles.dropdownItem
+          }, subcat.label)
+        );
+      })
+    )
+  ),
+  document.body
 ),
 
 React.createElement("main", { style: styles.main },
@@ -656,7 +683,8 @@ position: "relative",
 zIndex: 9997,
 paddingRight: "20vw",
 width: "100%",
-boxSizing: "border-box"
+boxSizing: "border-box",
+whiteSpace: "nowrap"
 },
 tab: {
 padding: "10px 20px",
@@ -715,6 +743,22 @@ zIndex: 100001,
 animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
 border: "1px solid #f0f0f0",
 pointerEvents: "auto",
+listStyle: "none",
+margin: 0
+},
+dropdownMenuPortal: {
+position: "fixed",
+zIndex: 999998,
+pointerEvents: "auto"
+},
+dropdownMenuList: {
+backgroundColor: "#ffffff",
+borderRadius: "16px",
+boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08)",
+padding: "12px 0",
+minWidth: "240px",
+animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+border: "1px solid #f0f0f0",
 listStyle: "none",
 margin: 0
 },

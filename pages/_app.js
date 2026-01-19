@@ -94,7 +94,8 @@ function MyApp({ Component, pageProps }) {
         }
 
         /* Dropdown item hover - Upscale design */
-        ul[style*="dropdownMenu"] li button:hover {
+        ul[style*="dropdownMenu"] li button:hover,
+        ul[style*="dropdownMenuList"] li button:hover {
           background-color: #fafafa !important;
           color: #0071e3 !important;
           transform: translateX(2px);
@@ -189,16 +190,27 @@ function MyApp({ Component, pageProps }) {
           }
         }
 
-        /* Desktop - ensure dropdown menu is visible */
+        /* Desktop - ensure dropdown menu portal is visible */
         @media (min-width: 769px) {
           div[style*="dropdownContainer"] {
             position: relative;
             z-index: 10000;
           }
 
-          ul[style*="dropdownMenu"] {
-            position: absolute !important;
-            z-index: 100001 !important;
+          div[style*="dropdownMenuPortal"] {
+            position: fixed !important;
+            z-index: 999998 !important;
+          }
+
+          ul[style*="dropdownMenuList"] {
+            z-index: 999999 !important;
+          }
+        }
+
+        /* Mobile - hide dropdown on very small screens */
+        @media (max-width: 768px) {
+          div[style*="dropdownMenuPortal"] {
+            display: block !important;
           }
         }
       `}</style>
