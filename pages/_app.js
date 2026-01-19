@@ -8,6 +8,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta charSet="UTF-8" />
         <title>Atelier OLDA - Boutique Premium</title>
+        <link rel="stylesheet" href="/critical-fix.css" />
       </Head>
       <style jsx global>{`
         /* Reset & Base */

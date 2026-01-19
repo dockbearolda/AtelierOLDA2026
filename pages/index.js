@@ -321,7 +321,7 @@ export default function OLDAStore() {
       )
     ) : React.createElement(React.Fragment, null,
 
-      React.createElement("div", { style: styles.navContainer },
+      React.createElement("div", { style: styles.navContainer, className: "nav-container" },
         React.createElement("nav", { style: styles.nav },
           CATEGORIES.map(function(cat) {
             var isActive = activeCategory === cat.key;
@@ -330,7 +330,8 @@ export default function OLDAStore() {
 
             return React.createElement("div", {
               key: cat.key,
-              style: styles.navItem
+              style: styles.navItem,
+              className: "nav-item"
             },
               React.createElement("button", {
                 onClick: function() {
@@ -346,7 +347,7 @@ export default function OLDAStore() {
                 hasSubcategories && React.createElement("span", { style: styles.dropdownArrow }, isOpen ? "▴" : "▾")
               ),
 
-              hasSubcategories && isOpen && React.createElement("div", { style: styles.dropdown },
+              hasSubcategories && isOpen && React.createElement("div", { style: styles.dropdown, className: "dropdown" },
                 cat.subcategories.map(function(sub) {
                   var isSubActive = activeSubcategory === sub.key;
                   return React.createElement("button", {
@@ -491,8 +492,7 @@ var styles = {
   container: {
     fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', Segoe UI, Roboto, sans-serif",
     minHeight: "100vh",
-    backgroundColor: "#fafafa",
-    position: "relative"
+    backgroundColor: "#fafafa"
   },
   progressBar: {
     position: "fixed",
@@ -702,12 +702,13 @@ var styles = {
     fontWeight: "500"
   },
   main: {
-    padding: "140px 16px 80px 16px",
+    padding: "16px 16px 80px 16px",
+    marginTop: "140px",
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "16px",
     maxWidth: "900px",
-    margin: "0 auto"
+    margin: "140px auto 0 auto"
   },
   card: {
     backgroundColor: "#ffffff",
