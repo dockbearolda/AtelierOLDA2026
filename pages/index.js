@@ -5,16 +5,18 @@ const MUGS_DATA = {
 nouveautes: [
 { id: 101, reference: "SM 01", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" }
 ],
-olda: [
+"tasse-ceramique-fuck": [
+{ id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
+],
+"tasse-ceramique": [
 { id: 1, reference: "TC 01", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Ceramique", couleur: "Rose & Blanc" },
 { id: 2, reference: "TC 02", image: "/images/mugs/rougeblanc.jpg", nom: "Tasse Ceramique", couleur: "Rouge & Blanc" },
 { id: 3, reference: "TC 03", image: "/images/mugs/orangeblanc.jpg", nom: "Tasse Ceramique", couleur: "Orange & Blanc" },
 { id: 4, reference: "TC 04", image: "/images/mugs/vertblanc.jpg", nom: "Tasse Ceramique", couleur: "Vert & Blanc" },
 { id: 5, reference: "TC 05", image: "/images/mugs/noirblanc.jpg", nom: "Tasse Ceramique", couleur: "Noir & Blanc" }
 ],
-fuck: [
-{ id: 11, reference: "TF 01", image: "/images/mugs/Fuckblancnoir.JPG", nom: "Tasse Ceramique Fuck", couleur: "Blanc & Noir" }
-],
+"tasse-metal": [],
+"autres-tasses": [],
 tshirt: [
 { id: 21, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
 ],
@@ -24,16 +26,26 @@ offres: [
 };
 
 const tabs = [
-{ key: "nouveautes", label: "Nouveautes" },
-{ key: "olda", label: "Tasse Ceramique OLDA" },
-{ key: "fuck", label: "Tasse Ceramique Fuck" },
+{ key: "nouveautes", label: "Nouveautés" },
+{
+  key: "tasses",
+  label: "Tasses",
+  hasDropdown: true,
+  subcategories: [
+    { key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
+    { key: "tasse-ceramique", label: "Tasse Céramique" },
+    { key: "tasse-metal", label: "Tasse Métal" },
+    { key: "autres-tasses", label: "Autres Tasses" }
+  ]
+},
 { key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
-const [activeTab, setActiveTab] = useState("olda");
+const [activeTab, setActiveTab] = useState("tasse-ceramique");
+const [openDropdown, setOpenDropdown] = useState(null);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -166,20 +178,28 @@ var totalArticles = panier.reduce(function(sum, item) { return sum + item.quanti
 
 var getTabStyle = function(tabKey) {
 var baseStyle = Object.assign({}, styles.tab);
-if (activeTab === tabKey) {
-if (tabKey === "nouveautes") {
-return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
-} else if (tabKey === "offres") {
-return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
+var isActive = activeTab === tabKey;
+
+// Pour l'onglet Tasses, vérifier si une sous-catégorie est active
+if (tabKey === "tasses") {
+  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal", "autres-tasses"];
+  isActive = tasseSubcats.indexOf(activeTab) !== -1;
 }
-return Object.assign({}, baseStyle, styles.tabActive);
+
+if (isActive) {
+  if (tabKey === "nouveautes") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
+  } else if (tabKey === "offres") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
+  }
+  return Object.assign({}, baseStyle, styles.tabActive);
 } else {
-if (tabKey === "nouveautes") {
-return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
-} else if (tabKey === "offres") {
-return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
-}
-return baseStyle;
+  if (tabKey === "nouveautes") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
+  } else if (tabKey === "offres") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
+  }
+  return baseStyle;
 }
 };
 
@@ -226,19 +246,56 @@ React.createElement("div", { style: styles.navContainer },
   React.createElement("div", { style: styles.navGradientLeft }),
   React.createElement("nav", { style: styles.nav },
     tabs.map(function(tab) {
-      return React.createElement("button", {
-        key: tab.key,
-        onClick: function() { setActiveTab(tab.key); },
-        style: getTabStyle(tab.key)
-      }, tab.label);
+      if (tab.hasDropdown) {
+        return React.createElement("div", {
+          key: tab.key,
+          style: styles.dropdownContainer,
+          onMouseEnter: function() { setOpenDropdown(tab.key); },
+          onMouseLeave: function() { setOpenDropdown(null); }
+        },
+          React.createElement("button", {
+            onClick: function() {
+              if (openDropdown === tab.key) {
+                setOpenDropdown(null);
+              } else {
+                setOpenDropdown(tab.key);
+              }
+            },
+            style: getTabStyle(tab.key)
+          },
+            tab.label,
+            React.createElement("span", { style: styles.dropdownArrow }, " ▼")
+          ),
+          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownMenu },
+            tab.subcategories.map(function(subcat) {
+              return React.createElement("button", {
+                key: subcat.key,
+                onClick: function() {
+                  setActiveTab(subcat.key);
+                  setShowHomepage(false);
+                  setOpenDropdown(null);
+                },
+                style: activeTab === subcat.key ?
+                  Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
+                  styles.dropdownItem
+              }, subcat.label);
+            })
+          )
+        );
+      } else {
+        return React.createElement("button", {
+          key: tab.key,
+          onClick: function() {
+            setActiveTab(tab.key);
+            setShowHomepage(false);
+            setOpenDropdown(null);
+          },
+          style: getTabStyle(tab.key)
+        }, tab.label);
+      }
     })
   ),
-  React.createElement("div", { style: styles.navGradientRight }),
-  React.createElement("div", { style: styles.swipeHint },
-    React.createElement("span", { style: styles.swipeArrowLeft }, "\u2190"),
-    React.createElement("span", { style: styles.swipeText }, "Faites d\u00e9filer"),
-    React.createElement("span", { style: styles.swipeArrowRight }, "\u2192")
-  )
+  React.createElement("div", { style: styles.navGradientRight })
 ),
 
 React.createElement("main", { style: styles.main },
@@ -270,7 +327,7 @@ React.createElement("main", { style: styles.main },
         rows: "2"
       }),
 
-      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter au panier")
+      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter")
     );
   })
 )
@@ -280,9 +337,8 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
   React.createElement("div", { style: styles.modal, onClick: function(e) { e.stopPropagation(); } },
     orderSent ? React.createElement("div", { style: styles.successContainer },
       React.createElement("div", { style: styles.successIcon }, "\u2713"),
-      React.createElement("h2", { style: styles.successTitle }, "Commande envoyee"),
-      React.createElement("p", { style: styles.successText }, "Merci " + clientInfo.nom),
-      React.createElement("p", { style: styles.successEmail }, "Nous vous contacterons a " + clientInfo.email),
+      React.createElement("h2", { style: styles.successTitle }, "Commande envoyée"),
+      React.createElement("p", { style: styles.successText }, "L'Atelier OLDA vous remercie pour votre confiance."),
       React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
     ) : React.createElement(React.Fragment, null,
       React.createElement("div", { style: styles.modalHeader },
@@ -330,6 +386,10 @@ cartOpen && React.createElement("div", { style: styles.modalOverlay, onClick: fu
       )
     )
   )
+),
+
+React.createElement("footer", { style: styles.footer },
+  React.createElement("p", { style: styles.footerText }, "\u00a9 2026 Atelier OLDA. Tous droits r\u00e9serv\u00e9s.")
 )
 
 );
@@ -429,7 +489,7 @@ alignItems: "center",
 borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
-zIndex: 1000
+zIndex: 9999
 },
 logo: {
 height: "40px",
@@ -462,7 +522,7 @@ position: "sticky",
 top: "73px",
 backgroundColor: "white",
 borderBottom: "1px solid #d2d2d7",
-zIndex: 1001,
+zIndex: 9998,
 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 transition: "box-shadow 0.3s ease"
 },
@@ -473,7 +533,7 @@ top: 0,
 bottom: 0,
 width: "40px",
 background: "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 1003,
+zIndex: 10000,
 pointerEvents: "none"
 },
 navGradientRight: {
@@ -483,7 +543,7 @@ top: 0,
 bottom: 0,
 width: "40px",
 background: "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 1003,
+zIndex: 10000,
 pointerEvents: "none"
 },
 nav: {
@@ -496,7 +556,7 @@ scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none",
 position: "relative",
-zIndex: 1002
+zIndex: 9997
 },
 swipeHint: {
 display: "flex",
@@ -540,6 +600,48 @@ transform: "scale(1.05)",
 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
 fontWeight: "500"
 },
+dropdownContainer: {
+position: "relative",
+display: "inline-block"
+},
+dropdownArrow: {
+fontSize: "10px",
+marginLeft: "4px",
+opacity: 0.7,
+transition: "transform 0.3s ease"
+},
+dropdownMenu: {
+position: "absolute",
+top: "calc(100% + 8px)",
+left: 0,
+backgroundColor: "white",
+borderRadius: "12px",
+boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+padding: "8px 0",
+minWidth: "200px",
+zIndex: 10001,
+animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+border: "1px solid #e5e5e7"
+},
+dropdownItem: {
+width: "100%",
+padding: "12px 20px",
+border: "none",
+backgroundColor: "transparent",
+color: "#1d1d1f",
+fontSize: "14px",
+fontWeight: "400",
+cursor: "pointer",
+transition: "all 0.2s ease",
+textAlign: "left",
+whiteSpace: "nowrap",
+display: "block"
+},
+dropdownItemActive: {
+backgroundColor: "#f5f5f7",
+color: "#0071e3",
+fontWeight: "500"
+},
 main: {
 padding: "40px",
 display: "grid",
@@ -570,7 +672,8 @@ overflow: "hidden"
 image: {
 maxHeight: "100%",
 maxWidth: "100%",
-objectFit: "contain"
+objectFit: "contain",
+mixBlendMode: "multiply"
 },
 productName: {
 margin: "0 0 4px 0",
@@ -800,5 +903,18 @@ borderRadius: "10px",
 cursor: "pointer",
 fontSize: "15px",
 fontWeight: "600"
+},
+footer: {
+backgroundColor: "#f5f5f7",
+padding: "32px 40px",
+textAlign: "center",
+borderTop: "1px solid #d2d2d7",
+marginTop: "60px"
+},
+footerText: {
+margin: 0,
+fontSize: "13px",
+color: "#86868b",
+fontWeight: "400"
 }
 };

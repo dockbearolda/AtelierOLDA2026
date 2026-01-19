@@ -49,6 +49,23 @@ function MyApp({ Component, pageProps }) {
           transform: scale(0.98);
         }
 
+        /* Dropdown animation */
+        @keyframes dropdownFadeIn {
+          0% {
+            opacity: 0;
+            transform: translateY(-8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Dropdown item hover */
+        button[style*="dropdownItem"]:hover {
+          background-color: #f5f5f7 !important;
+        }
+
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
