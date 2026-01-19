@@ -415,7 +415,9 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#f5f5f7"
+backgroundColor: "#f5f5f7",
+overflow: "visible",
+position: "relative"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
@@ -505,7 +507,8 @@ alignItems: "center",
 borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
-zIndex: 9999
+zIndex: 9999,
+overflow: "visible"
 },
 logo: {
 height: "40px",
@@ -620,7 +623,8 @@ fontWeight: "500"
 },
 dropdownContainer: {
 position: "relative",
-display: "inline-block"
+display: "inline-block",
+overflow: "visible"
 },
 dropdownArrow: {
 fontSize: "10px",
@@ -637,7 +641,7 @@ borderRadius: "12px",
 boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
 padding: "8px 0",
 minWidth: "200px",
-zIndex: 10001,
+zIndex: 99999,
 animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
 border: "1px solid #e5e5e7"
 },
@@ -778,8 +782,9 @@ backgroundColor: "rgba(0,0,0,0.4)",
 display: "flex",
 justifyContent: "center",
 alignItems: "center",
-zIndex: 1000,
-padding: "20px"
+zIndex: 100000,
+padding: "20px",
+animation: "fadeIn 0.3s ease-in-out"
 },
 modal: {
 backgroundColor: "white",
@@ -788,7 +793,8 @@ padding: "32px",
 maxWidth: "500px",
 width: "100%",
 maxHeight: "80vh",
-overflow: "auto"
+overflow: "auto",
+animation: "slideDown 0.3s ease-in-out"
 },
 modalHeader: {
 display: "flex",
