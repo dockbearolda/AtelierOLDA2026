@@ -56,9 +56,9 @@ const tabs = [
   label: "Tasses",
   hasDropdown: true,
   subcategories: [
-    { key: "tasse-ceramique-fuck", label: "Tasses Céramique Fuck" },
-    { key: "tasse-ceramique", label: "Tasses Céramique OLDA" },
-    { key: "tasse-metal", label: "Tasses Métal" }
+    { key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
+    { key: "tasse-ceramique", label: "Tasse Céramique" },
+    { key: "tasse-metal", label: "Tasse Métal & Bois" }
   ]
 },
 { key: "tshirt", label: "T-Shirt" },
@@ -279,7 +279,6 @@ React.createElement("span", { style: styles.categoryLabel }, tab.label)
 ) : React.createElement(React.Fragment, null,
 
 React.createElement("div", { style: styles.navContainer },
-  React.createElement("div", { style: styles.navGradientLeft }),
   React.createElement("nav", { style: styles.nav },
     tabs.map(function(tab) {
       if (tab.hasDropdown) {
@@ -302,19 +301,23 @@ React.createElement("div", { style: styles.navContainer },
             tab.label,
             React.createElement("span", { style: styles.dropdownArrow }, " ▼")
           ),
-          openDropdown === tab.key && React.createElement("div", { style: styles.dropdownMenu },
+          openDropdown === tab.key && React.createElement("ul", { style: styles.dropdownMenu },
             tab.subcategories.map(function(subcat) {
-              return React.createElement("button", {
+              return React.createElement("li", {
                 key: subcat.key,
-                onClick: function() {
-                  setActiveTab(subcat.key);
-                  setShowHomepage(false);
-                  setOpenDropdown(null);
-                },
-                style: activeTab === subcat.key ?
-                  Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
-                  styles.dropdownItem
-              }, subcat.label);
+                style: styles.dropdownItemWrapper
+              },
+                React.createElement("button", {
+                  onClick: function() {
+                    setActiveTab(subcat.key);
+                    setShowHomepage(false);
+                    setOpenDropdown(null);
+                  },
+                  style: activeTab === subcat.key ?
+                    Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
+                    styles.dropdownItem
+                }, subcat.label)
+              );
             })
           )
         );
@@ -329,8 +332,7 @@ React.createElement("div", { style: styles.navContainer },
         }, tab.label);
       }
     })
-  ),
-  React.createElement("div", { style: styles.navGradientRight })
+  )
 ),
 
 React.createElement("main", { style: styles.main },
@@ -573,26 +575,6 @@ boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 transition: "box-shadow 0.3s ease",
 overflow: "visible"
 },
-navGradientLeft: {
-position: "absolute",
-left: 0,
-top: 0,
-bottom: 0,
-width: "40px",
-background: "linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10000,
-pointerEvents: "none"
-},
-navGradientRight: {
-position: "absolute",
-right: 0,
-top: 0,
-bottom: 0,
-width: "40px",
-background: "linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0))",
-zIndex: 10000,
-pointerEvents: "none"
-},
 nav: {
 backgroundColor: "white",
 padding: "16px 40px",
@@ -604,7 +586,8 @@ scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none",
 position: "relative",
-zIndex: 9997
+zIndex: 9997,
+overflow: "visible"
 },
 tab: {
 padding: "10px 20px",
@@ -641,35 +624,44 @@ transition: "transform 0.3s ease"
 },
 dropdownMenu: {
 position: "absolute",
-top: "calc(100% + 8px)",
+top: "calc(100% + 12px)",
 left: 0,
-backgroundColor: "white",
-borderRadius: "12px",
-boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
-padding: "8px 0",
-minWidth: "220px",
-zIndex: 100000,
-animation: "dropdownFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-border: "1px solid #e5e5e7",
-pointerEvents: "auto"
+backgroundColor: "#ffffff",
+borderRadius: "16px",
+boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.04)",
+padding: "12px 0",
+minWidth: "240px",
+zIndex: 99999,
+animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+border: "1px solid #f0f0f0",
+pointerEvents: "auto",
+listStyle: "none",
+margin: 0
+},
+dropdownItemWrapper: {
+listStyle: "none",
+margin: 0,
+padding: 0
 },
 dropdownItem: {
 width: "100%",
-padding: "12px 20px",
+padding: "14px 24px",
 border: "none",
 backgroundColor: "transparent",
 color: "#1d1d1f",
-fontSize: "14px",
+fontSize: "15px",
 fontWeight: "400",
 cursor: "pointer",
-transition: "all 0.2s ease",
+transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
 textAlign: "left",
 whiteSpace: "nowrap",
 display: "block",
-pointerEvents: "auto"
+pointerEvents: "auto",
+letterSpacing: "0.01em",
+lineHeight: "1.4"
 },
 dropdownItemActive: {
-backgroundColor: "#f5f5f7",
+backgroundColor: "#fafafa",
 color: "#0071e3",
 fontWeight: "500"
 },
