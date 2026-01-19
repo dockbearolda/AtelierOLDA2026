@@ -21,36 +21,6 @@ function MyApp({ Component, pageProps }) {
           overflow-x: hidden;
         }
 
-        /* Dark Mode Support */
-        @media (prefers-color-scheme: dark) {
-          body {
-            background-color: #000000;
-            color: #f5f5f7;
-          }
-
-          .product-card {
-            background-color: #1d1d1f !important;
-            border-color: rgba(255,255,255,0.1) !important;
-          }
-
-          .product-card h3, .product-card p {
-            color: #f5f5f7 !important;
-          }
-
-          header {
-            background-color: #000000 !important;
-            border-color: #2c2c2e !important;
-          }
-
-          nav {
-            background-color: #000000 !important;
-          }
-
-          .homepage {
-            background-color: #000000 !important;
-          }
-        }
-
         /* Hide scrollbar for Chrome, Safari and Opera */
         nav::-webkit-scrollbar {
           display: none;
@@ -76,19 +46,6 @@ function MyApp({ Component, pageProps }) {
           );
           background-size: 1000px 100%;
           animation: shimmer 2s infinite;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .skeleton {
-            background: linear-gradient(
-              90deg,
-              #2c2c2e 0%,
-              #3a3a3c 20%,
-              #2c2c2e 40%,
-              #2c2c2e 100%
-            );
-            background-size: 1000px 100%;
-          }
         }
 
         /* Animation for scroll indicator */
