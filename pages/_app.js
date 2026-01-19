@@ -145,6 +145,11 @@ function MyApp({ Component, pageProps }) {
           transform: scale(0.95) !important;
         }
 
+        /* Prevent any overflow */
+        *, *::before, *::after {
+          box-sizing: border-box;
+        }
+
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
@@ -159,8 +164,13 @@ function MyApp({ Component, pageProps }) {
 
           main {
             grid-template-columns: repeat(2, 1fr) !important;
-            padding: 20px 4vw !important;
-            gap: 16px !important;
+            padding: 16px 3vw !important;
+            gap: 10px !important;
+          }
+
+          div[style*="card"] {
+            padding: 16px !important;
+            border-radius: 14px !important;
           }
 
           header {
@@ -179,7 +189,17 @@ function MyApp({ Component, pageProps }) {
           }
 
           main {
-            gap: 12px !important;
+            gap: 8px !important;
+            padding: 12px 2.5vw !important;
+          }
+
+          div[style*="card"] {
+            padding: 12px !important;
+          }
+
+          div[style*="imageContainer"] {
+            height: 160px !important;
+            margin-bottom: 12px !important;
           }
         }
 

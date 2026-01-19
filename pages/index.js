@@ -853,7 +853,9 @@ padding: "24px",
 boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
 transition: "transform 0.2s, box-shadow 0.2s",
 position: "relative",
-zIndex: 1
+zIndex: 1,
+boxSizing: "border-box",
+width: "100%"
 },
 imageContainer: {
 height: "200px",
@@ -863,7 +865,9 @@ marginBottom: "16px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-overflow: "hidden"
+overflow: "hidden",
+width: "100%",
+boxSizing: "border-box"
 },
 image: {
 maxHeight: "100%",
@@ -930,7 +934,8 @@ fontFamily: "inherit",
 resize: "none",
 marginBottom: "12px",
 boxSizing: "border-box",
-color: "#1d1d1f"
+color: "#1d1d1f",
+maxWidth: "100%"
 },
 addButton: {
 width: "100%",
