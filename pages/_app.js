@@ -100,9 +100,9 @@ function MyApp({ Component, pageProps }) {
           transform: translateX(2px);
         }
 
-        /* Ensure nav has visible overflow */
+        /* Ensure nav dropdown has visible overflow for dropdown menu */
         nav {
-          overflow: visible !important;
+          overflow-y: visible !important;
         }
 
         /* Navigation slider for mobile - hide scrollbar */
@@ -157,8 +157,9 @@ function MyApp({ Component, pageProps }) {
           }
 
           main {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: repeat(2, 1fr) !important;
             padding: 20px 4vw !important;
+            gap: 16px !important;
           }
 
           header {
@@ -174,6 +175,30 @@ function MyApp({ Component, pageProps }) {
           button[style*="tab"] {
             font-size: 13px !important;
             padding: 8px 16px !important;
+          }
+
+          main {
+            gap: 12px !important;
+          }
+        }
+
+        /* Ultra small screens - 1 column only */
+        @media (max-width: 380px) {
+          main {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        /* Desktop - ensure dropdown menu is visible */
+        @media (min-width: 769px) {
+          div[style*="dropdownContainer"] {
+            position: relative;
+            z-index: 10000;
+          }
+
+          ul[style*="dropdownMenu"] {
+            position: absolute !important;
+            z-index: 100001 !important;
           }
         }
       `}</style>

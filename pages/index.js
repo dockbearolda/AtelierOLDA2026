@@ -634,7 +634,8 @@ borderBottom: "1px solid #d2d2d7",
 zIndex: 9998,
 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 transition: "box-shadow 0.3s ease",
-overflow: "visible",
+overflowX: "hidden",
+overflowY: "visible",
 width: "100%",
 maxWidth: "100vw",
 boxSizing: "border-box"
@@ -682,7 +683,8 @@ dropdownContainer: {
 position: "relative",
 display: "inline-block",
 overflow: "visible",
-pointerEvents: "auto"
+pointerEvents: "auto",
+zIndex: 10000
 },
 dropdownBridge: {
 position: "absolute",
@@ -692,7 +694,7 @@ right: 0,
 height: "12px",
 backgroundColor: "transparent",
 pointerEvents: "auto",
-zIndex: 99998
+zIndex: 100000
 },
 dropdownArrow: {
 fontSize: "10px",
@@ -706,10 +708,10 @@ top: "calc(100% + 12px)",
 left: 0,
 backgroundColor: "#ffffff",
 borderRadius: "16px",
-boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.04)",
+boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08)",
 padding: "12px 0",
 minWidth: "240px",
-zIndex: 99999,
+zIndex: 100001,
 animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
 border: "1px solid #f0f0f0",
 pointerEvents: "auto",
