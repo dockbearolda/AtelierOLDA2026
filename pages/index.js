@@ -208,8 +208,6 @@ alt: "Atelier OLDA",
 style: styles.homepageLogo,
 className: "homepage-logo"
 }),
-React.createElement("h1", { style: styles.homepageTitle, className: "homepage-title" }, "Atelier OLDA"),
-React.createElement("p", { style: styles.homepageSubtitle, className: "homepage-subtitle" }, "Cr\u00e9ations uniques et personnalis\u00e9es"),
 React.createElement("div", { style: styles.categoryGrid },
 tabs.map(function(tab) {
 return React.createElement("button", {
@@ -239,12 +237,7 @@ React.createElement("div", { style: styles.navContainer },
       }, tab.label);
     })
   ),
-  React.createElement("div", { style: styles.navGradientRight }),
-  React.createElement("div", { style: styles.swipeHint },
-    React.createElement("span", { style: styles.swipeArrowLeft }, "\u2190"),
-    React.createElement("span", { style: styles.swipeText }, "Faites d\u00e9filer"),
-    React.createElement("span", { style: styles.swipeArrowRight }, "\u2192")
-  )
+  React.createElement("div", { style: styles.navGradientRight })
 ),
 
 React.createElement("main", { style: styles.main },
@@ -258,9 +251,12 @@ React.createElement("main", { style: styles.main },
           onError: function(e) { e.target.style.display = "none"; }
         })
       ),
-      React.createElement("h3", { style: styles.productName }, product.nom),
-      product.couleur && React.createElement("p", { style: styles.productColor, className: "product-color" }, product.couleur),
-      React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
+
+      React.createElement("div", { style: styles.productInfo },
+        React.createElement("h3", { style: styles.productName }, product.nom),
+        product.couleur && React.createElement("p", { style: styles.productColor, className: "product-color" }, product.couleur),
+        React.createElement("p", { style: styles.productRef }, product.reference)
+      ),
 
       React.createElement("div", { style: styles.quantityControl },
         React.createElement("button", { onClick: function() { ajuster(product.id, -1); }, style: styles.qtyButton }, "-"),
@@ -269,14 +265,14 @@ React.createElement("main", { style: styles.main },
       ),
 
       React.createElement("textarea", {
-        placeholder: "Note (optionnel)",
+        placeholder: "Note",
         value: getCommentaire(product.id),
         onChange: function(e) { updateCommentaire(product.id, e.target.value); },
         style: styles.commentaire,
-        rows: "2"
+        rows: "1"
       }),
 
-      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter au panier")
+      React.createElement("button", { onClick: function() { ajouterAuPanier(product); }, style: styles.addButton }, "Ajouter")
     );
   })
 )
@@ -504,27 +500,6 @@ scrollBehavior: "smooth",
 scrollbarWidth: "none",
 msOverflowStyle: "none"
 },
-swipeHint: {
-display: "flex",
-alignItems: "center",
-justifyContent: "center",
-gap: "8px",
-padding: "8px 0",
-backgroundColor: "#f5f5f7",
-fontSize: "13px",
-color: "#86868b"
-},
-swipeArrowLeft: {
-fontSize: "18px",
-animation: "slideLeft 1.5s ease-in-out infinite"
-},
-swipeArrowRight: {
-fontSize: "18px",
-animation: "slideRight 1.5s ease-in-out infinite"
-},
-swipeText: {
-fontWeight: "500"
-},
 tab: {
 padding: "10px 20px",
 border: "none",
@@ -552,15 +527,18 @@ margin: "0 auto"
 card: {
 backgroundColor: "white",
 borderRadius: "18px",
-padding: "24px",
-boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
-transition: "transform 0.2s, box-shadow 0.2s"
+padding: "20px",
+boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+transition: "transform 0.2s, box-shadow 0.2s",
+display: "flex",
+flexDirection: "column"
 },
 imageContainer: {
-height: "200px",
-backgroundColor: "white",
+width: "100%",
+aspectRatio: "1",
+backgroundColor: "#f5f5f7",
 borderRadius: "12px",
-marginBottom: "16px",
+marginBottom: "12px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
@@ -571,70 +549,78 @@ maxHeight: "100%",
 maxWidth: "100%",
 objectFit: "contain"
 },
+productInfo: {
+marginBottom: "12px",
+textAlign: "center"
+},
 productName: {
 margin: "0 0 4px 0",
-fontSize: "17px",
+fontSize: "15px",
 fontWeight: "600",
-color: "#1d1d1f"
+color: "#1d1d1f",
+lineHeight: "1.3"
 },
 productColor: {
-margin: "0 0 4px 0",
-fontSize: "14px",
+margin: "0 0 2px 0",
+fontSize: "13px",
 color: "#6e6e73"
 },
 productRef: {
-margin: "0 0 16px 0",
-fontSize: "12px",
-color: "#86868b"
+margin: "0",
+fontSize: "11px",
+color: "#86868b",
+fontWeight: "500"
 },
 quantityControl: {
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-gap: "16px",
-marginBottom: "12px"
+gap: "12px",
+marginBottom: "8px"
 },
 qtyButton: {
-width: "36px",
-height: "36px",
+width: "32px",
+height: "32px",
 border: "1px solid #d2d2d7",
 borderRadius: "50%",
 cursor: "pointer",
 backgroundColor: "white",
-fontSize: "18px",
+fontSize: "16px",
 color: "#1d1d1f",
 display: "flex",
 alignItems: "center",
-justifyContent: "center"
+justifyContent: "center",
+transition: "all 0.2s"
 },
 quantity: {
-fontSize: "17px",
+fontSize: "15px",
 fontWeight: "600",
-minWidth: "30px",
+minWidth: "24px",
 textAlign: "center"
 },
 commentaire: {
 width: "100%",
-padding: "10px",
+padding: "8px 10px",
 border: "1px solid #e5e5e7",
 borderRadius: "8px",
-fontSize: "13px",
+fontSize: "12px",
 fontFamily: "inherit",
 resize: "none",
-marginBottom: "12px",
+marginBottom: "8px",
 boxSizing: "border-box",
-color: "#1d1d1f"
+color: "#1d1d1f",
+backgroundColor: "#fafafa"
 },
 addButton: {
 width: "100%",
-padding: "12px",
+padding: "10px",
 backgroundColor: "#0071e3",
 color: "white",
 border: "none",
 borderRadius: "10px",
 cursor: "pointer",
-fontSize: "15px",
-fontWeight: "500",
+fontSize: "13px",
+fontWeight: "600",
 transition: "background-color 0.2s"
 },
 modalOverlay: {
