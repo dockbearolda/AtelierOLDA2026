@@ -1,12 +1,94 @@
 import React from 'react';
+import Head from 'next/head';
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta charSet="UTF-8" />
+      </Head>
       <style jsx global>{`
+        /* Reset & Base */
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
+        html, body {
+          width: 100%;
+          overflow-x: hidden;
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+          body {
+            background-color: #000000;
+            color: #f5f5f7;
+          }
+
+          .product-card {
+            background-color: #1d1d1f !important;
+            border-color: rgba(255,255,255,0.1) !important;
+          }
+
+          .product-card h3, .product-card p {
+            color: #f5f5f7 !important;
+          }
+
+          header {
+            background-color: #000000 !important;
+            border-color: #2c2c2e !important;
+          }
+
+          nav {
+            background-color: #000000 !important;
+          }
+
+          .homepage {
+            background-color: #000000 !important;
+          }
+        }
+
         /* Hide scrollbar for Chrome, Safari and Opera */
         nav::-webkit-scrollbar {
           display: none;
+        }
+
+        /* Skeleton Loading Animation */
+        @keyframes shimmer {
+          0% {
+            background-position: -1000px 0;
+          }
+          100% {
+            background-position: 1000px 0;
+          }
+        }
+
+        .skeleton {
+          background: linear-gradient(
+            90deg,
+            #f0f0f0 0%,
+            #e0e0e0 20%,
+            #f0f0f0 40%,
+            #f0f0f0 100%
+          );
+          background-size: 1000px 100%;
+          animation: shimmer 2s infinite;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .skeleton {
+            background: linear-gradient(
+              90deg,
+              #2c2c2e 0%,
+              #3a3a3c 20%,
+              #2c2c2e 40%,
+              #2c2c2e 100%
+            );
+            background-size: 1000px 100%;
+          }
         }
 
         /* Animation for scroll indicator */
@@ -27,15 +109,18 @@ function MyApp({ Component, pageProps }) {
           box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
+        .product-card {
+          transition: all 0.3s ease-in-out;
+        }
+
         .product-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.1) !important;
+          transform: scale(1.05) translateY(-4px);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.12) !important;
         }
 
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
-          transition: all 0.3s ease-in-out;
         }
 
         input, textarea, button {

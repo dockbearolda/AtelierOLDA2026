@@ -34,7 +34,6 @@ const tabs = [
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
 const [activeTab, setActiveTab] = useState("olda");
-const [currentStep, setCurrentStep] = useState(1);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -42,11 +41,19 @@ const [cartOpen, setCartOpen] = useState(false);
 const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
+const [imagesLoaded, setImagesLoaded] = useState({});
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
 setShowHomepage(false);
-setCurrentStep(1);
+};
+
+var handleImageLoad = function(id) {
+setImagesLoaded(function(prev) {
+var newState = Object.assign({}, prev);
+newState[id] = true;
+return newState;
+});
 };
 
 useEffect(function() {
@@ -228,23 +235,6 @@ React.createElement("span", { style: styles.categoryLabel }, tab.label)
 )
 ) : React.createElement(React.Fragment, null,
 
-React.createElement("div", { style: styles.stepper },
-  React.createElement("div", { style: currentStep >= 1 ? styles.stepActive : styles.step },
-    React.createElement("span", { style: styles.stepNumber }, "01"),
-    React.createElement("span", { style: styles.stepLabel }, "Choix de la collection")
-  ),
-  React.createElement("div", { style: styles.stepLine }),
-  React.createElement("div", { style: currentStep >= 2 ? styles.stepActive : styles.step },
-    React.createElement("span", { style: styles.stepNumber }, "02"),
-    React.createElement("span", { style: styles.stepLabel }, "Personnalisation")
-  ),
-  React.createElement("div", { style: styles.stepLine }),
-  React.createElement("div", { style: currentStep >= 3 ? styles.stepActive : styles.step },
-    React.createElement("span", { style: styles.stepNumber }, "03"),
-    React.createElement("span", { style: styles.stepLabel }, "Validation")
-  )
-),
-
 React.createElement("div", { style: styles.navContainer },
   React.createElement("div", { style: styles.scrollIndicator }),
   React.createElement("div", { style: styles.navGradientLeft }),
@@ -262,13 +252,16 @@ React.createElement("div", { style: styles.navContainer },
 
 React.createElement("main", { style: styles.main },
   MUGS_DATA[activeTab] && MUGS_DATA[activeTab].map(function(product) {
+    var isLoaded = imagesLoaded[product.id];
     return React.createElement("div", { key: product.id, style: styles.card, className: "product-card" },
       React.createElement("div", { style: styles.imageContainer },
+        !isLoaded && React.createElement("div", { style: styles.skeleton, className: "skeleton" }),
         React.createElement("img", {
           src: product.image,
           alt: product.nom,
-          style: styles.image,
-          onError: function(e) { e.target.style.display = "none"; }
+          style: Object.assign({}, styles.image, !isLoaded ? { opacity: 0 } : { opacity: 1 }),
+          onLoad: function() { handleImageLoad(product.id); },
+          onError: function(e) { handleImageLoad(product.id); e.target.style.display = "none"; }
         })
       ),
 
@@ -362,47 +355,6 @@ container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
 backgroundColor: "#fafafa"
-},
-stepper: {
-display: "flex",
-alignItems: "center",
-justifyContent: "center",
-padding: "32px 20px 24px",
-backgroundColor: "white",
-borderBottom: "1px solid #e5e5e7"
-},
-step: {
-display: "flex",
-alignItems: "center",
-gap: "8px",
-opacity: "0.3",
-transition: "all 0.3s ease-in-out"
-},
-stepActive: {
-display: "flex",
-alignItems: "center",
-gap: "8px",
-opacity: "1",
-transition: "all 0.3s ease-in-out"
-},
-stepNumber: {
-fontSize: "13px",
-fontWeight: "300",
-letterSpacing: "1px",
-color: "#1d1d1f"
-},
-stepLabel: {
-fontSize: "11px",
-fontWeight: "400",
-color: "#6e6e73",
-textTransform: "uppercase",
-letterSpacing: "0.5px"
-},
-stepLine: {
-width: "40px",
-height: "1px",
-backgroundColor: "#d2d2d7",
-margin: "0 16px"
 },
 scrollIndicator: {
 position: "absolute",
@@ -617,12 +569,24 @@ display: "flex",
 alignItems: "center",
 justifyContent: "center",
 overflow: "hidden",
-padding: "24px"
+padding: "24px",
+position: "relative"
+},
+skeleton: {
+position: "absolute",
+top: 0,
+left: 0,
+width: "100%",
+height: "100%",
+backgroundColor: "#e0e0e0",
+borderRadius: "16px",
+animation: "shimmer 2s infinite"
 },
 image: {
 maxHeight: "100%",
 maxWidth: "100%",
-objectFit: "contain"
+objectFit: "contain",
+transition: "opacity 0.3s ease-in-out"
 },
 productInfo: {
 marginBottom: "16px",
