@@ -42,10 +42,36 @@ nouveautes: [
 ],
 "tasse-metal": [],
 tshirt: [
-{ id: 41, reference: "H-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt unisexe ", couleur: "Bleu Saphir" }
+{ id: 41, reference: "TS-001", image: "/images/mugs/tshirtns300bleu.jpg", nom: "T-shirt Unisexe OLDA", couleur: "Bleu Saphir" },
+{ id: 42, reference: "TS-002", image: "/images/tshirt/ts-noir.jpg", nom: "T-shirt Unisexe OLDA", couleur: "Noir" },
+{ id: 43, reference: "TS-003", image: "/images/tshirt/ts-blanc.jpg", nom: "T-shirt Unisexe OLDA", couleur: "Blanc" },
+{ id: 44, reference: "TS-004", image: "/images/tshirt/ts-rose.jpg", nom: "T-shirt Unisexe OLDA", couleur: "Rose Pâle" },
+{ id: 45, reference: "TS-005", image: "/images/tshirt/ts-vert.jpg", nom: "T-shirt Unisexe OLDA", couleur: "Vert Sauge" },
+{ id: 46, reference: "TS-006", image: "/images/tshirt/ts-beige.jpg", nom: "T-shirt Unisexe OLDA", couleur: "Beige" }
+],
+"art-de-la-table": [
+{ id: 301, reference: "ADT-001", image: "/images/table/assiette-ceramique-blanche.jpg", nom: "Assiette Céramique", couleur: "Blanc Crème" },
+{ id: 302, reference: "ADT-002", image: "/images/table/assiette-ceramique-rose.jpg", nom: "Assiette Céramique", couleur: "Rose Pâle" },
+{ id: 303, reference: "ADT-003", image: "/images/table/assiette-ceramique-vert.jpg", nom: "Assiette Céramique", couleur: "Vert Sauge" },
+{ id: 304, reference: "ADT-004", image: "/images/table/bol-ceramique-blanc.jpg", nom: "Bol Céramique", couleur: "Blanc Crème" },
+{ id: 305, reference: "ADT-005", image: "/images/table/bol-ceramique-bleu.jpg", nom: "Bol Céramique", couleur: "Bleu Pastel" },
+{ id: 306, reference: "ADT-006", image: "/images/table/plateau-bois.jpg", nom: "Plateau Bois Artisanal", couleur: "Bois Naturel" },
+{ id: 307, reference: "ADT-007", image: "/images/table/set-table-lin.jpg", nom: "Set de Table Lin", couleur: "Lin Naturel" },
+{ id: 308, reference: "ADT-008", image: "/images/table/serviettes-tissu.jpg", nom: "Serviettes en Tissu (x4)", couleur: "Beige & Blanc" }
+],
+"accessoires-goodies": [
+{ id: 401, reference: "AG-001", image: "/images/mugs/decapsuleur.jpg", nom: "Décapsuleur Bois", couleur: "" },
+{ id: 402, reference: "AG-002", image: "/images/goodies/porte-cles-cuir.jpg", nom: "Porte-clés Cuir", couleur: "Camel" },
+{ id: 403, reference: "AG-003", image: "/images/goodies/porte-cles-cuir-noir.jpg", nom: "Porte-clés Cuir", couleur: "Noir" },
+{ id: 404, reference: "AG-004", image: "/images/goodies/tote-bag-toile.jpg", nom: "Tote Bag Toile OLDA", couleur: "Écru" },
+{ id: 405, reference: "AG-005", image: "/images/goodies/carnet-notes.jpg", nom: "Carnet de Notes", couleur: "Kraft" },
+{ id: 406, reference: "AG-006", image: "/images/mugs/nouveaute1.jpg", nom: "Support Mobile Acrylique", couleur: "" },
+{ id: 407, reference: "AG-007", image: "/images/goodies/bougie-artisanale.jpg", nom: "Bougie Artisanale", couleur: "Vanille & Bois" },
+{ id: 408, reference: "AG-008", image: "/images/goodies/dessous-verre.jpg", nom: "Dessous de Verre (x4)", couleur: "Bois & Liège" }
 ],
 offres: [
-{ id: 201, reference: "DB-001", image: "/images/mugs/decapsuleur.jpg", nom: "Decapsuleur Bois", couleur: "" }
+{ id: 201, reference: "PROMO-001", image: "/images/mugs/decapsuleur.jpg", nom: "Décapsuleur Bois", couleur: "" },
+{ id: 202, reference: "PROMO-002", image: "/images/mugs/roseblanc.jpg", nom: "Tasse Céramique OLDA", couleur: "Rose & Blanc" }
 ]
 };
 
@@ -61,6 +87,9 @@ const tabs = [
     { key: "tasse-metal", label: "Tasse Métal & Bois" }
   ]
 },
+{ key: "tshirt", label: "T-Shirt" },
+{ key: "art-de-la-table", label: "Art de la Table" },
+{ key: "accessoires-goodies", label: "Accessoires & Goodies" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
@@ -226,6 +255,12 @@ if (isActive) {
     return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#8B9D83", borderColor: "#8B9D83", color: "white" });
   } else if (tabKey === "offres") {
     return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#C4A68A", borderColor: "#C4A68A", color: "white" });
+  } else if (tabKey === "tshirt") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#9B8BAA", borderColor: "#9B8BAA", color: "white" });
+  } else if (tabKey === "art-de-la-table") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#B8A892", borderColor: "#B8A892", color: "white" });
+  } else if (tabKey === "accessoires-goodies") {
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#D4A895", borderColor: "#D4A895", color: "white" });
   }
   return Object.assign({}, baseStyle, styles.tabActive);
 } else {
@@ -233,6 +268,12 @@ if (isActive) {
     return Object.assign({}, baseStyle, { backgroundColor: "#D4E3D0", borderColor: "#D4E3D0", color: "#1d1d1f" });
   } else if (tabKey === "offres") {
     return Object.assign({}, baseStyle, { backgroundColor: "#F5E8E0", borderColor: "#F5E8E0", color: "#1d1d1f" });
+  } else if (tabKey === "tshirt") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#E8E3F0", borderColor: "#E8E3F0", color: "#1d1d1f" });
+  } else if (tabKey === "art-de-la-table") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#F0EBE3", borderColor: "#F0EBE3", color: "#1d1d1f" });
+  } else if (tabKey === "accessoires-goodies") {
+    return Object.assign({}, baseStyle, { backgroundColor: "#FFE8DC", borderColor: "#FFE8DC", color: "#1d1d1f" });
   }
   return baseStyle;
 }
@@ -261,12 +302,17 @@ React.createElement("h1", { style: styles.homepageTitle }, "Atelier OLDA"),
 React.createElement("p", { style: styles.homepageSubtitle }, "Cr\u00e9ations uniques et personnalis\u00e9es"),
 React.createElement("div", { style: styles.categoryGrid },
 tabs.map(function(tab) {
+var categoryStyle = styles.categoryCard;
+if (tab.key === "nouveautes") categoryStyle = Object.assign({}, styles.categoryCard, styles.categoryCardNew);
+else if (tab.key === "offres") categoryStyle = Object.assign({}, styles.categoryCard, styles.categoryCardPromo);
+else if (tab.key === "tshirt") categoryStyle = Object.assign({}, styles.categoryCard, styles.categoryCardTshirt);
+else if (tab.key === "art-de-la-table") categoryStyle = Object.assign({}, styles.categoryCard, styles.categoryCardTable);
+else if (tab.key === "accessoires-goodies") categoryStyle = Object.assign({}, styles.categoryCard, styles.categoryCardAccessoires);
+
 return React.createElement("button", {
 key: tab.key,
 onClick: function() { navigateToCategory(tab.key); },
-style: tab.key === "nouveautes" ? Object.assign({}, styles.categoryCard, styles.categoryCardNew) :
-tab.key === "offres" ? Object.assign({}, styles.categoryCard, styles.categoryCardPromo) :
-styles.categoryCard
+style: categoryStyle
 },
 tab.key === "nouveautes" && React.createElement("span", { style: styles.categoryBadge }, "Nouveau"),
 tab.key === "offres" && React.createElement("span", { style: styles.categoryBadgePromo }, "Promo"),
@@ -505,6 +551,15 @@ backgroundColor: "#D4E3D0"
 },
 categoryCardPromo: {
 backgroundColor: "#F5E8E0"
+},
+categoryCardTshirt: {
+backgroundColor: "#E8E3F0"
+},
+categoryCardTable: {
+backgroundColor: "#F0EBE3"
+},
+categoryCardAccessoires: {
+backgroundColor: "#FFE8DC"
 },
 categoryBadge: {
 position: "absolute",
