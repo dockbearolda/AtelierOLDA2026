@@ -104,11 +104,11 @@ var getCommentaire = function(id) { return commentaires[id] || ""; };
 
 var ajuster = function(id, delta) {
 var v = getQte(id) + delta;
-if (v >= 3 && v <= 99) setQuantites(Object.assign({}, quantites, { [id]: v }));
+if (v >= 3 && v <= 50) setQuantites({ ...quantites, [id]: v });
 };
 
 var updateCommentaire = function(id, value) {
-setCommentaires(Object.assign({}, commentaires, { [id]: value }));
+setCommentaires({ ...commentaires, [id]: value });
 };
 
 var ajouterAuPanier = function(p) {
@@ -117,16 +117,16 @@ var commentaire = getCommentaire(p.id);
 setPanier(function(prev) {
 var existant = prev.find(function(i) { return i.id === p.id; });
 if (existant) {
-return prev.map(function(i) { return i.id === p.id ? Object.assign({}, i, { quantite: i.quantite + qte, commentaire: commentaire }) : i; });
+return prev.map(function(i) { return i.id === p.id ? { ...i, quantite: i.quantite + qte, commentaire: commentaire } : i; });
 }
-return prev.concat([Object.assign({}, p, { quantite: qte, commentaire: commentaire })]);
+return prev.concat([{ ...p, quantite: qte, commentaire: commentaire }]);
 });
 
 // Animation "Ajouté ✓"
-setRecentlyAdded(Object.assign({}, recentlyAdded, { [p.id]: true }));
+setRecentlyAdded({ ...recentlyAdded, [p.id]: true });
 setTimeout(function() {
 setRecentlyAdded(function(prev) {
-var newState = Object.assign({}, prev);
+var newState = { ...prev };
 delete newState[p.id];
 return newState;
 });
@@ -155,14 +155,17 @@ var orderNumber = "OLDA-" + now.getFullYear() + ("0" + (now.getMonth() + 1)).sli
 
 var productsHTML = "";
 panier.forEach(function(item, index) {
-var productLine = "<tr style='border-bottom: 1px solid #f5f5f7;'>";
-productLine += "<td style='padding: 20px 0; font-size: 15px; color: #1d1d1f;'>";
-productLine += "<div style='font-weight: 500;'>" + item.nom + (item.couleur ? " - " + item.couleur : "") + "</div>";
+var productLine = "<tr style='border-bottom: 1px solid #e5e5e7;'>";
+productLine += "<td style='padding: 32px 0; font-size: 17px; color: #1d1d1f; line-height: 1.6;'>";
+productLine += "<div style='font-weight: 600; font-size: 19px; margin-bottom: 8px; letter-spacing: -0.3px;'>" + item.nom + "</div>";
+if (item.couleur) {
+productLine += "<div style='font-size: 15px; color: #6e6e73; margin-bottom: 6px;'>" + item.couleur + "</div>";
+}
 if (item.commentaire) {
-productLine += "<div style='margin-top: 8px; font-size: 13px; color: #86868b; font-style: italic;'>Note: " + item.commentaire + "</div>";
+productLine += "<div style='margin-top: 12px; padding: 16px; background-color: #f5f5f7; border-radius: 8px; font-size: 14px; color: #1d1d1f; line-height: 1.5;'>Note: " + item.commentaire + "</div>";
 }
 productLine += "</td>";
-productLine += "<td style='padding: 20px 0; text-align: right; font-size: 18px; font-weight: 600; color: #ff3b30;'>" + item.quantite + "</td>";
+productLine += "<td style='padding: 32px 0 32px 24px; text-align: right; font-size: 32px; font-weight: 300; color: #1d1d1f; width: 80px;'>" + item.quantite + "</td>";
 productLine += "</tr>";
 productsHTML += productLine;
 });
@@ -177,15 +180,15 @@ minute: "2-digit"
 });
 
 var emailHTML = "<!DOCTYPE html><html><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>";
-emailHTML += "<body style='margin: 0; padding: 40px 20px; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;'>";
-emailHTML += "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff;'>";
-emailHTML += "<div style='text-align: left; margin-bottom: 40px;'><img src='https://raw.githubusercontent.com/yourusername/AtelierOLDA2026/main/public/images/mugs/logo.jpeg' alt='OLDA' style='height: 60px; width: auto;' /></div>";
-emailHTML += "<div style='margin-bottom: 30px;'><h1 style='margin: 0; font-size: 28px; font-weight: 600; color: #1d1d1f;'>" + clientInfo.nom + "</h1></div>";
-emailHTML += "<div style='margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #1d1d1f;'><div style='font-size: 16px; color: #86868b; margin-bottom: 4px;'>Commande</div><div style='font-size: 20px; font-weight: 600; color: #1d1d1f;'>" + orderNumber + "</div><div style='font-size: 13px; color: #86868b; margin-top: 8px;'>" + dateStr + "</div></div>";
-emailHTML += "<table style='width: 100%; border-collapse: collapse; margin-bottom: 40px;'>";
+emailHTML += "<body style='margin: 0; padding: 60px 20px; background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;'>";
+emailHTML += "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; padding: 48px;'>";
+emailHTML += "<div style='text-align: left; margin-bottom: 56px;'><img src='https://raw.githubusercontent.com/yourusername/AtelierOLDA2026/main/public/images/mugs/logo.jpeg' alt='OLDA' style='height: 72px; width: auto;' /></div>";
+emailHTML += "<div style='margin-bottom: 48px;'><h1 style='margin: 0; font-size: 36px; font-weight: 600; color: #1d1d1f; letter-spacing: -0.5px;'>" + clientInfo.nom + "</h1><p style='margin: 8px 0 0 0; font-size: 17px; color: #6e6e73;'>" + clientInfo.email + "</p></div>";
+emailHTML += "<div style='margin-bottom: 56px; padding: 32px; background-color: #f5f5f7; border-radius: 12px;'><div style='font-size: 13px; color: #86868b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;'>Numéro de commande</div><div style='font-size: 24px; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; letter-spacing: -0.3px;'>" + orderNumber + "</div><div style='font-size: 15px; color: #6e6e73;'>" + dateStr + "</div></div>";
+emailHTML += "<table style='width: 100%; border-collapse: collapse; margin-bottom: 56px;'>";
 emailHTML += productsHTML;
 emailHTML += "</table>";
-emailHTML += "<div style='text-align: center; padding-top: 40px; border-top: 1px solid #f5f5f7; color: #86868b; font-size: 12px;'>Atelier OLDA &copy; " + now.getFullYear() + "</div>";
+emailHTML += "<div style='text-align: center; padding-top: 48px; border-top: 1px solid #e5e5e7; color: #86868b; font-size: 13px; line-height: 1.6;'>Atelier OLDA &copy; " + now.getFullYear() + "<br/><span style='font-size: 12px; color: #d2d2d7;'>Collection Luxury</span></div>";
 emailHTML += "</div></body></html>";
 
 var templateParams = {
@@ -224,7 +227,7 @@ setCurrentStep(1);
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
 
 var getTabStyle = function(tabKey) {
-var baseStyle = Object.assign({}, styles.tab);
+var baseStyle = { ...styles.tab };
 var isActive = activeTab === tabKey;
 
 // Pour l'onglet Tasses, vérifier si une sous-catégorie est active
@@ -241,16 +244,16 @@ if (tabKey === "goodies") {
 
 if (isActive) {
   if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
+    return { ...baseStyle, ...styles.tabActive, backgroundColor: "#0071e3", color: "white" };
   } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
+    return { ...baseStyle, ...styles.tabActive, backgroundColor: "#ff3b30", color: "white" };
   }
-  return Object.assign({}, baseStyle, styles.tabActive);
+  return { ...baseStyle, ...styles.tabActive };
 } else {
   if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
+    return { ...baseStyle, backgroundColor: "#e8f2ff", color: "#0071e3" };
   } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
+    return { ...baseStyle, backgroundColor: "#ffe5e5", color: "#ff3b30" };
   }
   return baseStyle;
 }
@@ -282,8 +285,8 @@ tabs.map(function(tab) {
 return React.createElement("button", {
 key: tab.key,
 onClick: function() { navigateToCategory(tab.key); },
-style: tab.key === "nouveautes" ? Object.assign({}, styles.categoryCard, styles.categoryCardNew) :
-tab.key === "offres" ? Object.assign({}, styles.categoryCard, styles.categoryCardPromo) :
+style: tab.key === "nouveautes" ? { ...styles.categoryCard, ...styles.categoryCardNew } :
+tab.key === "offres" ? { ...styles.categoryCard, ...styles.categoryCardPromo } :
 styles.categoryCard
 },
 tab.key === "nouveautes" && React.createElement("span", { style: styles.categoryBadge }, "Nouveau"),
@@ -332,7 +335,7 @@ React.createElement("div", { style: styles.navContainer },
                     setOpenDropdown(null);
                   },
                   style: activeTab === subcat.key ?
-                    Object.assign({}, styles.dropdownItem, styles.dropdownItemActive) :
+                    { ...styles.dropdownItem, ...styles.dropdownItemActive } :
                     styles.dropdownItem
                 }, subcat.label)
               );
@@ -368,23 +371,20 @@ React.createElement("main", { style: styles.main },
       product.couleur && React.createElement("p", { style: styles.productColor }, product.couleur),
       React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
 
-      React.createElement("div", { style: styles.quantityControl },
-        React.createElement("label", {
-          htmlFor: "qty-" + product.id,
-          style: styles.quantityLabel
-        }, "Quantité"),
-        React.createElement("select", {
-          id: "qty-" + product.id,
-          value: getQte(product.id),
-          onChange: function(e) {
-            setQuantites(Object.assign({}, quantites, { [product.id]: parseInt(e.target.value) }));
-          },
-          style: styles.quantitySelect
-        },
-          Array.from({ length: 48 }, function(_, i) { return i + 3; }).map(function(qty) {
-            return React.createElement("option", { key: qty, value: qty }, qty);
-          })
-        )
+      React.createElement("div", { className: "luxury-stepper" },
+        React.createElement("button", {
+          onClick: function() { ajuster(product.id, -1); },
+          className: "luxury-stepper-button",
+          disabled: getQte(product.id) <= 3,
+          "aria-label": "Diminuer la quantité"
+        }, "−"),
+        React.createElement("span", { className: "luxury-stepper-value" }, getQte(product.id)),
+        React.createElement("button", {
+          onClick: function() { ajuster(product.id, 1); },
+          className: "luxury-stepper-button",
+          disabled: getQte(product.id) >= 50,
+          "aria-label": "Augmenter la quantité"
+        }, "+")
       ),
 
       React.createElement("textarea", {
@@ -398,7 +398,7 @@ React.createElement("main", { style: styles.main },
       React.createElement("button", {
         onClick: function() { ajouterAuPanier(product); },
         style: recentlyAdded[product.id] ?
-          Object.assign({}, styles.addButton, styles.addButtonAdded) :
+          { ...styles.addButton, ...styles.addButtonAdded } :
           styles.addButton
       }, recentlyAdded[product.id] ? "Ajouté ✓" : "Ajouter")
     );
@@ -418,17 +418,17 @@ cartOpen && isMounted && ReactDOM.createPortal(
       React.createElement("div", { style: styles.modalHeader },
         React.createElement("div", { style: styles.stepperContainer },
           React.createElement("div", { style: styles.stepperSteps },
-            React.createElement("div", { style: currentStep === 1 ? Object.assign({}, styles.step, styles.stepActive) : currentStep > 1 ? Object.assign({}, styles.step, styles.stepCompleted) : styles.step },
+            React.createElement("div", { style: currentStep === 1 ? { ...styles.step, ...styles.stepActive } : currentStep > 1 ? { ...styles.step, ...styles.stepCompleted } : styles.step },
               React.createElement("span", { style: styles.stepNumber }, "1"),
               React.createElement("span", { style: styles.stepLabel }, "Sélection")
             ),
-            React.createElement("div", { style: currentStep >= 2 ? Object.assign({}, styles.stepLine, styles.stepLineActive) : styles.stepLine }),
-            React.createElement("div", { style: currentStep === 2 ? Object.assign({}, styles.step, styles.stepActive) : currentStep > 2 ? Object.assign({}, styles.step, styles.stepCompleted) : styles.step },
+            React.createElement("div", { style: currentStep >= 2 ? { ...styles.stepLine, ...styles.stepLineActive } : styles.stepLine }),
+            React.createElement("div", { style: currentStep === 2 ? { ...styles.step, ...styles.stepActive } : currentStep > 2 ? { ...styles.step, ...styles.stepCompleted } : styles.step },
               React.createElement("span", { style: styles.stepNumber }, "2"),
               React.createElement("span", { style: styles.stepLabel }, "Livraison")
             ),
-            React.createElement("div", { style: currentStep >= 3 ? Object.assign({}, styles.stepLine, styles.stepLineActive) : styles.stepLine }),
-            React.createElement("div", { style: currentStep === 3 ? Object.assign({}, styles.step, styles.stepActive) : styles.step },
+            React.createElement("div", { style: currentStep >= 3 ? { ...styles.stepLine, ...styles.stepLineActive } : styles.stepLine }),
+            React.createElement("div", { style: currentStep === 3 ? { ...styles.step, ...styles.stepActive } : styles.step },
               React.createElement("span", { style: styles.stepNumber }, "3"),
               React.createElement("span", { style: styles.stepLabel }, "Paiement")
             )
@@ -464,14 +464,14 @@ cartOpen && isMounted && ReactDOM.createPortal(
               type: "text",
               placeholder: "Votre nom",
               value: clientInfo.nom,
-              onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { nom: e.target.value })); },
+              onChange: function(e) { setClientInfo({ ...clientInfo, nom: e.target.value }); },
               style: styles.input
             }),
             React.createElement("input", {
               type: "email",
               placeholder: "Votre email",
               value: clientInfo.email,
-              onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { email: e.target.value })); },
+              onChange: function(e) { setClientInfo({ ...clientInfo, email: e.target.value }); },
               style: styles.input
             }),
             React.createElement("div", { style: styles.stepButtonsContainer },
@@ -482,7 +482,7 @@ cartOpen && isMounted && ReactDOM.createPortal(
               React.createElement("button", {
                 onClick: function() { setCurrentStep(3); },
                 disabled: !clientInfo.nom || !clientInfo.email,
-                style: Object.assign({}, styles.submitButton, (!clientInfo.nom || !clientInfo.email) ? styles.submitButtonDisabled : {})
+                style: { ...styles.submitButton, ...(!clientInfo.nom || !clientInfo.email) && styles.submitButtonDisabled }
               }, "Suivant")
             )
           )
@@ -512,7 +512,7 @@ cartOpen && isMounted && ReactDOM.createPortal(
             React.createElement("button", {
               onClick: envoyerCommande,
               disabled: sending,
-              style: Object.assign({}, styles.submitButton, sending ? styles.submitButtonDisabled : {})
+              style: { ...styles.submitButton, ...sending && styles.submitButtonDisabled }
             }, sending ? "Envoi en cours..." : "Commander")
           )
         )

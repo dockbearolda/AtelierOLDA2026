@@ -1,0 +1,305 @@
+/* ===================================
+   LUXURY COLLECTION - DESIGN SYSTEM
+   =================================== */
+
+:root {
+  /* Apple Color Palette */
+  --color-primary: #1d1d1f;
+  --color-secondary: #86868b;
+  --color-tertiary: #6e6e73;
+  --color-background: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-border: #d2d2d7;
+  --color-border-light: #e5e5e7;
+
+  /* Accent Colors */
+  --color-accent-blue: #0071e3;
+  --color-accent-blue-light: #e8f2ff;
+  --color-accent-red: #ff3b30;
+  --color-accent-red-light: #ffe5e5;
+  --color-accent-green: #34c759;
+
+  /* Typography */
+  --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 40px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --z-dropdown: 99999;
+  --z-nav: 9998;
+  --z-header: 9999;
+  --z-modal: 999999;
+}
+
+/* ===================================
+   RESET & BASE
+   =================================== */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  position: relative !important;
+  font-family: var(--font-primary);
+  background-color: var(--color-background);
+}
+
+/* ===================================
+   HEADER & NAVIGATION
+   =================================== */
+
+.luxury-header {
+  background-color: var(--color-surface);
+  padding: var(--spacing-lg) var(--spacing-3xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  padding-top: calc(var(--spacing-lg) + env(safe-area-inset-top));
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.luxury-nav-container {
+  position: sticky;
+  top: calc(73px + env(safe-area-inset-top));
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  z-index: var(--z-nav);
+  overflow: visible;
+}
+
+.luxury-nav {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-3xl);
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.luxury-nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===================================
+   GRILLE PRODUITS ULTRA FLAT
+   =================================== */
+
+.luxury-grid {
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: var(--color-border);
+  width: 100%;
+}
+
+.luxury-card {
+  background-color: var(--color-surface);
+  padding: var(--spacing-xl);
+  border: none;
+  box-shadow: none;
+}
+
+.luxury-card-image {
+  height: 200px;
+  background-color: #fafafa;
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+}
+
+.luxury-card-image img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+/* ===================================
+   STEPPER MINIMALISTE
+   =================================== */
+
+.luxury-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.luxury-stepper-button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: var(--font-weight-regular);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.luxury-stepper-button:hover:not(:disabled) {
+  background-color: var(--color-background);
+  border-color: var(--color-primary);
+}
+
+.luxury-stepper-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.luxury-stepper-value {
+  font-size: 15px;
+  font-weight: var(--font-weight-semibold);
+  min-width: 40px;
+  text-align: center;
+  color: var(--color-primary);
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media screen and (min-width: 1200px) {
+  .luxury-grid {
+    grid-template-columns: repeat(5, 1fr);
+    padding: var(--spacing-3xl) var(--spacing-xl);
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1199px) {
+  .luxury-grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .luxury-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--spacing-xl) var(--spacing-md);
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right));
+  }
+
+  .luxury-card {
+    padding: var(--spacing-lg);
+  }
+
+  .luxury-card-image {
+    height: 160px;
+  }
+
+  .luxury-nav {
+    padding-left: max(var(--spacing-3xl), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-3xl), env(safe-area-inset-right));
+    scroll-snap-type: x proximity;
+    scroll-padding: 0 var(--spacing-xl);
+  }
+
+  .luxury-nav button {
+    scroll-snap-align: center;
+    flex-shrink: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .luxury-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--spacing-lg) var(--spacing-sm);
+    max-width: 100vw;
+  }
+}
+
+/* ===================================
+   OPTIMISATIONS SAFARI iOS
+   =================================== */
+
+@supports (-webkit-touch-callout: none) {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  .luxury-grid {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: scroll-position;
+  }
+
+  img {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .luxury-header,
+  .luxury-nav-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+  }
+}
+
+/* ===================================
+   RETINA DISPLAYS
+   =================================== */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .luxury-grid {
+    gap: 1px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
