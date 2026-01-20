@@ -49,12 +49,12 @@ offres: [
 ]
 };
 
-// Navigation Plate - CSS Snap Slider
+// Navigation Plate - CSS Snap Slider (Hiérarchie spécifique)
 const categories = [
 { key: "nouveautes", label: "Nouveautés" },
-{ key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
-{ key: "tasse-ceramique", label: "Tasse Céramique" },
-{ key: "tasse-metal", label: "Tasse Métal & Bois" },
+{ key: "tasse-ceramique-fuck", label: "Tasse Fuck" },
+{ key: "tasse-ceramique", label: "Tasse Olda" },
+{ key: "tasse-metal", label: "Tasse Métal" },
 { key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
@@ -574,21 +574,22 @@ minWidth: "20px",
 textAlign: "center"
 },
 main: {
-padding: "40px 20px",
+padding: "0",
 display: "grid",
 gridTemplateColumns: "repeat(5, 1fr)",
 gap: "1px",
-maxWidth: "1400px",
+maxWidth: "100%",
 margin: "0 auto",
 backgroundColor: "#d2d2d7",
 border: "none",
 width: "100%",
-boxSizing: "border-box"
+boxSizing: "border-box",
+minHeight: "calc(100vh - 140px)"
 },
 card: {
-backgroundColor: "white",
+backgroundColor: "#ffffff",
 borderRadius: "0",
-padding: "24px",
+padding: "20px",
 boxShadow: "none",
 transition: "none",
 position: "relative",
@@ -597,20 +598,20 @@ border: "none"
 },
 imageContainer: {
 height: "200px",
-backgroundColor: "#fafafa",
+backgroundColor: "transparent",
 borderRadius: "0",
 marginBottom: "16px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
 overflow: "hidden",
-border: "1px solid #e5e5e7"
+border: "none"
 },
 image: {
-maxHeight: "100%",
-maxWidth: "100%",
-objectFit: "contain",
-mixBlendMode: "multiply"
+width: "100%",
+height: "100%",
+objectFit: "cover",
+mixBlendMode: "normal"
 },
 productName: {
 margin: "0 0 4px 0",
