@@ -73,7 +73,7 @@ const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
 const [cartOpen, setCartOpen] = useState(false);
-const [clientInfo, setClientInfo] = useState({ nom: "", email: "" });
+const [clientInfo, setClientInfo] = useState({ nom: "", email: "", commentaire: "" });
 const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [recentlyAdded, setRecentlyAdded] = useState({});
@@ -207,7 +207,7 @@ var fermerEtReset = function() {
 setCartOpen(false);
 setOrderSent(false);
 setPanier([]);
-setClientInfo({ nom: "", email: "" });
+setClientInfo({ nom: "", email: "", commentaire: "" });
 };
 
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
@@ -224,16 +224,16 @@ if (tabKey === "tasses") {
 
 if (isActive) {
   if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#0071e3", color: "white" });
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#7B9C9C", color: "white", borderColor: "#7B9C9C" });
   } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#ff3b30", color: "white" });
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#C8A99A", color: "white", borderColor: "#C8A99A" });
   }
   return Object.assign({}, baseStyle, styles.tabActive);
 } else {
   if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#e8f2ff", color: "#0071e3" });
+    return Object.assign({}, baseStyle, { backgroundColor: "transparent", color: "#7B9C9C", borderColor: "#B4C8C8" });
   } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#ffe5e5", color: "#ff3b30" });
+    return Object.assign({}, baseStyle, { backgroundColor: "transparent", color: "#C8A99A", borderColor: "#E5D6D3" });
   }
   return baseStyle;
 }
@@ -407,17 +407,24 @@ cartOpen && isMounted && ReactDOM.createPortal(
         React.createElement("div", { style: styles.form },
           React.createElement("input", {
             type: "text",
-            placeholder: "Votre nom",
+            placeholder: "Nom",
             value: clientInfo.nom,
             onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { nom: e.target.value })); },
             style: styles.input
           }),
           React.createElement("input", {
             type: "email",
-            placeholder: "Votre email",
+            placeholder: "Mail",
             value: clientInfo.email,
             onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { email: e.target.value })); },
             style: styles.input
+          }),
+          React.createElement("textarea", {
+            placeholder: "Commentaire (optionnel)",
+            value: clientInfo.commentaire,
+            onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { commentaire: e.target.value })); },
+            style: styles.textarea,
+            rows: "3"
           }),
 
           React.createElement("button", {
@@ -444,7 +451,7 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#f5f5f7",
+backgroundColor: "#EFE8E3",
 overflow: "visible",
 position: "relative"
 },
@@ -453,12 +460,12 @@ minHeight: "calc(100vh - 73px)",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-backgroundColor: "#ffffff"
+backgroundColor: "#FEFEFE"
 },
 homepageContent: {
 textAlign: "center",
-padding: "40px",
-maxWidth: "900px",
+padding: "60px 40px",
+maxWidth: "1000px",
 margin: "0 auto"
 },
 homepageTitle: {
@@ -476,38 +483,41 @@ fontWeight: "400"
 },
 categoryGrid: {
 display: "grid",
-gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-gap: "20px",
-marginTop: "40px"
+gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+gap: "28px",
+marginTop: "60px"
 },
 categoryCard: {
-backgroundColor: "#f5f5f7",
-border: "none",
-borderRadius: "18px",
-padding: "32px 20px",
+backgroundColor: "#FEFEFE",
+border: "1px solid #E5D6D3",
+borderRadius: "20px",
+padding: "36px 24px",
 cursor: "pointer",
 transition: "all 0.3s",
 position: "relative",
-minHeight: "120px",
+minHeight: "140px",
 display: "flex",
 flexDirection: "column",
 alignItems: "center",
-justifyContent: "center"
+justifyContent: "center",
+boxShadow: "0 2px 8px rgba(123, 156, 156, 0.08)"
 },
 categoryCardNew: {
-backgroundColor: "#e8f2ff"
+backgroundColor: "#E8F2F2",
+borderColor: "#B4C8C8"
 },
 categoryCardPromo: {
-backgroundColor: "#ffe5e5"
+backgroundColor: "#F5E8E5",
+borderColor: "#E5D6D3"
 },
 categoryBadge: {
 position: "absolute",
 top: "12px",
 right: "12px",
-backgroundColor: "#0071e3",
+backgroundColor: "#7B9C9C",
 color: "white",
-padding: "4px 10px",
-borderRadius: "12px",
+padding: "6px 12px",
+borderRadius: "14px",
 fontSize: "11px",
 fontWeight: "600"
 },
@@ -515,10 +525,10 @@ categoryBadgePromo: {
 position: "absolute",
 top: "12px",
 right: "12px",
-backgroundColor: "#ff3b30",
+backgroundColor: "#C8A99A",
 color: "white",
-padding: "4px 10px",
-borderRadius: "12px",
+padding: "6px 12px",
+borderRadius: "14px",
 fontSize: "11px",
 fontWeight: "600"
 },
@@ -528,12 +538,12 @@ fontWeight: "500",
 color: "#1d1d1f"
 },
 header: {
-backgroundColor: "white",
-padding: "16px 40px",
+backgroundColor: "#FEFEFE",
+padding: "20px 40px",
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
-borderBottom: "1px solid #d2d2d7",
+borderBottom: "1px solid #E5D6D3",
 position: "sticky",
 top: 0,
 zIndex: 9999,
@@ -556,7 +566,7 @@ badge: {
 position: "absolute",
 top: "0",
 right: "0",
-backgroundColor: "#0071e3",
+backgroundColor: "#7B9C9C",
 color: "white",
 borderRadius: "10px",
 padding: "2px 6px",
@@ -568,18 +578,18 @@ textAlign: "center"
 navContainer: {
 position: "sticky",
 top: "73px",
-backgroundColor: "white",
-borderBottom: "1px solid #d2d2d7",
+backgroundColor: "#FEFEFE",
+borderBottom: "1px solid #E5D6D3",
 zIndex: 9998,
-boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+boxShadow: "0 2px 8px rgba(123, 156, 156, 0.08)",
 transition: "box-shadow 0.3s ease",
 overflow: "visible"
 },
 nav: {
-backgroundColor: "white",
-padding: "16px 40px",
+backgroundColor: "#FEFEFE",
+padding: "20px 40px",
 display: "flex",
-gap: "12px",
+gap: "16px",
 overflowX: "auto",
 overflowY: "visible",
 scrollBehavior: "smooth",
@@ -590,12 +600,12 @@ zIndex: 9997,
 overflow: "visible"
 },
 tab: {
-padding: "10px 20px",
-border: "none",
-borderRadius: "20px",
+padding: "12px 24px",
+border: "1px solid #E5D6D3",
+borderRadius: "24px",
 cursor: "pointer",
-backgroundColor: "#f5f5f7",
-color: "#1d1d1f",
+backgroundColor: "transparent",
+color: "#6B9090",
 fontSize: "14px",
 fontWeight: "400",
 transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -604,10 +614,11 @@ transform: "scale(1)",
 boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
 },
 tabActive: {
-backgroundColor: "#1d1d1f",
+backgroundColor: "#7B9C9C",
 color: "white",
+border: "1px solid #7B9C9C",
 transform: "scale(1.05)",
-boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+boxShadow: "0 4px 12px rgba(123, 156, 156, 0.2)",
 fontWeight: "500"
 },
 dropdownContainer: {
@@ -626,14 +637,14 @@ dropdownMenu: {
 position: "absolute",
 top: "calc(100% + 12px)",
 left: 0,
-backgroundColor: "#ffffff",
-borderRadius: "16px",
-boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.04)",
+backgroundColor: "#FEFEFE",
+borderRadius: "20px",
+boxShadow: "0 4px 16px rgba(123, 156, 156, 0.12)",
 padding: "12px 0",
-minWidth: "240px",
+minWidth: "260px",
 zIndex: 99999,
 animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-border: "1px solid #f0f0f0",
+border: "1px solid #E5D6D3",
 pointerEvents: "auto",
 listStyle: "none",
 margin: 0
@@ -661,42 +672,46 @@ letterSpacing: "0.01em",
 lineHeight: "1.4"
 },
 dropdownItemActive: {
-backgroundColor: "#fafafa",
-color: "#0071e3",
+backgroundColor: "#E8F2F2",
+color: "#7B9C9C",
 fontWeight: "500"
 },
 main: {
-padding: "40px",
+padding: "60px 40px",
 display: "grid",
 gridTemplateColumns: "repeat(2, 1fr)",
-gap: "24px",
-maxWidth: "900px",
+gap: "32px",
+maxWidth: "1000px",
 margin: "0 auto"
 },
 card: {
-backgroundColor: "white",
-borderRadius: "18px",
-padding: "24px",
-boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
+backgroundColor: "#FEFEFE",
+borderRadius: "20px",
+padding: "28px",
+border: "1px solid #E5D6D3",
+boxShadow: "0 2px 8px rgba(123, 156, 156, 0.08)",
 transition: "transform 0.2s, box-shadow 0.2s",
 position: "relative",
 zIndex: 1
 },
 imageContainer: {
-height: "200px",
-backgroundColor: "white",
-borderRadius: "12px",
-marginBottom: "16px",
+minHeight: "220px",
+height: "auto",
+aspectRatio: "1 / 1",
+backgroundColor: "#FEFEFE",
+borderRadius: "16px",
+marginBottom: "20px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-overflow: "hidden"
+overflow: "hidden",
+border: "1px solid #E5D6D3"
 },
 image: {
-maxHeight: "100%",
-maxWidth: "100%",
+width: "100%",
+height: "100%",
 objectFit: "contain",
-mixBlendMode: "multiply"
+padding: "16px"
 },
 productName: {
 margin: "0 0 4px 0",
@@ -722,17 +737,18 @@ gap: "16px",
 marginBottom: "12px"
 },
 qtyButton: {
-width: "36px",
-height: "36px",
-border: "1px solid #d2d2d7",
+width: "40px",
+height: "40px",
+border: "1px solid #B4C8C8",
 borderRadius: "50%",
 cursor: "pointer",
-backgroundColor: "white",
+backgroundColor: "#FEFEFE",
 fontSize: "18px",
-color: "#1d1d1f",
+color: "#7B9C9C",
 display: "flex",
 alignItems: "center",
-justifyContent: "center"
+justifyContent: "center",
+transition: "all 0.3s ease"
 },
 quantity: {
 fontSize: "17px",
@@ -742,29 +758,31 @@ textAlign: "center"
 },
 commentaire: {
 width: "100%",
-padding: "10px",
-border: "1px solid #e5e5e7",
-borderRadius: "8px",
+padding: "12px 16px",
+border: "1px solid #E5D6D3",
+borderRadius: "12px",
 fontSize: "13px",
 fontFamily: "inherit",
 resize: "none",
 marginBottom: "12px",
 boxSizing: "border-box",
-color: "#1d1d1f"
+color: "#6B9090",
+backgroundColor: "#FEFEFE",
+transition: "all 0.3s ease"
 },
 addButton: {
 width: "100%",
-padding: "11px 16px",
-backgroundColor: "#0071e3",
+padding: "14px 16px",
+backgroundColor: "#7B9C9C",
 color: "white",
 border: "none",
-borderRadius: "12px",
+borderRadius: "16px",
 cursor: "pointer",
 fontSize: "14px",
-fontWeight: "400",
+fontWeight: "500",
 letterSpacing: "-0.01em",
 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+boxShadow: "0 2px 8px rgba(123, 156, 156, 0.2)",
 transform: "scale(1)"
 },
 addButtonAdded: {
@@ -779,7 +797,8 @@ top: 0,
 left: 0,
 right: 0,
 bottom: 0,
-backgroundColor: "rgba(0,0,0,0.4)",
+backgroundColor: "rgba(107, 144, 144, 0.3)",
+backdropFilter: "blur(8px)",
 display: "flex",
 justifyContent: "center",
 alignItems: "center",
@@ -788,13 +807,15 @@ padding: "20px",
 animation: "fadeIn 0.3s ease-in-out"
 },
 modal: {
-backgroundColor: "white",
-borderRadius: "20px",
-padding: "32px",
+backgroundColor: "#FEFEFE",
+borderRadius: "24px",
+padding: "40px",
 maxWidth: "500px",
 width: "100%",
 maxHeight: "80vh",
 overflow: "auto",
+border: "1px solid #E5D6D3",
+boxShadow: "0 8px 32px rgba(123, 156, 156, 0.15)",
 animation: "slideDown 0.3s ease-in-out"
 },
 modalHeader: {
@@ -830,16 +851,16 @@ cartItem: {
 display: "flex",
 justifyContent: "space-between",
 alignItems: "flex-start",
-padding: "16px 0",
-borderBottom: "1px solid #f5f5f7",
-gap: "12px"
+padding: "20px 0",
+borderBottom: "1px solid #E5D6D3",
+gap: "16px"
 },
 cartItemImage: {
-width: "60px",
-height: "60px",
+width: "70px",
+height: "70px",
 objectFit: "contain",
-borderRadius: "8px",
-backgroundColor: "#f5f5f7"
+borderRadius: "12px",
+backgroundColor: "#EFE8E3"
 },
 cartItemName: {
 margin: "0 0 4px 0",
@@ -873,24 +894,42 @@ gap: "12px"
 },
 input: {
 width: "100%",
-padding: "14px",
-border: "1px solid #d2d2d7",
-borderRadius: "10px",
+padding: "16px 20px",
+border: "1px solid #E5D6D3",
+borderRadius: "12px",
 fontSize: "15px",
 boxSizing: "border-box",
-fontFamily: "inherit"
+fontFamily: "inherit",
+backgroundColor: "#FEFEFE",
+color: "#6B9090",
+transition: "all 0.3s ease"
+},
+textarea: {
+width: "100%",
+padding: "16px 20px",
+border: "1px solid #E5D6D3",
+borderRadius: "12px",
+fontSize: "15px",
+boxSizing: "border-box",
+fontFamily: "inherit",
+backgroundColor: "#FEFEFE",
+color: "#6B9090",
+resize: "vertical",
+transition: "all 0.3s ease"
 },
 submitButton: {
 width: "100%",
-padding: "14px",
-backgroundColor: "#0071e3",
+padding: "16px",
+backgroundColor: "#7B9C9C",
 color: "white",
 border: "none",
-borderRadius: "10px",
+borderRadius: "16px",
 cursor: "pointer",
 fontSize: "15px",
 fontWeight: "600",
-marginTop: "8px"
+marginTop: "12px",
+boxShadow: "0 4px 12px rgba(123, 156, 156, 0.25)",
+transition: "all 0.3s ease"
 },
 submitButtonDisabled: {
 backgroundColor: "#86868b",
@@ -901,16 +940,17 @@ textAlign: "center",
 padding: "20px"
 },
 successIcon: {
-width: "64px",
-height: "64px",
-backgroundColor: "#34c759",
+width: "80px",
+height: "80px",
+backgroundColor: "#7B9C9C",
 color: "white",
 borderRadius: "50%",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-fontSize: "32px",
-margin: "0 auto 20px"
+fontSize: "40px",
+margin: "0 auto 24px",
+boxShadow: "0 4px 16px rgba(123, 156, 156, 0.3)"
 },
 successTitle: {
 fontSize: "24px",
@@ -929,26 +969,28 @@ color: "#6e6e73",
 margin: "0 0 24px 0"
 },
 closeButton: {
-padding: "14px 32px",
-backgroundColor: "#0071e3",
+padding: "16px 36px",
+backgroundColor: "#7B9C9C",
 color: "white",
 border: "none",
-borderRadius: "10px",
+borderRadius: "16px",
 cursor: "pointer",
 fontSize: "15px",
-fontWeight: "600"
+fontWeight: "600",
+boxShadow: "0 4px 12px rgba(123, 156, 156, 0.25)",
+transition: "all 0.3s ease"
 },
 footer: {
-backgroundColor: "#f5f5f7",
-padding: "32px 40px",
+backgroundColor: "#E5D6D3",
+padding: "40px 40px",
 textAlign: "center",
-borderTop: "1px solid #d2d2d7",
-marginTop: "60px"
+borderTop: "1px solid #C8A99A",
+marginTop: "80px"
 },
 footerText: {
 margin: 0,
 fontSize: "13px",
-color: "#86868b",
+color: "#6B9090",
 fontWeight: "400"
 }
 };

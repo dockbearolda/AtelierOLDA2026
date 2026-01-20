@@ -85,7 +85,7 @@ function MyApp({ Component, pageProps }) {
         /* Dropdown item hover - Upscale design */
         ul[style*="dropdownMenu"] li button:hover {
           background-color: #fafafa !important;
-          color: #0071e3 !important;
+          color: #7B9C9C !important;
           transform: translateX(2px);
         }
 
@@ -103,6 +103,76 @@ function MyApp({ Component, pageProps }) {
         /* Smooth transitions */
         * {
           -webkit-tap-highlight-color: transparent;
+        }
+
+        /* RESPONSIVE MOBILE FIRST - Media Queries */
+
+        /* iPhone & Mobile (max-width: 768px) */
+        @media (max-width: 768px) {
+          /* Header responsive */
+          header {
+            padding: 12px 20px !important;
+          }
+
+          /* Navigation responsive */
+          nav {
+            padding: 12px 20px !important;
+          }
+
+          /* Main grid - 1 colonne sur mobile */
+          main {
+            grid-template-columns: 1fr !important;
+            padding: 24px 16px !important;
+            gap: 20px !important;
+          }
+
+          /* Homepage responsive */
+          .homepageContent {
+            padding: 20px !important;
+          }
+
+          .homepageTitle {
+            font-size: 36px !important;
+          }
+
+          .homepageSubtitle {
+            font-size: 18px !important;
+          }
+
+          /* Modal responsive */
+          div[style*="maxWidth: 500px"] {
+            padding: 24px 20px !important;
+            max-width: 100% !important;
+          }
+
+          /* Footer responsive */
+          footer {
+            padding: 24px 20px !important;
+          }
+        }
+
+        /* Très petits écrans - iPhone SE, etc. (max-width: 375px) */
+        @media (max-width: 375px) {
+          header {
+            padding: 10px 16px !important;
+          }
+
+          nav {
+            padding: 10px 16px !important;
+          }
+
+          main {
+            padding: 20px 12px !important;
+            gap: 16px !important;
+          }
+
+          .homepageTitle {
+            font-size: 28px !important;
+          }
+
+          .homepageSubtitle {
+            font-size: 16px !important;
+          }
         }
       `}</style>
       <Component {...pageProps} />
