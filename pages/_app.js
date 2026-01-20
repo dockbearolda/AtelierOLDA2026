@@ -104,6 +104,85 @@ function MyApp({ Component, pageProps }) {
         * {
           -webkit-tap-highlight-color: transparent;
         }
+
+        /* SOLUTION DROPDOWN : Pont invisible entre bouton et menu */
+        .dropdown-button-bridge {
+          position: relative;
+        }
+
+        .dropdown-button-bridge::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 100%;
+          height: 12px;
+          background: transparent;
+          pointer-events: auto;
+          z-index: 99998;
+        }
+
+        /* FIX GRILLE PRODUITS IPHONE : 2 colonnes sans coupure */
+        @media screen and (max-width: 768px) {
+          main[style*="grid"] {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 20px !important;
+          }
+        }
+
+        /* Media query spécifique iPhone */
+        @media screen and (max-width: 430px) {
+          main[style*="grid"] {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+            padding: 16px !important;
+          }
+        }
+
+        /* STEPPER HAUT DE GAMME : États actif et complété */
+        [style*="stepActive"] [style*="stepNumber"] {
+          background-color: #1d1d1f !important;
+          color: white !important;
+          border-color: #1d1d1f !important;
+        }
+
+        [style*="stepCompleted"] [style*="stepNumber"] {
+          background-color: #f5f5f7 !important;
+          border-color: #86868b !important;
+          color: #86868b !important;
+        }
+
+        /* Hover sur bouton Précédent */
+        [style*="backButton"]:hover {
+          background-color: #f5f5f7 !important;
+          transform: translateY(0) !important;
+        }
+
+        /* Responsive stepper pour mobile */
+        @media screen and (max-width: 500px) {
+          [style*="stepLabel"] {
+            font-size: 9px !important;
+          }
+
+          [style*="stepNumber"] {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 12px !important;
+          }
+
+          [style*="stepLine"] {
+            margin: 0 8px !important;
+          }
+
+          [style*="stepperContainer"] {
+            padding-right: 20px !important;
+          }
+        }
       `}</style>
       <Component {...pageProps} />
     </>
