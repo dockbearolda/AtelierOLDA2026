@@ -169,7 +169,22 @@ function MyApp({ Component, pageProps }) {
 
           /* Footer responsive */
           footer {
-            padding: 32px 20px !important;
+            padding: 60px 20px 40px !important;
+            margin-top: 80px !important;
+          }
+
+          /* Select responsive */
+          select {
+            font-size: 16px !important;
+          }
+
+          /* Contact section responsive */
+          .footerTitle {
+            font-size: 16px !important;
+          }
+
+          .footerAddress, .footerCity, .footerContact {
+            font-size: 13px !important;
           }
         }
 
@@ -222,6 +237,30 @@ function MyApp({ Component, pageProps }) {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           text-rendering: optimizeLegibility;
+          overflow-x: hidden;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+        }
+
+        /* Correction débordement sur iPhone */
+        * {
+          box-sizing: border-box;
+        }
+
+        html, body {
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        /* Suppression tap highlight sur tous les boutons */
+        button, a, select {
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+          outline: none;
+        }
+
+        button:focus, a:focus, select:focus {
+          outline: none;
         }
       `}</style>
       <Component {...pageProps} />

@@ -61,7 +61,6 @@ const tabs = [
     { key: "tasse-metal", label: "Tasse Métal & Bois" }
   ]
 },
-{ key: "tshirt", label: "T-Shirt" },
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
@@ -351,9 +350,16 @@ React.createElement("main", { style: styles.main },
       React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
 
       React.createElement("div", { style: styles.quantityControl },
-        React.createElement("button", { onClick: function() { ajuster(product.id, -1); }, style: styles.qtyButton }, "-"),
-        React.createElement("span", { style: styles.quantity }, getQte(product.id)),
-        React.createElement("button", { onClick: function() { ajuster(product.id, 1); }, style: styles.qtyButton }, "+")
+        React.createElement("label", { style: styles.quantityLabel }, "Quantité"),
+        React.createElement("select", {
+          value: getQte(product.id),
+          onChange: function(e) { setQuantites(Object.assign({}, quantites, { [product.id]: parseInt(e.target.value) })); },
+          style: styles.quantitySelect
+        },
+          Array.from({ length: 98 }, function(_, i) { return i + 3; }).map(function(num) {
+            return React.createElement("option", { key: num, value: num }, num);
+          })
+        )
       ),
 
       React.createElement("textarea", {
@@ -440,32 +446,18 @@ cartOpen && isMounted && ReactDOM.createPortal(
   document.body
 ),
 
-React.createElement("section", { style: styles.contactSection },
-  React.createElement("div", { style: styles.contactContainer },
-    React.createElement("h2", { style: styles.contactTitle }, "Contactez-nous"),
-    React.createElement("p", { style: styles.contactSubtitle }, "Une question sur nos cr\u00e9ations ? Nous sommes \u00e0 votre \u00e9coute."),
-    React.createElement("div", { style: styles.contactForm },
-      React.createElement("input", {
-        type: "text",
-        placeholder: "Nom",
-        style: styles.contactInput
-      }),
-      React.createElement("input", {
-        type: "email",
-        placeholder: "Mail",
-        style: styles.contactInput
-      }),
-      React.createElement("textarea", {
-        placeholder: "Commentaire",
-        style: styles.contactTextarea
-      }),
-      React.createElement("button", { style: styles.contactButton }, "Commander")
-    )
-  )
-),
-
 React.createElement("footer", { style: styles.footer },
-  React.createElement("p", { style: styles.footerText }, "\u00a9 2026 Atelier OLDA. Tous droits r\u00e9serv\u00e9s.")
+  React.createElement("div", { style: styles.footerContent },
+    React.createElement("h3", { style: styles.footerTitle }, "Atelier OLDA"),
+    React.createElement("p", { style: styles.footerAddress }, "1 rue Opale, Route de l'Espérance"),
+    React.createElement("p", { style: styles.footerCity }, "Grand-Case, Saint-Martin"),
+    React.createElement("div", { style: styles.footerContact },
+      React.createElement("a", { href: "tel:+590690479788", style: styles.footerLink }, "+590 690 47 97 88"),
+      React.createElement("span", { style: styles.footerSeparator }, " | "),
+      React.createElement("a", { href: "mailto:atelierolda@gmail.com", style: styles.footerLink }, "atelierolda@gmail.com")
+    ),
+    React.createElement("p", { style: styles.footerCopyright }, "\u00a9 2026 Tous droits r\u00e9serv\u00e9s")
+  )
 )
 
 );
@@ -475,9 +467,11 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#FAFAF8",
+backgroundColor: "#FCFCFB",
 overflow: "visible",
-position: "relative"
+position: "relative",
+width: "100%",
+maxWidth: "100vw"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
@@ -587,7 +581,12 @@ backgroundColor: "transparent",
 border: "none",
 cursor: "pointer",
 position: "relative",
-padding: "8px"
+padding: "8px",
+outline: "none",
+WebkitTapHighlightColor: "rgba(0, 0, 0, 0)",
+WebkitTouchCallout: "none",
+WebkitUserSelect: "none",
+userSelect: "none"
 },
 badge: {
 position: "absolute",
@@ -628,18 +627,18 @@ overflow: "visible"
 },
 tab: {
 padding: "10px 24px",
-border: "1px solid #F0EDE9",
+border: "1px solid #F5F3F0",
 borderRadius: "20px",
 cursor: "pointer",
-backgroundColor: "#FAFAF8",
-color: "#8B9C9C",
+backgroundColor: "#FCFCFB",
+color: "#9AABAB",
 fontSize: "13px",
 fontWeight: "400",
 transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
 whiteSpace: "nowrap",
 transform: "scale(1)",
 boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
-letterSpacing: "0.02em"
+letterSpacing: "0.03em"
 },
 tabActive: {
 backgroundColor: "#8B9C9C",
@@ -726,14 +725,14 @@ imageContainer: {
 minHeight: "240px",
 height: "auto",
 aspectRatio: "1 / 1",
-backgroundColor: "#FAFAF8",
+backgroundColor: "#FCFCFB",
 borderRadius: "20px",
 marginBottom: "24px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
 overflow: "hidden",
-border: "1px solid #F5F3F0"
+border: "1px solid #F8F6F3"
 },
 image: {
 width: "100%",
@@ -759,43 +758,50 @@ color: "#86868b"
 },
 quantityControl: {
 display: "flex",
-alignItems: "center",
-justifyContent: "center",
-gap: "16px",
-marginBottom: "12px"
+flexDirection: "column",
+alignItems: "flex-start",
+gap: "8px",
+marginBottom: "16px"
 },
-qtyButton: {
-width: "40px",
-height: "40px",
-border: "1px solid #E8E5E0",
-borderRadius: "50%",
+quantityLabel: {
+fontSize: "12px",
+fontWeight: "400",
+color: "#86868b",
+letterSpacing: "0.04em",
+textTransform: "uppercase"
+},
+quantitySelect: {
+width: "100%",
+padding: "12px 40px 12px 16px",
+border: "1px solid #F8F6F3",
+borderRadius: "16px",
+fontSize: "14px",
+fontWeight: "400",
+color: "#5A5A5A",
+backgroundColor: "#FCFCFB",
 cursor: "pointer",
-backgroundColor: "#FFFFFF",
-fontSize: "18px",
-color: "#8B9C9C",
-display: "flex",
-alignItems: "center",
-justifyContent: "center",
-transition: "all 0.3s ease"
-},
-quantity: {
-fontSize: "17px",
-fontWeight: "600",
-minWidth: "30px",
-textAlign: "center"
+appearance: "none",
+WebkitAppearance: "none",
+MozAppearance: "none",
+backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239AABAB' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
+backgroundRepeat: "no-repeat",
+backgroundPosition: "right 16px center",
+transition: "all 0.3s ease",
+outline: "none",
+WebkitTapHighlightColor: "rgba(0, 0, 0, 0)"
 },
 commentaire: {
 width: "100%",
 padding: "12px 16px",
-border: "1px solid #F5F3F0",
+border: "1px solid #F8F6F3",
 borderRadius: "16px",
 fontSize: "13px",
 fontFamily: "inherit",
 resize: "none",
 marginBottom: "16px",
 boxSizing: "border-box",
-color: "#4A4A4A",
-backgroundColor: "#FAFAF8",
+color: "#5A5A5A",
+backgroundColor: "#FCFCFB",
 transition: "all 0.3s ease"
 },
 addButton: {
@@ -923,26 +929,26 @@ gap: "12px"
 input: {
 width: "100%",
 padding: "16px 20px",
-border: "1px solid #F5F3F0",
+border: "1px solid #F8F6F3",
 borderRadius: "16px",
 fontSize: "15px",
 boxSizing: "border-box",
 fontFamily: "inherit",
-backgroundColor: "#FAFAF8",
-color: "#4A4A4A",
+backgroundColor: "#FCFCFB",
+color: "#5A5A5A",
 transition: "all 0.3s ease",
 fontWeight: "400"
 },
 textarea: {
 width: "100%",
 padding: "16px 20px",
-border: "1px solid #F5F3F0",
+border: "1px solid #F8F6F3",
 borderRadius: "16px",
 fontSize: "15px",
 boxSizing: "border-box",
 fontFamily: "inherit",
-backgroundColor: "#FAFAF8",
-color: "#4A4A4A",
+backgroundColor: "#FCFCFB",
+color: "#5A5A5A",
 resize: "vertical",
 transition: "all 0.3s ease",
 fontWeight: "400"
@@ -1013,91 +1019,63 @@ transition: "all 0.3s ease",
 letterSpacing: "0.02em"
 },
 footer: {
-backgroundColor: "#F5F3F0",
-padding: "48px 48px",
+backgroundColor: "#FCFCFB",
+padding: "80px 48px 60px",
 textAlign: "center",
-borderTop: "1px solid #E8E5E0",
-marginTop: "0"
+borderTop: "1px solid #F5F3F0",
+marginTop: "120px"
 },
-footerText: {
-margin: 0,
-fontSize: "13px",
-color: "#999999",
-fontWeight: "400",
-letterSpacing: "0.02em"
-},
-contactSection: {
-backgroundColor: "#FFFFFF",
-padding: "100px 48px",
-marginTop: "120px",
-borderTop: "1px solid #F5F3F0"
-},
-contactContainer: {
+footerContent: {
 maxWidth: "600px",
-margin: "0 auto",
-textAlign: "center"
+margin: "0 auto"
 },
-contactTitle: {
-fontSize: "32px",
-fontWeight: "600",
-color: "#1d1d1f",
-marginBottom: "16px",
-letterSpacing: "-0.02em"
-},
-contactSubtitle: {
-fontSize: "17px",
-color: "#86868b",
-marginBottom: "48px",
-fontWeight: "400",
-lineHeight: "1.5"
-},
-contactForm: {
-display: "flex",
-flexDirection: "column",
-gap: "16px",
-textAlign: "left"
-},
-contactInput: {
-width: "100%",
-padding: "18px 24px",
-border: "1px solid #F5F3F0",
-borderRadius: "20px",
-fontSize: "15px",
-boxSizing: "border-box",
-fontFamily: "inherit",
-backgroundColor: "#FAFAF8",
-color: "#4A4A4A",
-transition: "all 0.3s ease",
-fontWeight: "400"
-},
-contactTextarea: {
-width: "100%",
-padding: "18px 24px",
-border: "1px solid #F5F3F0",
-borderRadius: "20px",
-fontSize: "15px",
-boxSizing: "border-box",
-fontFamily: "inherit",
-backgroundColor: "#FAFAF8",
-color: "#4A4A4A",
-resize: "vertical",
-minHeight: "120px",
-transition: "all 0.3s ease",
-fontWeight: "400"
-},
-contactButton: {
-width: "100%",
-padding: "20px",
-backgroundColor: "#8B9C9C",
-color: "white",
-border: "none",
-borderRadius: "24px",
-cursor: "pointer",
-fontSize: "16px",
+footerTitle: {
+fontSize: "18px",
 fontWeight: "500",
-marginTop: "16px",
-boxShadow: "0 2px 12px rgba(139, 156, 156, 0.15)",
-transition: "all 0.3s ease",
-letterSpacing: "0.02em"
+color: "#4A4A4A",
+margin: "0 0 24px 0",
+letterSpacing: "0.15em",
+textTransform: "uppercase"
+},
+footerAddress: {
+fontSize: "14px",
+color: "#86868b",
+margin: "0 0 6px 0",
+fontWeight: "300",
+letterSpacing: "0.05em",
+lineHeight: "1.6"
+},
+footerCity: {
+fontSize: "14px",
+color: "#86868b",
+margin: "0 0 28px 0",
+fontWeight: "300",
+letterSpacing: "0.05em",
+lineHeight: "1.6"
+},
+footerContact: {
+fontSize: "14px",
+color: "#86868b",
+margin: "0 0 32px 0",
+fontWeight: "300",
+letterSpacing: "0.04em"
+},
+footerLink: {
+color: "#8B9C9C",
+textDecoration: "none",
+transition: "color 0.3s ease"
+},
+footerSeparator: {
+color: "#D0D0D0",
+margin: "0 8px"
+},
+footerCopyright: {
+fontSize: "12px",
+color: "#B0B0B0",
+margin: "0",
+fontWeight: "300",
+letterSpacing: "0.06em",
+paddingTop: "28px",
+borderTop: "1px solid #F0EDE9"
 }
 };
