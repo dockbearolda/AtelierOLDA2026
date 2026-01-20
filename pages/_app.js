@@ -136,16 +136,16 @@ function MyApp({ Component, pageProps }) {
             opacity: 0.7;
           }
 
-          /* Main grid - 2 colonnes sur mobile (style High-End) */
+          /* Main grid - 2 colonnes sur mobile (style Apple) */
           main {
             grid-template-columns: repeat(2, 1fr) !important;
-            padding: 32px 16px !important;
-            gap: 16px !important;
+            padding: 0 !important;
+            gap: 0 !important;
           }
 
           /* Cards plus compactes sur mobile */
           div[style*="card"] {
-            padding: 20px 16px !important;
+            padding: 32px 16px !important;
           }
 
           /* Homepage responsive */
@@ -199,13 +199,13 @@ function MyApp({ Component, pageProps }) {
           }
 
           main {
-            padding: 24px 12px !important;
-            gap: 12px !important;
+            padding: 0 !important;
+            gap: 0 !important;
           }
 
           /* Cards encore plus compactes sur très petits écrans */
           div[style*="card"] {
-            padding: 16px 12px !important;
+            padding: 28px 12px !important;
           }
 
           .homepageTitle {
