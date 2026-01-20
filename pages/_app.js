@@ -122,26 +122,71 @@ function MyApp({ Component, pageProps }) {
           z-index: 99998;
         }
 
-        /* FIX GRILLE PRODUITS IPHONE : 2 colonnes sans coupure */
-        @media screen and (max-width: 768px) {
+        /* GRILLE ULTRA FLAT : Technique du trait 1px */
+        main[style*="grid"] {
+          gap: 1px !important;
+          background-color: #d2d2d7 !important;
+          padding: 0 !important;
+          border: none !important;
+        }
+
+        /* FIX RETINA/IPHONE : Traits ultra-fins et nets */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
           main[style*="grid"] {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 10px !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
+            gap: 1px !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+        }
+
+        /* Cartes produits : Zero shadow, zero border */
+        [style*="card"] {
+          box-shadow: none !important;
+          border-radius: 0 !important;
+          border: none !important;
+        }
+
+        /* Select dropdown : Focus ultra-flat */
+        select[style*="quantitySelect"]:focus {
+          outline: none;
+          border-color: #1d1d1f;
+        }
+
+        /* Media query mobile : Hauteur de touche optimisée */
+        @media screen and (max-width: 768px) {
+          select[style*="quantitySelect"] {
+            min-height: 48px !important;
+            font-size: 16px !important;
+          }
+
+          /* Optimisation mobile pour textarea et boutons */
+          textarea[style*="commentaire"],
+          button[style*="addButton"] {
+            min-height: 48px !important;
+            font-size: 14px !important;
+          }
+
+          /* Cartes produits : Padding mobile */
+          [style*="card"] {
             padding: 20px !important;
           }
         }
 
-        /* Media query spécifique iPhone */
-        @media screen and (max-width: 430px) {
-          main[style*="grid"] {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 10px !important;
-            padding: 16px !important;
-          }
+        /* Hover ultra-flat sur bouton Ajouter */
+        button[style*="addButton"]:hover:not([style*="addButtonAdded"]) {
+          background-color: #000000 !important;
+        }
+
+        /* Focus ultra-flat sur textarea */
+        textarea[style*="commentaire"]:focus {
+          outline: none;
+          border-color: #1d1d1f;
+        }
+
+        /* Style du texte dans le select (iOS fix) */
+        select[style*="quantitySelect"] option {
+          background-color: white;
+          color: #1d1d1f;
         }
 
         /* STEPPER HAUT DE GAMME : États actif et complété */

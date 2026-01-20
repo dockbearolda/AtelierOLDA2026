@@ -369,9 +369,22 @@ React.createElement("main", { style: styles.main },
       React.createElement("p", { style: styles.productRef }, "Ref: " + product.reference),
 
       React.createElement("div", { style: styles.quantityControl },
-        React.createElement("button", { onClick: function() { ajuster(product.id, -1); }, style: styles.qtyButton }, "-"),
-        React.createElement("span", { style: styles.quantity }, getQte(product.id)),
-        React.createElement("button", { onClick: function() { ajuster(product.id, 1); }, style: styles.qtyButton }, "+")
+        React.createElement("label", {
+          htmlFor: "qty-" + product.id,
+          style: styles.quantityLabel
+        }, "Quantité"),
+        React.createElement("select", {
+          id: "qty-" + product.id,
+          value: getQte(product.id),
+          onChange: function(e) {
+            setQuantites(Object.assign({}, quantites, { [product.id]: parseInt(e.target.value) }));
+          },
+          style: styles.quantitySelect
+        },
+          Array.from({ length: 48 }, function(_, i) { return i + 3; }).map(function(qty) {
+            return React.createElement("option", { key: qty, value: qty }, qty);
+          })
+        )
       ),
 
       React.createElement("textarea", {
@@ -743,31 +756,35 @@ color: "#0071e3",
 fontWeight: "500"
 },
 main: {
-padding: "40px",
+padding: "0",
 display: "grid",
 gridTemplateColumns: "repeat(2, 1fr)",
-gap: "24px",
+gap: "1px",
 maxWidth: "900px",
-margin: "0 auto"
+margin: "0 auto",
+backgroundColor: "#d2d2d7",
+border: "none"
 },
 card: {
 backgroundColor: "white",
-borderRadius: "18px",
+borderRadius: "0",
 padding: "24px",
-boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
-transition: "transform 0.2s, box-shadow 0.2s",
+boxShadow: "none",
+transition: "none",
 position: "relative",
-zIndex: 1
+zIndex: 1,
+border: "none"
 },
 imageContainer: {
 height: "200px",
-backgroundColor: "white",
-borderRadius: "12px",
+backgroundColor: "#fafafa",
+borderRadius: "0",
 marginBottom: "16px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-overflow: "hidden"
+overflow: "hidden",
+border: "1px solid #e5e5e7"
 },
 image: {
 maxHeight: "100%",
@@ -794,61 +811,75 @@ color: "#86868b"
 quantityControl: {
 display: "flex",
 alignItems: "center",
-justifyContent: "center",
-gap: "16px",
-marginBottom: "12px"
+justifyContent: "space-between",
+gap: "8px",
+marginBottom: "16px",
+width: "100%"
 },
-qtyButton: {
-width: "36px",
-height: "36px",
+quantityLabel: {
+fontSize: "13px",
+fontWeight: "400",
+color: "#86868b",
+textTransform: "uppercase",
+letterSpacing: "0.5px"
+},
+quantitySelect: {
+flex: 1,
+padding: "12px 16px",
 border: "1px solid #d2d2d7",
-borderRadius: "50%",
-cursor: "pointer",
+borderRadius: "0",
 backgroundColor: "white",
-fontSize: "18px",
+fontSize: "15px",
+fontWeight: "400",
 color: "#1d1d1f",
-display: "flex",
-alignItems: "center",
-justifyContent: "center"
-},
-quantity: {
-fontSize: "17px",
-fontWeight: "600",
-minWidth: "30px",
-textAlign: "center"
+cursor: "pointer",
+appearance: "none",
+WebkitAppearance: "none",
+MozAppearance: "none",
+backgroundImage: "url('data:image/svg+xml;charset=UTF-8,%3csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1 1L5 5L9 1' stroke='%231d1d1f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e')",
+backgroundRepeat: "no-repeat",
+backgroundPosition: "right 12px center",
+backgroundSize: "10px",
+paddingRight: "36px",
+transition: "border-color 0.2s ease",
+minHeight: "44px",
+touchAction: "manipulation"
 },
 commentaire: {
 width: "100%",
-padding: "10px",
-border: "1px solid #e5e5e7",
-borderRadius: "8px",
+padding: "12px",
+border: "1px solid #d2d2d7",
+borderRadius: "0",
 fontSize: "13px",
 fontFamily: "inherit",
 resize: "none",
-marginBottom: "12px",
+marginBottom: "16px",
 boxSizing: "border-box",
-color: "#1d1d1f"
+color: "#1d1d1f",
+minHeight: "44px"
 },
 addButton: {
 width: "100%",
-padding: "11px 16px",
-backgroundColor: "#0071e3",
+padding: "14px 16px",
+backgroundColor: "#1d1d1f",
 color: "white",
 border: "none",
-borderRadius: "12px",
+borderRadius: "0",
 cursor: "pointer",
-fontSize: "14px",
-fontWeight: "400",
-letterSpacing: "-0.01em",
-transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-transform: "scale(1)"
+fontSize: "13px",
+fontWeight: "500",
+letterSpacing: "0.5px",
+textTransform: "uppercase",
+transition: "background-color 0.2s ease",
+boxShadow: "none",
+transform: "scale(1)",
+minHeight: "44px"
 },
 addButtonAdded: {
-backgroundColor: "#86868b",
+backgroundColor: "#34c759",
 color: "white",
-transform: "scale(0.98)",
-boxShadow: "0 1px 2px rgba(0, 0, 0, 0.08)"
+transform: "scale(1)",
+boxShadow: "none"
 },
 modalOverlay: {
 position: "fixed",
