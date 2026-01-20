@@ -224,16 +224,16 @@ if (tabKey === "tasses") {
 
 if (isActive) {
   if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#7B9C9C", color: "white", borderColor: "#7B9C9C" });
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#8B9C9C", color: "white", borderColor: "#8B9C9C" });
   } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#C8A99A", color: "white", borderColor: "#C8A99A" });
+    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#B8A89A", color: "white", borderColor: "#B8A89A" });
   }
   return Object.assign({}, baseStyle, styles.tabActive);
 } else {
   if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, { backgroundColor: "transparent", color: "#7B9C9C", borderColor: "#B4C8C8" });
+    return Object.assign({}, baseStyle, { backgroundColor: "#F5FAF9", color: "#8B9C9C", borderColor: "#E8F0EF" });
   } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, { backgroundColor: "transparent", color: "#C8A99A", borderColor: "#E5D6D3" });
+    return Object.assign({}, baseStyle, { backgroundColor: "#FAF9F7", color: "#B8A89A", borderColor: "#F0EDE9" });
   }
   return baseStyle;
 }
@@ -440,6 +440,30 @@ cartOpen && isMounted && ReactDOM.createPortal(
   document.body
 ),
 
+React.createElement("section", { style: styles.contactSection },
+  React.createElement("div", { style: styles.contactContainer },
+    React.createElement("h2", { style: styles.contactTitle }, "Contactez-nous"),
+    React.createElement("p", { style: styles.contactSubtitle }, "Une question sur nos cr\u00e9ations ? Nous sommes \u00e0 votre \u00e9coute."),
+    React.createElement("div", { style: styles.contactForm },
+      React.createElement("input", {
+        type: "text",
+        placeholder: "Nom",
+        style: styles.contactInput
+      }),
+      React.createElement("input", {
+        type: "email",
+        placeholder: "Mail",
+        style: styles.contactInput
+      }),
+      React.createElement("textarea", {
+        placeholder: "Commentaire",
+        style: styles.contactTextarea
+      }),
+      React.createElement("button", { style: styles.contactButton }, "Commander")
+    )
+  )
+),
+
 React.createElement("footer", { style: styles.footer },
   React.createElement("p", { style: styles.footerText }, "\u00a9 2026 Atelier OLDA. Tous droits r\u00e9serv\u00e9s.")
 )
@@ -451,7 +475,7 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#EFE8E3",
+backgroundColor: "#FAFAF8",
 overflow: "visible",
 position: "relative"
 },
@@ -460,12 +484,12 @@ minHeight: "calc(100vh - 73px)",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-backgroundColor: "#FEFEFE"
+backgroundColor: "#FFFFFF"
 },
 homepageContent: {
 textAlign: "center",
-padding: "60px 40px",
-maxWidth: "1000px",
+padding: "80px 48px",
+maxWidth: "1100px",
 margin: "0 auto"
 },
 homepageTitle: {
@@ -483,54 +507,56 @@ fontWeight: "400"
 },
 categoryGrid: {
 display: "grid",
-gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-gap: "28px",
-marginTop: "60px"
+gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+gap: "32px",
+marginTop: "80px"
 },
 categoryCard: {
-backgroundColor: "#FEFEFE",
-border: "1px solid #E5D6D3",
-borderRadius: "20px",
-padding: "36px 24px",
+backgroundColor: "#FFFFFF",
+border: "1px solid #F5F3F0",
+borderRadius: "24px",
+padding: "40px 28px",
 cursor: "pointer",
 transition: "all 0.3s",
 position: "relative",
-minHeight: "140px",
+minHeight: "160px",
 display: "flex",
 flexDirection: "column",
 alignItems: "center",
 justifyContent: "center",
-boxShadow: "0 2px 8px rgba(123, 156, 156, 0.08)"
+boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)"
 },
 categoryCardNew: {
-backgroundColor: "#E8F2F2",
-borderColor: "#B4C8C8"
+backgroundColor: "#F5FAF9",
+borderColor: "#E8F0EF"
 },
 categoryCardPromo: {
-backgroundColor: "#F5E8E5",
-borderColor: "#E5D6D3"
+backgroundColor: "#FAF9F7",
+borderColor: "#F0EDE9"
 },
 categoryBadge: {
 position: "absolute",
-top: "12px",
-right: "12px",
-backgroundColor: "#7B9C9C",
+top: "16px",
+right: "16px",
+backgroundColor: "#8B9C9C",
 color: "white",
-padding: "6px 12px",
-borderRadius: "14px",
+padding: "6px 14px",
+borderRadius: "16px",
 fontSize: "11px",
-fontWeight: "600"
+fontWeight: "600",
+letterSpacing: "0.03em"
 },
 categoryBadgePromo: {
 position: "absolute",
-top: "12px",
-right: "12px",
-backgroundColor: "#C8A99A",
+top: "16px",
+right: "16px",
+backgroundColor: "#B8A89A",
 color: "white",
-padding: "6px 12px",
-borderRadius: "14px",
+padding: "6px 14px",
+borderRadius: "16px",
 fontSize: "11px",
-fontWeight: "600"
+fontWeight: "600",
+letterSpacing: "0.03em"
 },
 categoryLabel: {
 fontSize: "17px",
@@ -538,16 +564,17 @@ fontWeight: "500",
 color: "#1d1d1f"
 },
 header: {
-backgroundColor: "#FEFEFE",
-padding: "20px 40px",
+backgroundColor: "#FFFFFF",
+padding: "24px 48px",
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
-borderBottom: "1px solid #E5D6D3",
+borderBottom: "1px solid #F0EDE9",
 position: "sticky",
 top: 0,
 zIndex: 9999,
-overflow: "visible"
+overflow: "visible",
+boxShadow: "0 1px 0 rgba(0, 0, 0, 0.02)"
 },
 logo: {
 height: "40px",
@@ -566,11 +593,11 @@ badge: {
 position: "absolute",
 top: "0",
 right: "0",
-backgroundColor: "#7B9C9C",
+backgroundColor: "#8B9C9C",
 color: "white",
-borderRadius: "10px",
-padding: "2px 6px",
-fontSize: "12px",
+borderRadius: "12px",
+padding: "3px 7px",
+fontSize: "11px",
 fontWeight: "600",
 minWidth: "20px",
 textAlign: "center"
@@ -578,18 +605,18 @@ textAlign: "center"
 navContainer: {
 position: "sticky",
 top: "73px",
-backgroundColor: "#FEFEFE",
-borderBottom: "1px solid #E5D6D3",
+backgroundColor: "#FFFFFF",
+borderBottom: "1px solid #F5F3F0",
 zIndex: 9998,
-boxShadow: "0 2px 8px rgba(123, 156, 156, 0.08)",
+boxShadow: "0 1px 0 rgba(0, 0, 0, 0.02)",
 transition: "box-shadow 0.3s ease",
 overflow: "visible"
 },
 nav: {
-backgroundColor: "#FEFEFE",
-padding: "20px 40px",
+backgroundColor: "#FFFFFF",
+padding: "20px 48px",
 display: "flex",
-gap: "16px",
+gap: "20px",
 overflowX: "auto",
 overflowY: "visible",
 scrollBehavior: "smooth",
@@ -600,25 +627,26 @@ zIndex: 9997,
 overflow: "visible"
 },
 tab: {
-padding: "12px 24px",
-border: "1px solid #E5D6D3",
-borderRadius: "24px",
+padding: "10px 24px",
+border: "1px solid #F0EDE9",
+borderRadius: "20px",
 cursor: "pointer",
-backgroundColor: "transparent",
-color: "#6B9090",
-fontSize: "14px",
+backgroundColor: "#FAFAF8",
+color: "#8B9C9C",
+fontSize: "13px",
 fontWeight: "400",
 transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
 whiteSpace: "nowrap",
 transform: "scale(1)",
-boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
+boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
+letterSpacing: "0.02em"
 },
 tabActive: {
-backgroundColor: "#7B9C9C",
-color: "white",
-border: "1px solid #7B9C9C",
-transform: "scale(1.05)",
-boxShadow: "0 4px 12px rgba(123, 156, 156, 0.2)",
+backgroundColor: "#8B9C9C",
+color: "#FFFFFF",
+border: "1px solid #8B9C9C",
+transform: "scale(1.02)",
+boxShadow: "0 2px 8px rgba(139, 156, 156, 0.15)",
 fontWeight: "500"
 },
 dropdownContainer: {
@@ -637,14 +665,14 @@ dropdownMenu: {
 position: "absolute",
 top: "calc(100% + 12px)",
 left: 0,
-backgroundColor: "#FEFEFE",
-borderRadius: "20px",
-boxShadow: "0 4px 16px rgba(123, 156, 156, 0.12)",
-padding: "12px 0",
-minWidth: "260px",
+backgroundColor: "#FFFFFF",
+borderRadius: "24px",
+boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+padding: "16px 0",
+minWidth: "280px",
 zIndex: 99999,
 animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-border: "1px solid #E5D6D3",
+border: "1px solid #F5F3F0",
 pointerEvents: "auto",
 listStyle: "none",
 margin: 0
@@ -672,46 +700,46 @@ letterSpacing: "0.01em",
 lineHeight: "1.4"
 },
 dropdownItemActive: {
-backgroundColor: "#E8F2F2",
-color: "#7B9C9C",
+backgroundColor: "#F5FAF9",
+color: "#8B9C9C",
 fontWeight: "500"
 },
 main: {
-padding: "60px 40px",
+padding: "80px 48px",
 display: "grid",
 gridTemplateColumns: "repeat(2, 1fr)",
-gap: "32px",
-maxWidth: "1000px",
+gap: "40px",
+maxWidth: "1100px",
 margin: "0 auto"
 },
 card: {
-backgroundColor: "#FEFEFE",
-borderRadius: "20px",
-padding: "28px",
-border: "1px solid #E5D6D3",
-boxShadow: "0 2px 8px rgba(123, 156, 156, 0.08)",
+backgroundColor: "#FFFFFF",
+borderRadius: "24px",
+padding: "32px",
+border: "1px solid #F5F3F0",
+boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)",
 transition: "transform 0.2s, box-shadow 0.2s",
 position: "relative",
 zIndex: 1
 },
 imageContainer: {
-minHeight: "220px",
+minHeight: "240px",
 height: "auto",
 aspectRatio: "1 / 1",
-backgroundColor: "#FEFEFE",
-borderRadius: "16px",
-marginBottom: "20px",
+backgroundColor: "#FAFAF8",
+borderRadius: "20px",
+marginBottom: "24px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
 overflow: "hidden",
-border: "1px solid #E5D6D3"
+border: "1px solid #F5F3F0"
 },
 image: {
 width: "100%",
 height: "100%",
 objectFit: "contain",
-padding: "16px"
+padding: "20px"
 },
 productName: {
 margin: "0 0 4px 0",
@@ -739,12 +767,12 @@ marginBottom: "12px"
 qtyButton: {
 width: "40px",
 height: "40px",
-border: "1px solid #B4C8C8",
+border: "1px solid #E8E5E0",
 borderRadius: "50%",
 cursor: "pointer",
-backgroundColor: "#FEFEFE",
+backgroundColor: "#FFFFFF",
 fontSize: "18px",
-color: "#7B9C9C",
+color: "#8B9C9C",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
@@ -759,30 +787,30 @@ textAlign: "center"
 commentaire: {
 width: "100%",
 padding: "12px 16px",
-border: "1px solid #E5D6D3",
-borderRadius: "12px",
+border: "1px solid #F5F3F0",
+borderRadius: "16px",
 fontSize: "13px",
 fontFamily: "inherit",
 resize: "none",
-marginBottom: "12px",
+marginBottom: "16px",
 boxSizing: "border-box",
-color: "#6B9090",
-backgroundColor: "#FEFEFE",
+color: "#4A4A4A",
+backgroundColor: "#FAFAF8",
 transition: "all 0.3s ease"
 },
 addButton: {
 width: "100%",
 padding: "14px 16px",
-backgroundColor: "#7B9C9C",
+backgroundColor: "#8B9C9C",
 color: "white",
 border: "none",
-borderRadius: "16px",
+borderRadius: "20px",
 cursor: "pointer",
-fontSize: "14px",
+fontSize: "13px",
 fontWeight: "500",
-letterSpacing: "-0.01em",
+letterSpacing: "0.01em",
 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-boxShadow: "0 2px 8px rgba(123, 156, 156, 0.2)",
+boxShadow: "0 1px 4px rgba(139, 156, 156, 0.12)",
 transform: "scale(1)"
 },
 addButtonAdded: {
@@ -797,8 +825,8 @@ top: 0,
 left: 0,
 right: 0,
 bottom: 0,
-backgroundColor: "rgba(107, 144, 144, 0.3)",
-backdropFilter: "blur(8px)",
+backgroundColor: "rgba(139, 156, 156, 0.25)",
+backdropFilter: "blur(12px)",
 display: "flex",
 justifyContent: "center",
 alignItems: "center",
@@ -807,15 +835,15 @@ padding: "20px",
 animation: "fadeIn 0.3s ease-in-out"
 },
 modal: {
-backgroundColor: "#FEFEFE",
-borderRadius: "24px",
-padding: "40px",
-maxWidth: "500px",
+backgroundColor: "#FFFFFF",
+borderRadius: "28px",
+padding: "48px",
+maxWidth: "520px",
 width: "100%",
 maxHeight: "80vh",
 overflow: "auto",
-border: "1px solid #E5D6D3",
-boxShadow: "0 8px 32px rgba(123, 156, 156, 0.15)",
+border: "1px solid #F5F3F0",
+boxShadow: "0 8px 40px rgba(0, 0, 0, 0.08)",
 animation: "slideDown 0.3s ease-in-out"
 },
 modalHeader: {
@@ -851,16 +879,16 @@ cartItem: {
 display: "flex",
 justifyContent: "space-between",
 alignItems: "flex-start",
-padding: "20px 0",
-borderBottom: "1px solid #E5D6D3",
-gap: "16px"
+padding: "24px 0",
+borderBottom: "1px solid #F5F3F0",
+gap: "20px"
 },
 cartItemImage: {
-width: "70px",
-height: "70px",
+width: "80px",
+height: "80px",
 objectFit: "contain",
-borderRadius: "12px",
-backgroundColor: "#EFE8E3"
+borderRadius: "16px",
+backgroundColor: "#FAFAF8"
 },
 cartItemName: {
 margin: "0 0 4px 0",
@@ -895,41 +923,44 @@ gap: "12px"
 input: {
 width: "100%",
 padding: "16px 20px",
-border: "1px solid #E5D6D3",
-borderRadius: "12px",
+border: "1px solid #F5F3F0",
+borderRadius: "16px",
 fontSize: "15px",
 boxSizing: "border-box",
 fontFamily: "inherit",
-backgroundColor: "#FEFEFE",
-color: "#6B9090",
-transition: "all 0.3s ease"
+backgroundColor: "#FAFAF8",
+color: "#4A4A4A",
+transition: "all 0.3s ease",
+fontWeight: "400"
 },
 textarea: {
 width: "100%",
 padding: "16px 20px",
-border: "1px solid #E5D6D3",
-borderRadius: "12px",
+border: "1px solid #F5F3F0",
+borderRadius: "16px",
 fontSize: "15px",
 boxSizing: "border-box",
 fontFamily: "inherit",
-backgroundColor: "#FEFEFE",
-color: "#6B9090",
+backgroundColor: "#FAFAF8",
+color: "#4A4A4A",
 resize: "vertical",
-transition: "all 0.3s ease"
+transition: "all 0.3s ease",
+fontWeight: "400"
 },
 submitButton: {
 width: "100%",
-padding: "16px",
-backgroundColor: "#7B9C9C",
+padding: "18px",
+backgroundColor: "#8B9C9C",
 color: "white",
 border: "none",
-borderRadius: "16px",
+borderRadius: "20px",
 cursor: "pointer",
 fontSize: "15px",
-fontWeight: "600",
-marginTop: "12px",
-boxShadow: "0 4px 12px rgba(123, 156, 156, 0.25)",
-transition: "all 0.3s ease"
+fontWeight: "500",
+marginTop: "16px",
+boxShadow: "0 2px 8px rgba(139, 156, 156, 0.15)",
+transition: "all 0.3s ease",
+letterSpacing: "0.02em"
 },
 submitButtonDisabled: {
 backgroundColor: "#86868b",
@@ -940,17 +971,17 @@ textAlign: "center",
 padding: "20px"
 },
 successIcon: {
-width: "80px",
-height: "80px",
-backgroundColor: "#7B9C9C",
+width: "88px",
+height: "88px",
+backgroundColor: "#8B9C9C",
 color: "white",
 borderRadius: "50%",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-fontSize: "40px",
-margin: "0 auto 24px",
-boxShadow: "0 4px 16px rgba(123, 156, 156, 0.3)"
+fontSize: "44px",
+margin: "0 auto 28px",
+boxShadow: "0 4px 20px rgba(139, 156, 156, 0.2)"
 },
 successTitle: {
 fontSize: "24px",
@@ -969,28 +1000,104 @@ color: "#6e6e73",
 margin: "0 0 24px 0"
 },
 closeButton: {
-padding: "16px 36px",
-backgroundColor: "#7B9C9C",
+padding: "18px 40px",
+backgroundColor: "#8B9C9C",
 color: "white",
 border: "none",
-borderRadius: "16px",
+borderRadius: "20px",
 cursor: "pointer",
 fontSize: "15px",
-fontWeight: "600",
-boxShadow: "0 4px 12px rgba(123, 156, 156, 0.25)",
-transition: "all 0.3s ease"
+fontWeight: "500",
+boxShadow: "0 2px 12px rgba(139, 156, 156, 0.15)",
+transition: "all 0.3s ease",
+letterSpacing: "0.02em"
 },
 footer: {
-backgroundColor: "#E5D6D3",
-padding: "40px 40px",
+backgroundColor: "#F5F3F0",
+padding: "48px 48px",
 textAlign: "center",
-borderTop: "1px solid #C8A99A",
-marginTop: "80px"
+borderTop: "1px solid #E8E5E0",
+marginTop: "0"
 },
 footerText: {
 margin: 0,
 fontSize: "13px",
-color: "#6B9090",
+color: "#999999",
+fontWeight: "400",
+letterSpacing: "0.02em"
+},
+contactSection: {
+backgroundColor: "#FFFFFF",
+padding: "100px 48px",
+marginTop: "120px",
+borderTop: "1px solid #F5F3F0"
+},
+contactContainer: {
+maxWidth: "600px",
+margin: "0 auto",
+textAlign: "center"
+},
+contactTitle: {
+fontSize: "32px",
+fontWeight: "600",
+color: "#1d1d1f",
+marginBottom: "16px",
+letterSpacing: "-0.02em"
+},
+contactSubtitle: {
+fontSize: "17px",
+color: "#86868b",
+marginBottom: "48px",
+fontWeight: "400",
+lineHeight: "1.5"
+},
+contactForm: {
+display: "flex",
+flexDirection: "column",
+gap: "16px",
+textAlign: "left"
+},
+contactInput: {
+width: "100%",
+padding: "18px 24px",
+border: "1px solid #F5F3F0",
+borderRadius: "20px",
+fontSize: "15px",
+boxSizing: "border-box",
+fontFamily: "inherit",
+backgroundColor: "#FAFAF8",
+color: "#4A4A4A",
+transition: "all 0.3s ease",
 fontWeight: "400"
+},
+contactTextarea: {
+width: "100%",
+padding: "18px 24px",
+border: "1px solid #F5F3F0",
+borderRadius: "20px",
+fontSize: "15px",
+boxSizing: "border-box",
+fontFamily: "inherit",
+backgroundColor: "#FAFAF8",
+color: "#4A4A4A",
+resize: "vertical",
+minHeight: "120px",
+transition: "all 0.3s ease",
+fontWeight: "400"
+},
+contactButton: {
+width: "100%",
+padding: "20px",
+backgroundColor: "#8B9C9C",
+color: "white",
+border: "none",
+borderRadius: "24px",
+cursor: "pointer",
+fontSize: "16px",
+fontWeight: "500",
+marginTop: "16px",
+boxShadow: "0 2px 12px rgba(139, 156, 156, 0.15)",
+transition: "all 0.3s ease",
+letterSpacing: "0.02em"
 }
 };

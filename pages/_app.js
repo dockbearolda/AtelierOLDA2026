@@ -114,21 +114,43 @@ function MyApp({ Component, pageProps }) {
             padding: 12px 20px !important;
           }
 
-          /* Navigation responsive */
+          /* Navigation responsive avec indicateurs de scroll */
           nav {
             padding: 12px 20px !important;
+            position: relative;
           }
 
-          /* Main grid - 1 colonne sur mobile */
+          /* Indicateur visuel de scroll à droite */
+          nav::after {
+            content: '→';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(to right, transparent, #FEFEFE 50%);
+            padding: 12px 20px 12px 40px;
+            color: #7B9C9C;
+            font-size: 16px;
+            font-weight: 600;
+            pointer-events: none;
+            opacity: 0.7;
+          }
+
+          /* Main grid - 2 colonnes sur mobile (style High-End) */
           main {
-            grid-template-columns: 1fr !important;
-            padding: 24px 16px !important;
-            gap: 20px !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            padding: 32px 16px !important;
+            gap: 16px !important;
+          }
+
+          /* Cards plus compactes sur mobile */
+          div[style*="card"] {
+            padding: 20px 16px !important;
           }
 
           /* Homepage responsive */
           .homepageContent {
-            padding: 20px !important;
+            padding: 32px 20px !important;
           }
 
           .homepageTitle {
@@ -147,23 +169,28 @@ function MyApp({ Component, pageProps }) {
 
           /* Footer responsive */
           footer {
-            padding: 24px 20px !important;
+            padding: 32px 20px !important;
           }
         }
 
         /* Très petits écrans - iPhone SE, etc. (max-width: 375px) */
         @media (max-width: 375px) {
           header {
-            padding: 10px 16px !important;
+            padding: 10px 12px !important;
           }
 
           nav {
-            padding: 10px 16px !important;
+            padding: 10px 12px !important;
           }
 
           main {
-            padding: 20px 12px !important;
-            gap: 16px !important;
+            padding: 24px 12px !important;
+            gap: 12px !important;
+          }
+
+          /* Cards encore plus compactes sur très petits écrans */
+          div[style*="card"] {
+            padding: 16px 12px !important;
           }
 
           .homepageTitle {
@@ -173,6 +200,28 @@ function MyApp({ Component, pageProps }) {
           .homepageSubtitle {
             font-size: 16px !important;
           }
+        }
+
+        /* Masquer la scrollbar sur la navigation (style Apple) */
+        nav::-webkit-scrollbar {
+          display: none !important;
+        }
+
+        nav {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+
+        /* Smooth scrolling sur toute la page */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Typography fine et lisible (style Apple) */
+        body {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
         }
       `}</style>
       <Component {...pageProps} />
