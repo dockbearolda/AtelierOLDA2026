@@ -62,6 +62,15 @@ const tabs = [
   ]
 },
 { key: "tshirt", label: "T-Shirt" },
+{
+  key: "goodies",
+  label: "Goodies",
+  hasDropdown: true,
+  subcategories: [
+    { key: "nouveautes", label: "Support Mobile" },
+    { key: "offres", label: "Décapsuleur Bois" }
+  ]
+},
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
@@ -78,6 +87,7 @@ const [orderSent, setOrderSent] = useState(false);
 const [sending, setSending] = useState(false);
 const [recentlyAdded, setRecentlyAdded] = useState({});
 const [isMounted, setIsMounted] = useState(false);
+const [currentStep, setCurrentStep] = useState(1);
 
 var navigateToCategory = function(category) {
 setActiveTab(category);
@@ -208,6 +218,7 @@ setCartOpen(false);
 setOrderSent(false);
 setPanier([]);
 setClientInfo({ nom: "", email: "" });
+setCurrentStep(1);
 };
 
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
@@ -220,6 +231,12 @@ var isActive = activeTab === tabKey;
 if (tabKey === "tasses") {
   var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal"];
   isActive = tasseSubcats.indexOf(activeTab) !== -1;
+}
+
+// Pour l'onglet Goodies, vérifier si une sous-catégorie est active
+if (tabKey === "goodies") {
+  var goodiesSubcats = ["nouveautes", "offres"];
+  isActive = goodiesSubcats.indexOf(activeTab) !== -1;
 }
 
 if (isActive) {
@@ -289,6 +306,7 @@ React.createElement("div", { style: styles.navContainer },
           onMouseLeave: function() { setOpenDropdown(null); }
         },
           React.createElement("button", {
+            className: "dropdown-button-bridge",
             onClick: function() {
               if (openDropdown === tab.key) {
                 setOpenDropdown(null);
@@ -385,46 +403,105 @@ cartOpen && isMounted && ReactDOM.createPortal(
       React.createElement("button", { onClick: fermerEtReset, style: styles.closeButton }, "Fermer")
     ) : React.createElement(React.Fragment, null,
       React.createElement("div", { style: styles.modalHeader },
-        React.createElement("h2", { style: styles.modalTitle }, "Sélection"),
+        React.createElement("div", { style: styles.stepperContainer },
+          React.createElement("div", { style: styles.stepperSteps },
+            React.createElement("div", { style: currentStep === 1 ? Object.assign({}, styles.step, styles.stepActive) : currentStep > 1 ? Object.assign({}, styles.step, styles.stepCompleted) : styles.step },
+              React.createElement("span", { style: styles.stepNumber }, "1"),
+              React.createElement("span", { style: styles.stepLabel }, "Sélection")
+            ),
+            React.createElement("div", { style: currentStep >= 2 ? Object.assign({}, styles.stepLine, styles.stepLineActive) : styles.stepLine }),
+            React.createElement("div", { style: currentStep === 2 ? Object.assign({}, styles.step, styles.stepActive) : currentStep > 2 ? Object.assign({}, styles.step, styles.stepCompleted) : styles.step },
+              React.createElement("span", { style: styles.stepNumber }, "2"),
+              React.createElement("span", { style: styles.stepLabel }, "Livraison")
+            ),
+            React.createElement("div", { style: currentStep >= 3 ? Object.assign({}, styles.stepLine, styles.stepLineActive) : styles.stepLine }),
+            React.createElement("div", { style: currentStep === 3 ? Object.assign({}, styles.step, styles.stepActive) : styles.step },
+              React.createElement("span", { style: styles.stepNumber }, "3"),
+              React.createElement("span", { style: styles.stepLabel }, "Paiement")
+            )
+          )
+        ),
         React.createElement("button", { onClick: function() { setCartOpen(false); }, style: styles.closeIcon }, "\u00d7")
       ),
 
       panier.length === 0 ? React.createElement("p", { style: styles.emptyCart }, "Votre sélection est vide") : React.createElement(React.Fragment, null,
-        React.createElement("div", { style: styles.cartItems },
-          panier.map(function(item) {
-            return React.createElement("div", { key: item.id, style: styles.cartItem },
-              React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
-              React.createElement("div", { style: { flex: 1 } },
-                React.createElement("p", { style: styles.cartItemName }, item.nom),
-                React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
-                item.commentaire && React.createElement("p", { style: styles.cartItemComment }, "Note: " + item.commentaire)
-              ),
-              React.createElement("button", { onClick: function() { supprimerDuPanier(item.id); }, style: styles.deleteButton }, "\u00d7")
-            );
-          })
+        currentStep === 1 && React.createElement(React.Fragment, null,
+          React.createElement("div", { style: styles.cartItems },
+            panier.map(function(item) {
+              return React.createElement("div", { key: item.id, style: styles.cartItem },
+                React.createElement("img", { src: item.image, alt: item.nom, style: styles.cartItemImage }),
+                React.createElement("div", { style: { flex: 1 } },
+                  React.createElement("p", { style: styles.cartItemName }, item.nom),
+                  React.createElement("p", { style: styles.cartItemDetails }, item.couleur ? item.couleur + " x " + item.quantite : "x " + item.quantite),
+                  item.commentaire && React.createElement("p", { style: styles.cartItemComment }, "Note: " + item.commentaire)
+                ),
+                React.createElement("button", { onClick: function() { supprimerDuPanier(item.id); }, style: styles.deleteButton }, "\u00d7")
+              );
+            })
+          ),
+          React.createElement("button", {
+            onClick: function() { setCurrentStep(2); },
+            style: styles.submitButton
+          }, "Suivant")
         ),
 
-        React.createElement("div", { style: styles.form },
-          React.createElement("input", {
-            type: "text",
-            placeholder: "Votre nom",
-            value: clientInfo.nom,
-            onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { nom: e.target.value })); },
-            style: styles.input
-          }),
-          React.createElement("input", {
-            type: "email",
-            placeholder: "Votre email",
-            value: clientInfo.email,
-            onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { email: e.target.value })); },
-            style: styles.input
-          }),
+        currentStep === 2 && React.createElement(React.Fragment, null,
+          React.createElement("div", { style: styles.form },
+            React.createElement("input", {
+              type: "text",
+              placeholder: "Votre nom",
+              value: clientInfo.nom,
+              onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { nom: e.target.value })); },
+              style: styles.input
+            }),
+            React.createElement("input", {
+              type: "email",
+              placeholder: "Votre email",
+              value: clientInfo.email,
+              onChange: function(e) { setClientInfo(Object.assign({}, clientInfo, { email: e.target.value })); },
+              style: styles.input
+            }),
+            React.createElement("div", { style: styles.stepButtonsContainer },
+              React.createElement("button", {
+                onClick: function() { setCurrentStep(1); },
+                style: styles.backButton
+              }, "Précédent"),
+              React.createElement("button", {
+                onClick: function() { setCurrentStep(3); },
+                disabled: !clientInfo.nom || !clientInfo.email,
+                style: Object.assign({}, styles.submitButton, (!clientInfo.nom || !clientInfo.email) ? styles.submitButtonDisabled : {})
+              }, "Suivant")
+            )
+          )
+        ),
 
-          React.createElement("button", {
-            onClick: envoyerCommande,
-            disabled: sending,
-            style: Object.assign({}, styles.submitButton, sending ? styles.submitButtonDisabled : {})
-          }, sending ? "Envoi en cours..." : "Commander")
+        currentStep === 3 && React.createElement(React.Fragment, null,
+          React.createElement("div", { style: styles.recapContainer },
+            React.createElement("h3", { style: styles.recapTitle }, "Récapitulatif de votre commande"),
+            React.createElement("div", { style: styles.recapSection },
+              React.createElement("p", { style: styles.recapLabel }, "Articles sélectionnés:"),
+              React.createElement("p", { style: styles.recapValue }, totalArticles + " article" + (totalArticles > 1 ? "s" : ""))
+            ),
+            React.createElement("div", { style: styles.recapSection },
+              React.createElement("p", { style: styles.recapLabel }, "Nom:"),
+              React.createElement("p", { style: styles.recapValue }, clientInfo.nom)
+            ),
+            React.createElement("div", { style: styles.recapSection },
+              React.createElement("p", { style: styles.recapLabel }, "Email:"),
+              React.createElement("p", { style: styles.recapValue }, clientInfo.email)
+            )
+          ),
+          React.createElement("div", { style: styles.stepButtonsContainer },
+            React.createElement("button", {
+              onClick: function() { setCurrentStep(2); },
+              style: styles.backButton
+            }, "Précédent"),
+            React.createElement("button", {
+              onClick: envoyerCommande,
+              disabled: sending,
+              style: Object.assign({}, styles.submitButton, sending ? styles.submitButtonDisabled : {})
+            }, sending ? "Envoi en cours..." : "Commander")
+          )
         )
       )
     )
@@ -800,8 +877,109 @@ animation: "slideDown 0.3s ease-in-out"
 modalHeader: {
 display: "flex",
 justifyContent: "space-between",
+alignItems: "flex-start",
+marginBottom: "32px"
+},
+stepperContainer: {
+flex: 1,
+paddingRight: "40px"
+},
+stepperSteps: {
+display: "flex",
 alignItems: "center",
-marginBottom: "24px"
+justifyContent: "space-between",
+width: "100%"
+},
+step: {
+display: "flex",
+flexDirection: "column",
+alignItems: "center",
+gap: "8px",
+opacity: 0.4,
+transition: "all 0.3s ease"
+},
+stepActive: {
+opacity: 1
+},
+stepCompleted: {
+opacity: 0.7
+},
+stepNumber: {
+width: "32px",
+height: "32px",
+borderRadius: "50%",
+border: "1px solid #d2d2d7",
+display: "flex",
+alignItems: "center",
+justifyContent: "center",
+fontSize: "13px",
+fontWeight: "500",
+color: "#1d1d1f",
+backgroundColor: "white",
+transition: "all 0.3s ease"
+},
+stepLabel: {
+fontSize: "11px",
+fontWeight: "400",
+color: "#1d1d1f",
+textTransform: "uppercase",
+letterSpacing: "0.5px"
+},
+stepLine: {
+height: "1px",
+flex: 1,
+backgroundColor: "#e5e5e7",
+margin: "0 12px",
+transition: "all 0.3s ease"
+},
+stepLineActive: {
+backgroundColor: "#1d1d1f"
+},
+stepButtonsContainer: {
+display: "flex",
+gap: "12px",
+marginTop: "20px"
+},
+backButton: {
+flex: 1,
+padding: "14px",
+backgroundColor: "white",
+color: "#1d1d1f",
+border: "1px solid #d2d2d7",
+borderRadius: "10px",
+cursor: "pointer",
+fontSize: "15px",
+fontWeight: "500",
+transition: "all 0.2s ease"
+},
+recapContainer: {
+padding: "20px 0"
+},
+recapTitle: {
+fontSize: "17px",
+fontWeight: "600",
+color: "#1d1d1f",
+marginBottom: "20px",
+margin: "0 0 20px 0"
+},
+recapSection: {
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center",
+padding: "16px 0",
+borderBottom: "1px solid #f5f5f7"
+},
+recapLabel: {
+fontSize: "14px",
+color: "#86868b",
+margin: 0,
+fontWeight: "400"
+},
+recapValue: {
+fontSize: "15px",
+color: "#1d1d1f",
+margin: 0,
+fontWeight: "500"
 },
 modalTitle: {
 margin: 0,
