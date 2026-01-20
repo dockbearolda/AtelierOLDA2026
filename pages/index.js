@@ -49,35 +49,27 @@ offres: [
 ]
 };
 
+// Navigation Plate - CSS Snap Slider
+const categories = [
+{ key: "nouveautes", label: "Nouveautés" },
+{ key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
+{ key: "tasse-ceramique", label: "Tasse Céramique" },
+{ key: "tasse-metal", label: "Tasse Métal & Bois" },
+{ key: "tshirt", label: "T-Shirt" },
+{ key: "offres", label: "Offres Promotionnelles" }
+];
+
+// Ancien tabs pour la homepage
 const tabs = [
 { key: "nouveautes", label: "Nouveautés" },
-{
-  key: "tasses",
-  label: "Tasses",
-  hasDropdown: true,
-  subcategories: [
-    { key: "tasse-ceramique-fuck", label: "Tasse Céramique Fuck" },
-    { key: "tasse-ceramique", label: "Tasse Céramique" },
-    { key: "tasse-metal", label: "Tasse Métal & Bois" }
-  ]
-},
+{ key: "tasse-ceramique-fuck", label: "Tasses" },
 { key: "tshirt", label: "T-Shirt" },
-{
-  key: "goodies",
-  label: "Goodies",
-  hasDropdown: true,
-  subcategories: [
-    { key: "nouveautes", label: "Support Mobile" },
-    { key: "offres", label: "Décapsuleur Bois" }
-  ]
-},
 { key: "offres", label: "Offres Promotionnelles" }
 ];
 
 export default function OLDAStore() {
 const [showHomepage, setShowHomepage] = useState(true);
 const [activeTab, setActiveTab] = useState("tasse-ceramique");
-const [openDropdown, setOpenDropdown] = useState(null);
 const [quantites, setQuantites] = useState({});
 const [commentaires, setCommentaires] = useState({});
 const [panier, setPanier] = useState([]);
@@ -226,39 +218,6 @@ setCurrentStep(1);
 
 var totalArticles = panier.reduce(function(sum, item) { return sum + item.quantite; }, 0);
 
-var getTabStyle = function(tabKey) {
-var baseStyle = { ...styles.tab };
-var isActive = activeTab === tabKey;
-
-// Pour l'onglet Tasses, vérifier si une sous-catégorie est active
-if (tabKey === "tasses") {
-  var tasseSubcats = ["tasse-ceramique-fuck", "tasse-ceramique", "tasse-metal"];
-  isActive = tasseSubcats.indexOf(activeTab) !== -1;
-}
-
-// Pour l'onglet Goodies, vérifier si une sous-catégorie est active
-if (tabKey === "goodies") {
-  var goodiesSubcats = ["nouveautes", "offres"];
-  isActive = goodiesSubcats.indexOf(activeTab) !== -1;
-}
-
-if (isActive) {
-  if (tabKey === "nouveautes") {
-    return { ...baseStyle, ...styles.tabActive, backgroundColor: "#0071e3", color: "white" };
-  } else if (tabKey === "offres") {
-    return { ...baseStyle, ...styles.tabActive, backgroundColor: "#ff3b30", color: "white" };
-  }
-  return { ...baseStyle, ...styles.tabActive };
-} else {
-  if (tabKey === "nouveautes") {
-    return { ...baseStyle, backgroundColor: "#e8f2ff", color: "#0071e3" };
-  } else if (tabKey === "offres") {
-    return { ...baseStyle, backgroundColor: "#ffe5e5", color: "#ff3b30" };
-  }
-  return baseStyle;
-}
-};
-
 return React.createElement("div", { style: styles.container },
 React.createElement("header", { style: styles.header },
 React.createElement("img", {
@@ -298,62 +257,17 @@ React.createElement("span", { style: styles.categoryLabel }, tab.label)
 )
 ) : React.createElement(React.Fragment, null,
 
-React.createElement("div", { style: styles.navContainer },
-  React.createElement("nav", { style: styles.nav },
-    tabs.map(function(tab) {
-      if (tab.hasDropdown) {
-        return React.createElement("div", {
-          key: tab.key,
-          style: styles.dropdownContainer,
-          onMouseEnter: function() { setOpenDropdown(tab.key); },
-          onMouseLeave: function() { setOpenDropdown(null); }
-        },
-          React.createElement("button", {
-            className: "dropdown-button-bridge",
-            onClick: function() {
-              if (openDropdown === tab.key) {
-                setOpenDropdown(null);
-              } else {
-                setOpenDropdown(tab.key);
-              }
-            },
-            style: getTabStyle(tab.key)
-          },
-            tab.label,
-            React.createElement("span", { style: styles.dropdownArrow }, " ▼")
-          ),
-          openDropdown === tab.key && React.createElement("ul", { style: styles.dropdownMenu },
-            tab.subcategories.map(function(subcat) {
-              return React.createElement("li", {
-                key: subcat.key,
-                style: styles.dropdownItemWrapper
-              },
-                React.createElement("button", {
-                  onClick: function() {
-                    setActiveTab(subcat.key);
-                    setShowHomepage(false);
-                    setOpenDropdown(null);
-                  },
-                  style: activeTab === subcat.key ?
-                    { ...styles.dropdownItem, ...styles.dropdownItemActive } :
-                    styles.dropdownItem
-                }, subcat.label)
-              );
-            })
-          )
-        );
-      } else {
-        return React.createElement("button", {
-          key: tab.key,
-          onClick: function() {
-            setActiveTab(tab.key);
-            setShowHomepage(false);
-          },
-          style: getTabStyle(tab.key)
-        }, tab.label);
+React.createElement("nav", { className: "luxury-snap-nav" },
+  categories.map(function(cat) {
+    return React.createElement("div", {
+      key: cat.key,
+      className: "luxury-snap-item" + (activeTab === cat.key ? " active" : ""),
+      onClick: function() {
+        setActiveTab(cat.key);
+        setShowHomepage(false);
       }
-    })
-  )
+    }, cat.label);
+  })
 ),
 
 React.createElement("main", { style: styles.main },
@@ -659,110 +573,6 @@ fontWeight: "600",
 minWidth: "20px",
 textAlign: "center"
 },
-navContainer: {
-position: "sticky",
-top: "calc(73px + env(safe-area-inset-top))",
-backgroundColor: "white",
-borderBottom: "1px solid #d2d2d7",
-zIndex: 9998,
-boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-transition: "box-shadow 0.3s ease",
-overflow: "visible",
-WebkitBackfaceVisibility: "hidden",
-backfaceVisibility: "hidden"
-},
-nav: {
-backgroundColor: "white",
-padding: "16px 40px",
-display: "flex",
-gap: "12px",
-overflowX: "auto",
-overflowY: "visible",
-scrollBehavior: "smooth",
-scrollbarWidth: "none",
-msOverflowStyle: "none",
-position: "relative",
-zIndex: 9997,
-WebkitOverflowScrolling: "touch",
-flexWrap: "nowrap",
-whiteSpace: "nowrap"
-},
-tab: {
-padding: "10px 20px",
-border: "none",
-borderRadius: "20px",
-cursor: "pointer",
-backgroundColor: "#f5f5f7",
-color: "#1d1d1f",
-fontSize: "14px",
-fontWeight: "400",
-transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-whiteSpace: "nowrap",
-transform: "scale(1)",
-boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
-},
-tabActive: {
-backgroundColor: "#1d1d1f",
-color: "white",
-transform: "scale(1.05)",
-boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-fontWeight: "500"
-},
-dropdownContainer: {
-position: "relative",
-display: "inline-block",
-overflow: "visible",
-pointerEvents: "auto"
-},
-dropdownArrow: {
-fontSize: "10px",
-marginLeft: "4px",
-opacity: 0.7,
-transition: "transform 0.3s ease"
-},
-dropdownMenu: {
-position: "absolute",
-top: "calc(100% + 12px)",
-left: 0,
-backgroundColor: "#ffffff",
-borderRadius: "16px",
-boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.04)",
-padding: "12px 0",
-minWidth: "240px",
-zIndex: 99999,
-animation: "dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-border: "1px solid #f0f0f0",
-pointerEvents: "auto",
-listStyle: "none",
-margin: 0
-},
-dropdownItemWrapper: {
-listStyle: "none",
-margin: 0,
-padding: 0
-},
-dropdownItem: {
-width: "100%",
-padding: "14px 24px",
-border: "none",
-backgroundColor: "transparent",
-color: "#1d1d1f",
-fontSize: "15px",
-fontWeight: "400",
-cursor: "pointer",
-transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-textAlign: "left",
-whiteSpace: "nowrap",
-display: "block",
-pointerEvents: "auto",
-letterSpacing: "0.01em",
-lineHeight: "1.4"
-},
-dropdownItemActive: {
-backgroundColor: "#fafafa",
-color: "#0071e3",
-fontWeight: "500"
-},
 main: {
 padding: "40px 20px",
 display: "grid",
@@ -817,43 +627,6 @@ productRef: {
 margin: "0 0 16px 0",
 fontSize: "12px",
 color: "#86868b"
-},
-quantityControl: {
-display: "flex",
-alignItems: "center",
-justifyContent: "space-between",
-gap: "8px",
-marginBottom: "16px",
-width: "100%"
-},
-quantityLabel: {
-fontSize: "13px",
-fontWeight: "400",
-color: "#86868b",
-textTransform: "uppercase",
-letterSpacing: "0.5px"
-},
-quantitySelect: {
-flex: 1,
-padding: "12px 16px",
-border: "1px solid #d2d2d7",
-borderRadius: "0",
-backgroundColor: "white",
-fontSize: "15px",
-fontWeight: "400",
-color: "#1d1d1f",
-cursor: "pointer",
-appearance: "none",
-WebkitAppearance: "none",
-MozAppearance: "none",
-backgroundImage: "url('data:image/svg+xml;charset=UTF-8,%3csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1 1L5 5L9 1' stroke='%231d1d1f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e')",
-backgroundRepeat: "no-repeat",
-backgroundPosition: "right 12px center",
-backgroundSize: "10px",
-paddingRight: "36px",
-transition: "border-color 0.2s ease",
-minHeight: "44px",
-touchAction: "manipulation"
 },
 commentaire: {
 width: "100%",
