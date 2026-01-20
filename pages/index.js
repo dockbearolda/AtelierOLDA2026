@@ -473,7 +473,7 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#f5f5f7",
+backgroundColor: "#FAF9F6",
 overflow: "visible",
 overflowX: "hidden",
 position: "relative",
@@ -486,7 +486,7 @@ minHeight: "calc(100vh - 73px)",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-backgroundColor: "#f5f5f7"
+backgroundColor: "#FAF9F6"
 },
 homepageContent: {
 textAlign: "center",
@@ -514,8 +514,8 @@ gap: "20px",
 marginTop: "40px"
 },
 categoryCard: {
-backgroundColor: "white",
-border: "1px solid #d2d2d7",
+backgroundColor: "#F4F1EA",
+border: "1px solid #E6DAC8",
 borderRadius: "12px",
 padding: "32px 20px",
 cursor: "pointer",
@@ -528,25 +528,25 @@ alignItems: "center",
 justifyContent: "center"
 },
 categoryCardNew: {
-backgroundColor: "white"
+backgroundColor: "#F4F1EA"
 },
 categoryCardPromo: {
-backgroundColor: "white"
+backgroundColor: "#F4F1EA"
 },
 categoryCardTshirt: {
-backgroundColor: "white"
+backgroundColor: "#F4F1EA"
 },
 categoryCardTable: {
-backgroundColor: "white"
+backgroundColor: "#F4F1EA"
 },
 categoryCardAccessoires: {
-backgroundColor: "white"
+backgroundColor: "#F4F1EA"
 },
 categoryBadge: {
 position: "absolute",
 top: "12px",
 right: "12px",
-backgroundColor: "#0071e3",
+backgroundColor: "#A48D78",
 color: "white",
 padding: "4px 10px",
 borderRadius: "10px",
@@ -558,7 +558,7 @@ categoryBadgePromo: {
 position: "absolute",
 top: "12px",
 right: "12px",
-backgroundColor: "#ff3b30",
+backgroundColor: "#CBB9A4",
 color: "white",
 padding: "4px 10px",
 borderRadius: "10px",
@@ -572,12 +572,12 @@ fontWeight: "500",
 color: "#1d1d1f"
 },
 header: {
-backgroundColor: "rgba(255,255,255,0.92)",
+backgroundColor: "rgba(250, 249, 246, 0.92)",
 padding: "12px 16px",
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
-borderBottom: "1px solid #d2d2d7",
+borderBottom: "1px solid #E6DAC8",
 position: "sticky",
 top: 0,
 zIndex: 9999,
@@ -601,7 +601,7 @@ badge: {
 position: "absolute",
 top: "0",
 right: "0",
-backgroundColor: "#0071e3",
+backgroundColor: "#A48D78",
 color: "white",
 borderRadius: "10px",
 padding: "2px 6px",
@@ -614,12 +614,13 @@ letterSpacing: "-0.01em"
 navContainer: {
 position: "sticky",
 top: "48px",
-backgroundColor: "rgba(255,255,255,0.92)",
-borderBottom: "1px solid #d2d2d7",
+backgroundColor: "rgba(250, 249, 246, 0.92)",
+borderBottom: "1px solid #E6DAC8",
 zIndex: 9998,
 boxShadow: "none",
 transition: "box-shadow 0.3s ease",
-overflow: "visible",
+overflowX: "hidden",
+overflowY: "visible",
 backdropFilter: "blur(20px)"
 },
 nav: {
@@ -634,14 +635,14 @@ scrollbarWidth: "none",
 msOverflowStyle: "none",
 position: "relative",
 zIndex: 9997,
-overflow: "visible"
+WebkitOverflowScrolling: "touch"
 },
 tab: {
 padding: "8px 16px",
 border: "none",
 borderRadius: "18px",
 cursor: "pointer",
-backgroundColor: "transparent",
+backgroundColor: "#F4F1EA",
 color: "#1d1d1f",
 fontSize: "12px",
 fontWeight: "400",
@@ -652,7 +653,7 @@ boxShadow: "none",
 letterSpacing: "-0.01em"
 },
 tabActive: {
-backgroundColor: "#1d1d1f",
+backgroundColor: "#A48D78",
 color: "white",
 borderColor: "transparent",
 transform: "scale(1)",
@@ -723,10 +724,10 @@ maxWidth: "100%",
 width: "100%",
 margin: "0 auto",
 overflowX: "hidden",
-backgroundColor: "#d2d2d7"
+backgroundColor: "#E6DAC8"
 },
 card: {
-backgroundColor: "white",
+backgroundColor: "#FAF9F6",
 borderRadius: "0",
 padding: "20px 16px",
 boxShadow: "none",
@@ -740,7 +741,7 @@ width: "100%"
 },
 imageContainer: {
 height: "180px",
-backgroundColor: "#f5f5f7",
+backgroundColor: "#F4F1EA",
 borderRadius: "0",
 marginBottom: "16px",
 display: "flex",
@@ -795,7 +796,7 @@ textTransform: "none"
 quantitySelect: {
 width: "100%",
 padding: "10px 12px",
-border: "1px solid #d2d2d7",
+border: "1px solid #E6DAC8",
 borderRadius: "8px",
 fontSize: "14px",
 fontFamily: "inherit",
@@ -814,7 +815,7 @@ MozAppearance: "none"
 commentaire: {
 width: "100%",
 padding: "10px 12px",
-border: "1px solid #d2d2d7",
+border: "1px solid #E6DAC8",
 borderRadius: "8px",
 fontSize: "13px",
 fontFamily: "inherit",
@@ -828,7 +829,7 @@ transition: "border-color 0.2s ease"
 addButton: {
 width: "100%",
 padding: "12px 16px",
-backgroundColor: "#0071e3",
+backgroundColor: "#A48D78",
 color: "white",
 border: "none",
 borderRadius: "8px",
@@ -842,7 +843,7 @@ boxShadow: "none",
 transform: "scale(1)"
 },
 addButtonAdded: {
-backgroundColor: "#34c759",
+backgroundColor: "#CBB9A4",
 color: "white",
 borderColor: "transparent",
 transform: "scale(1)",
@@ -950,7 +951,7 @@ gap: "12px"
 input: {
 width: "100%",
 padding: "14px",
-border: "1px solid #D4C4B0",
+border: "1px solid #E6DAC8",
 borderRadius: "8px",
 fontSize: "15px",
 boxSizing: "border-box",
@@ -961,7 +962,7 @@ transition: "border-color 0.2s ease"
 submitButton: {
 width: "100%",
 padding: "16px",
-backgroundColor: "#8B9D83",
+backgroundColor: "#A48D78",
 color: "white",
 border: "none",
 borderRadius: "8px",
@@ -974,7 +975,7 @@ textTransform: "uppercase",
 transition: "all 0.3s ease"
 },
 submitButtonDisabled: {
-backgroundColor: "#C4C4C4",
+backgroundColor: "#CBB9A4",
 cursor: "not-allowed",
 opacity: 0.6
 },
@@ -985,7 +986,7 @@ padding: "20px"
 successIcon: {
 width: "64px",
 height: "64px",
-backgroundColor: "#8B9D83",
+backgroundColor: "#A48D78",
 color: "white",
 borderRadius: "50%",
 display: "flex",
@@ -1014,7 +1015,7 @@ margin: "0 0 24px 0"
 },
 closeButton: {
 padding: "16px 40px",
-backgroundColor: "#8B9D83",
+backgroundColor: "#A48D78",
 color: "white",
 border: "none",
 borderRadius: "8px",
@@ -1026,10 +1027,10 @@ textTransform: "uppercase",
 transition: "all 0.3s ease"
 },
 footer: {
-backgroundColor: "#f5f5f7",
+backgroundColor: "#FAF9F6",
 padding: "40px 20px",
 textAlign: "center",
-borderTop: "1px solid #d2d2d7",
+borderTop: "1px solid #E6DAC8",
 marginTop: "60px"
 },
 footerText: {
