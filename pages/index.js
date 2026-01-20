@@ -251,30 +251,8 @@ if (tabKey === "tasses") {
 }
 
 if (isActive) {
-  if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#8B9D83", borderColor: "#8B9D83", color: "white" });
-  } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#C4A68A", borderColor: "#C4A68A", color: "white" });
-  } else if (tabKey === "tshirt") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#9B8BAA", borderColor: "#9B8BAA", color: "white" });
-  } else if (tabKey === "art-de-la-table") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#B8A892", borderColor: "#B8A892", color: "white" });
-  } else if (tabKey === "accessoires-goodies") {
-    return Object.assign({}, baseStyle, styles.tabActive, { backgroundColor: "#D4A895", borderColor: "#D4A895", color: "white" });
-  }
   return Object.assign({}, baseStyle, styles.tabActive);
 } else {
-  if (tabKey === "nouveautes") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#D4E3D0", borderColor: "#D4E3D0", color: "#1d1d1f" });
-  } else if (tabKey === "offres") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#F5E8E0", borderColor: "#F5E8E0", color: "#1d1d1f" });
-  } else if (tabKey === "tshirt") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#E8E3F0", borderColor: "#E8E3F0", color: "#1d1d1f" });
-  } else if (tabKey === "art-de-la-table") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#F0EBE3", borderColor: "#F0EBE3", color: "#1d1d1f" });
-  } else if (tabKey === "accessoires-goodies") {
-    return Object.assign({}, baseStyle, { backgroundColor: "#FFE8DC", borderColor: "#FFE8DC", color: "#1d1d1f" });
-  }
   return baseStyle;
 }
 };
@@ -495,17 +473,20 @@ var styles = {
 container: {
 fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
-backgroundColor: "#FAF7F2",
+backgroundColor: "#f5f5f7",
 overflow: "visible",
+overflowX: "hidden",
 position: "relative",
-WebkitTapHighlightColor: "transparent"
+WebkitTapHighlightColor: "transparent",
+maxWidth: "100vw",
+width: "100%"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
-backgroundColor: "#FAF7F2"
+backgroundColor: "#f5f5f7"
 },
 homepageContent: {
 textAlign: "center",
@@ -533,12 +514,12 @@ gap: "20px",
 marginTop: "40px"
 },
 categoryCard: {
-backgroundColor: "#F5F0E8",
-border: "none",
-borderRadius: "18px",
+backgroundColor: "white",
+border: "1px solid #d2d2d7",
+borderRadius: "12px",
 padding: "32px 20px",
 cursor: "pointer",
-transition: "all 0.3s",
+transition: "all 0.2s",
 position: "relative",
 minHeight: "120px",
 display: "flex",
@@ -547,43 +528,43 @@ alignItems: "center",
 justifyContent: "center"
 },
 categoryCardNew: {
-backgroundColor: "#D4E3D0"
+backgroundColor: "white"
 },
 categoryCardPromo: {
-backgroundColor: "#F5E8E0"
+backgroundColor: "white"
 },
 categoryCardTshirt: {
-backgroundColor: "#E8E3F0"
+backgroundColor: "white"
 },
 categoryCardTable: {
-backgroundColor: "#F0EBE3"
+backgroundColor: "white"
 },
 categoryCardAccessoires: {
-backgroundColor: "#FFE8DC"
+backgroundColor: "white"
 },
 categoryBadge: {
 position: "absolute",
 top: "12px",
 right: "12px",
-backgroundColor: "#8B9D83",
+backgroundColor: "#0071e3",
 color: "white",
 padding: "4px 10px",
-borderRadius: "12px",
-fontSize: "11px",
-fontWeight: "500",
-letterSpacing: "0.05em"
+borderRadius: "10px",
+fontSize: "10px",
+fontWeight: "600",
+letterSpacing: "-0.01em"
 },
 categoryBadgePromo: {
 position: "absolute",
 top: "12px",
 right: "12px",
-backgroundColor: "#C4A68A",
+backgroundColor: "#ff3b30",
 color: "white",
 padding: "4px 10px",
-borderRadius: "12px",
-fontSize: "11px",
-fontWeight: "500",
-letterSpacing: "0.05em"
+borderRadius: "10px",
+fontSize: "10px",
+fontWeight: "600",
+letterSpacing: "-0.01em"
 },
 categoryLabel: {
 fontSize: "17px",
@@ -591,17 +572,17 @@ fontWeight: "500",
 color: "#1d1d1f"
 },
 header: {
-backgroundColor: "white",
-padding: "20px 40px",
+backgroundColor: "rgba(255,255,255,0.92)",
+padding: "12px 16px",
 display: "flex",
 justifyContent: "space-between",
 alignItems: "center",
-borderBottom: "1px solid #E5DDD0",
+borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
 zIndex: 9999,
 overflow: "visible",
-backdropFilter: "blur(10px)"
+backdropFilter: "blur(20px)"
 },
 logo: {
 height: "40px",
@@ -620,31 +601,32 @@ badge: {
 position: "absolute",
 top: "0",
 right: "0",
-backgroundColor: "#8B9D83",
+backgroundColor: "#0071e3",
 color: "white",
 borderRadius: "10px",
-padding: "3px 7px",
+padding: "2px 6px",
 fontSize: "11px",
-fontWeight: "500",
-minWidth: "20px",
+fontWeight: "600",
+minWidth: "18px",
 textAlign: "center",
-letterSpacing: "0.01em"
+letterSpacing: "-0.01em"
 },
 navContainer: {
 position: "sticky",
-top: "80px",
-backgroundColor: "white",
-borderBottom: "1px solid #E5DDD0",
+top: "48px",
+backgroundColor: "rgba(255,255,255,0.92)",
+borderBottom: "1px solid #d2d2d7",
 zIndex: 9998,
-boxShadow: "0 1px 6px rgba(0, 0, 0, 0.03)",
+boxShadow: "none",
 transition: "box-shadow 0.3s ease",
-overflow: "visible"
+overflow: "visible",
+backdropFilter: "blur(20px)"
 },
 nav: {
-backgroundColor: "white",
-padding: "18px 40px",
+backgroundColor: "transparent",
+padding: "12px 16px",
 display: "flex",
-gap: "14px",
+gap: "8px",
 overflowX: "auto",
 overflowY: "visible",
 scrollBehavior: "smooth",
@@ -655,27 +637,27 @@ zIndex: 9997,
 overflow: "visible"
 },
 tab: {
-padding: "11px 22px",
-border: "1px solid #E5DDD0",
-borderRadius: "20px",
+padding: "8px 16px",
+border: "none",
+borderRadius: "18px",
 cursor: "pointer",
 backgroundColor: "transparent",
 color: "#1d1d1f",
-fontSize: "13px",
+fontSize: "12px",
 fontWeight: "400",
-transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+transition: "all 0.2s ease",
 whiteSpace: "nowrap",
 transform: "scale(1)",
-boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
-letterSpacing: "0.02em"
+boxShadow: "none",
+letterSpacing: "-0.01em"
 },
 tabActive: {
-backgroundColor: "#8B9D83",
+backgroundColor: "#1d1d1f",
 color: "white",
-borderColor: "#8B9D83",
-transform: "scale(1.02)",
-boxShadow: "0 2px 8px rgba(139, 157, 131, 0.2)",
-fontWeight: "500"
+borderColor: "transparent",
+transform: "scale(1)",
+boxShadow: "none",
+fontWeight: "600"
 },
 dropdownContainer: {
 position: "relative",
@@ -733,35 +715,39 @@ color: "#0071e3",
 fontWeight: "500"
 },
 main: {
-padding: "48px 40px",
+padding: "0",
 display: "grid",
-gridTemplateColumns: "repeat(2, 1fr)",
-gap: "32px",
-maxWidth: "1000px",
-margin: "0 auto"
+gridTemplateColumns: "1fr 1fr",
+gap: "1px",
+maxWidth: "100%",
+width: "100%",
+margin: "0 auto",
+overflowX: "hidden",
+backgroundColor: "#d2d2d7"
 },
 card: {
 backgroundColor: "white",
-borderRadius: "12px",
-padding: "28px",
-boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-transition: "transform 0.3s ease, box-shadow 0.3s ease",
+borderRadius: "0",
+padding: "20px 16px",
+boxShadow: "none",
+transition: "none",
 position: "relative",
 zIndex: 1,
 display: "flex",
 flexDirection: "column",
-minHeight: "100%"
+minHeight: "100%",
+width: "100%"
 },
 imageContainer: {
-height: "220px",
-backgroundColor: "#FDFCFA",
-borderRadius: "8px",
-marginBottom: "20px",
+height: "180px",
+backgroundColor: "#f5f5f7",
+borderRadius: "0",
+marginBottom: "16px",
 display: "flex",
 alignItems: "center",
 justifyContent: "center",
 overflow: "hidden",
-border: "1px solid #F5F0E8"
+border: "none"
 },
 image: {
 maxHeight: "100%",
@@ -770,45 +756,48 @@ objectFit: "contain",
 mixBlendMode: "multiply"
 },
 productName: {
-margin: "0 0 6px 0",
-fontSize: "16px",
-fontWeight: "500",
+margin: "0 0 2px 0",
+fontSize: "17px",
+fontWeight: "600",
 color: "#1d1d1f",
-letterSpacing: "0.01em"
+letterSpacing: "-0.01em",
+lineHeight: "1.2"
 },
 productColor: {
-margin: "0 0 6px 0",
-fontSize: "13px",
+margin: "0 0 1px 0",
+fontSize: "12px",
 color: "#6e6e73",
-fontWeight: "300"
+fontWeight: "400",
+lineHeight: "1.3"
 },
 productRef: {
-margin: "0 0 20px 0",
-fontSize: "11px",
+margin: "0 0 12px 0",
+fontSize: "12px",
 color: "#86868b",
-letterSpacing: "0.05em",
-textTransform: "uppercase"
+letterSpacing: "0",
+textTransform: "none",
+lineHeight: "1.3"
 },
 quantityControl: {
 display: "flex",
 flexDirection: "column",
 alignItems: "flex-start",
-gap: "8px",
-marginBottom: "16px"
+gap: "6px",
+marginBottom: "10px"
 },
 quantityLabel: {
 fontSize: "12px",
 color: "#6e6e73",
 fontWeight: "400",
-letterSpacing: "0.05em",
-textTransform: "uppercase"
+letterSpacing: "0",
+textTransform: "none"
 },
 quantitySelect: {
 width: "100%",
-padding: "12px 14px",
-border: "1px solid #D4C4B0",
+padding: "10px 12px",
+border: "1px solid #d2d2d7",
 borderRadius: "8px",
-fontSize: "15px",
+fontSize: "14px",
 fontFamily: "inherit",
 backgroundColor: "white",
 color: "#1d1d1f",
@@ -816,21 +805,21 @@ cursor: "pointer",
 appearance: "none",
 backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236e6e73' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
 backgroundRepeat: "no-repeat",
-backgroundPosition: "right 14px center",
-paddingRight: "40px",
+backgroundPosition: "right 12px center",
+paddingRight: "36px",
 transition: "all 0.2s ease",
 WebkitAppearance: "none",
 MozAppearance: "none"
 },
 commentaire: {
 width: "100%",
-padding: "12px 14px",
-border: "1px solid #D4C4B0",
+padding: "10px 12px",
+border: "1px solid #d2d2d7",
 borderRadius: "8px",
 fontSize: "13px",
 fontFamily: "inherit",
 resize: "none",
-marginBottom: "16px",
+marginBottom: "10px",
 boxSizing: "border-box",
 color: "#1d1d1f",
 backgroundColor: "white",
@@ -838,24 +827,24 @@ transition: "border-color 0.2s ease"
 },
 addButton: {
 width: "100%",
-padding: "14px 16px",
-backgroundColor: "transparent",
-color: "#1d1d1f",
-border: "1px solid #D4C4B0",
+padding: "12px 16px",
+backgroundColor: "#0071e3",
+color: "white",
+border: "none",
 borderRadius: "8px",
 cursor: "pointer",
-fontSize: "13px",
-fontWeight: "400",
-letterSpacing: "0.08em",
-textTransform: "uppercase",
-transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+fontSize: "14px",
+fontWeight: "500",
+letterSpacing: "-0.01em",
+textTransform: "none",
+transition: "all 0.2s ease",
 boxShadow: "none",
 transform: "scale(1)"
 },
 addButtonAdded: {
-backgroundColor: "#8B9D83",
+backgroundColor: "#34c759",
 color: "white",
-borderColor: "#8B9D83",
+borderColor: "transparent",
 transform: "scale(1)",
 boxShadow: "none"
 },
@@ -1037,25 +1026,25 @@ textTransform: "uppercase",
 transition: "all 0.3s ease"
 },
 footer: {
-backgroundColor: "#FAF7F2",
-padding: "48px 40px",
+backgroundColor: "#f5f5f7",
+padding: "40px 20px",
 textAlign: "center",
-borderTop: "1px solid #E5DDD0",
-marginTop: "80px"
+borderTop: "1px solid #d2d2d7",
+marginTop: "60px"
 },
 footerText: {
-margin: "0 0 8px 0",
-fontSize: "12px",
+margin: "0 0 6px 0",
+fontSize: "11px",
 color: "#6e6e73",
-fontWeight: "300",
-letterSpacing: "0.08em",
-lineHeight: "1.8"
+fontWeight: "400",
+letterSpacing: "0.01em",
+lineHeight: "1.6"
 },
 footerContact: {
 margin: 0,
-fontSize: "12px",
+fontSize: "11px",
 color: "#86868b",
-fontWeight: "300",
-letterSpacing: "0.08em"
+fontWeight: "400",
+letterSpacing: "0.01em"
 }
 };

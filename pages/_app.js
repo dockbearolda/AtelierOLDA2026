@@ -4,6 +4,13 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <style jsx global>{`
+        /* Lock horizontal scroll */
+        html, body {
+          overflow-x: hidden !important;
+          max-width: 100vw !important;
+          width: 100% !important;
+        }
+
         /* Hide scrollbar for Chrome, Safari and Opera */
         nav::-webkit-scrollbar {
           display: none;
