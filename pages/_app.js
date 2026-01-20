@@ -119,10 +119,26 @@ function MyApp({ Component, pageProps }) {
           -webkit-overflow-scrolling: touch !important;
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
+          scroll-behavior: smooth !important;
+          overscroll-behavior-x: contain !important;
         }
 
         nav[style*="flex"]::-webkit-scrollbar {
           display: none !important;
+        }
+
+        /* MENU STICKY : Support Safe Area iPhone */
+        [style*="header"] {
+          padding-top: calc(16px + env(safe-area-inset-top)) !important;
+          margin-top: calc(-1 * env(safe-area-inset-top)) !important;
+          -webkit-backdrop-filter: blur(10px) !important;
+          backdrop-filter: blur(10px) !important;
+        }
+
+        [style*="navContainer"] {
+          top: calc(73px + env(safe-area-inset-top)) !important;
+          -webkit-backdrop-filter: blur(10px) !important;
+          backdrop-filter: blur(10px) !important;
         }
 
         /* SOLUTION DROPDOWN : Pont invisible entre bouton et menu */
@@ -176,6 +192,17 @@ function MyApp({ Component, pageProps }) {
           main[style*="grid"] {
             grid-template-columns: repeat(2, 1fr) !important;
             padding: 16px 8px !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+        }
+
+        /* FIX CENTRAGE iPhone : Alignement parfait */
+        @media screen and (max-width: 768px) {
+          main[style*="grid"] {
+            margin-left: auto !important;
+            margin-right: auto !important;
+            width: calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right)) !important;
           }
         }
 
@@ -298,11 +325,19 @@ function MyApp({ Component, pageProps }) {
           /* Navigation : Smooth scrolling sur iOS */
           nav[style*="flex"] {
             -webkit-overflow-scrolling: touch !important;
-            scroll-snap-type: x mandatory !important;
+            scroll-snap-type: x proximity !important;
+            scroll-padding: 0 20px !important;
           }
 
           nav[style*="flex"] button {
-            scroll-snap-align: start !important;
+            scroll-snap-align: center !important;
+            flex-shrink: 0 !important;
+          }
+
+          /* Menu mobile : Padding pour Safe Area */
+          nav[style*="flex"] {
+            padding-left: max(40px, env(safe-area-inset-left)) !important;
+            padding-right: max(40px, env(safe-area-inset-right)) !important;
           }
         }
 
@@ -311,6 +346,41 @@ function MyApp({ Component, pageProps }) {
           body {
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
+          }
+        }
+
+        /* OPTIMISATIONS SAFARI iOS : Stabilité et performance */
+        @supports (-webkit-touch-callout: none) {
+          /* Détection Safari iOS */
+          * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+
+          /* Fix du bounce vertical sur iOS */
+          body {
+            overscroll-behavior-y: none;
+          }
+
+          /* Grille : Performance GPU sur iOS */
+          main[style*="grid"] {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: scroll-position;
+          }
+
+          /* Images : Optimisation chargement iOS */
+          img {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+          }
+
+          /* Navigation sticky : Accélération GPU */
+          [style*="sticky"] {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: transform;
           }
         }
       `}</style>

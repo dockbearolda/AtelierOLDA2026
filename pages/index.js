@@ -629,7 +629,9 @@ borderBottom: "1px solid #d2d2d7",
 position: "sticky",
 top: 0,
 zIndex: 9999,
-overflow: "visible"
+overflow: "visible",
+paddingTop: "calc(16px + env(safe-area-inset-top))",
+marginTop: "calc(-1 * env(safe-area-inset-top))"
 },
 logo: {
 height: "40px",
@@ -659,13 +661,15 @@ textAlign: "center"
 },
 navContainer: {
 position: "sticky",
-top: "73px",
+top: "calc(73px + env(safe-area-inset-top))",
 backgroundColor: "white",
 borderBottom: "1px solid #d2d2d7",
 zIndex: 9998,
 boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 transition: "box-shadow 0.3s ease",
-overflow: "visible"
+overflow: "visible",
+WebkitBackfaceVisibility: "hidden",
+backfaceVisibility: "hidden"
 },
 nav: {
 backgroundColor: "white",
