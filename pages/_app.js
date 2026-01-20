@@ -105,6 +105,26 @@ function MyApp({ Component, pageProps }) {
           -webkit-tap-highlight-color: transparent;
         }
 
+        /* STABILITÉ PARFAITE : Zéro scroll horizontal */
+        html, body {
+          overflow-x: hidden !important;
+          width: 100% !important;
+          position: relative !important;
+        }
+
+        /* Menu slider : Seul élément avec scroll horizontal */
+        nav[style*="flex"] {
+          overflow-x: auto !important;
+          overflow-y: hidden !important;
+          -webkit-overflow-scrolling: touch !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+
+        nav[style*="flex"]::-webkit-scrollbar {
+          display: none !important;
+        }
+
         /* SOLUTION DROPDOWN : Pont invisible entre bouton et menu */
         .dropdown-button-bridge {
           position: relative;
@@ -126,8 +146,37 @@ function MyApp({ Component, pageProps }) {
         main[style*="grid"] {
           gap: 1px !important;
           background-color: #d2d2d7 !important;
-          padding: 0 !important;
           border: none !important;
+          overflow-x: hidden !important;
+        }
+
+        /* GRILLE RESPONSIVE : 5 colonnes PC, 4 colonnes tablette, 2 colonnes iPhone */
+        @media screen and (min-width: 1200px) {
+          main[style*="grid"] {
+            grid-template-columns: repeat(5, 1fr) !important;
+            padding: 40px 20px !important;
+          }
+        }
+
+        @media screen and (min-width: 769px) and (max-width: 1199px) {
+          main[style*="grid"] {
+            grid-template-columns: repeat(4, 1fr) !important;
+            padding: 32px 16px !important;
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          main[style*="grid"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+            padding: 24px 12px !important;
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          main[style*="grid"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+            padding: 16px 8px !important;
+          }
         }
 
         /* FIX RETINA/IPHONE : Traits ultra-fins et nets */
@@ -226,6 +275,42 @@ function MyApp({ Component, pageProps }) {
 
           [style*="stepperContainer"] {
             padding-right: 20px !important;
+          }
+        }
+
+        /* OPTIMISATION IPHONE : Stabilité et fluidité */
+        @media screen and (max-width: 768px) {
+          /* Bloquer le zoom sur double-tap */
+          * {
+            touch-action: manipulation !important;
+          }
+
+          /* Cartes produits : Padding optimisé iPhone */
+          [style*="card"] {
+            padding: 16px !important;
+          }
+
+          /* Images : Ratio stable */
+          [style*="imageContainer"] {
+            height: 160px !important;
+          }
+
+          /* Navigation : Smooth scrolling sur iOS */
+          nav[style*="flex"] {
+            -webkit-overflow-scrolling: touch !important;
+            scroll-snap-type: x mandatory !important;
+          }
+
+          nav[style*="flex"] button {
+            scroll-snap-align: start !important;
+          }
+        }
+
+        /* FIX IPHONE X et plus : Safe Area */
+        @supports (padding: max(0px)) {
+          body {
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
           }
         }
       `}</style>

@@ -536,7 +536,9 @@ fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
 minHeight: "100vh",
 backgroundColor: "#f5f5f7",
 overflow: "visible",
-position: "relative"
+position: "relative",
+overflowX: "hidden",
+width: "100%"
 },
 homepage: {
 minHeight: "calc(100vh - 73px)",
@@ -677,7 +679,9 @@ scrollbarWidth: "none",
 msOverflowStyle: "none",
 position: "relative",
 zIndex: 9997,
-overflow: "visible"
+WebkitOverflowScrolling: "touch",
+flexWrap: "nowrap",
+whiteSpace: "nowrap"
 },
 tab: {
 padding: "10px 20px",
@@ -756,14 +760,16 @@ color: "#0071e3",
 fontWeight: "500"
 },
 main: {
-padding: "0",
+padding: "40px 20px",
 display: "grid",
-gridTemplateColumns: "repeat(2, 1fr)",
+gridTemplateColumns: "repeat(5, 1fr)",
 gap: "1px",
-maxWidth: "900px",
+maxWidth: "1400px",
 margin: "0 auto",
 backgroundColor: "#d2d2d7",
-border: "none"
+border: "none",
+width: "100%",
+boxSizing: "border-box"
 },
 card: {
 backgroundColor: "white",
