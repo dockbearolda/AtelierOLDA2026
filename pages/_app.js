@@ -155,6 +155,42 @@ function MyApp({ Component, pageProps }) {
           -webkit-tap-highlight-color: transparent;
         }
 
+        /* CRITICAL: Force grid layout - 2 columns */
+        main {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 10px !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          padding: 16px 10px !important;
+          max-width: 900px !important;
+          margin: 0 auto !important;
+        }
+
+        /* CRITICAL: Force cards to fit */
+        main > div {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          box-sizing: border-box !important;
+        }
+
+        /* CRITICAL: Navigation slider */
+        nav {
+          display: flex !important;
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          overflow-y: visible !important;
+          -webkit-overflow-scrolling: touch !important;
+          padding: 16px 10px !important;
+          padding-right: 50px !important;
+        }
+
+        nav > div,
+        nav > button {
+          flex: 0 0 auto !important;
+        }
+
         /* Mobile responsive fixes */
         @media (max-width: 768px) {
           nav {
